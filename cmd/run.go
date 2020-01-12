@@ -15,6 +15,16 @@ var runCmd = &cobra.Command{
 	},
 }
 
+var migrateCmd = &cobra.Command{
+	Use:   "migrate",
+	Short: "",
+	Long:  ``,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("Running migrations...")
+	},
+}
+
 func init() {
 	RootCmd.AddCommand(runCmd)
+	RootCmd.AddCommand(migrateCmd)
 }
