@@ -17,6 +17,7 @@ func Run() {
 		auth.GET("/logout", Logout)
 		auth.POST("/login", Login)
 		auth.POST("/signup", SignUp)
+		auth.POST("/refresh_token", RefreshToken)
 		auth.POST("/resetpassword", ResetPassword)
 		auth.PATCH("/confirm", Confirm)
 		auth.PATCH("/update", Update)
