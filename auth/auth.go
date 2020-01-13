@@ -18,8 +18,8 @@ func Run() {
 		auth.POST("/login", Login)
 		auth.POST("/signup", SignUp)
 		auth.POST("/resetpassword", ResetPassword)
-		auth.PUT("/confirm", Confirm)
-		auth.PUT("/update", Update)
+		auth.PATCH("/confirm", Confirm)
+		auth.PATCH("/update", Update)
 		auth.DELETE("/delete", Delete)
 	}
 
