@@ -13,15 +13,15 @@ var cfgFile string
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	// Read in config from file
+	// Read config from file
 	RootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file `path`")
 
-	// Set the default database url
+	// Set default values
 	viper.SetDefault("token.access_token_expires", "5m")
 	viper.SetDefault("token.refresh_token_expires", "1d")
 	viper.SetDefault("token.refresh_token_expires_extended", "1y")
 
-	// Read in environment variables that match
+	// Read binded and matching environment variables
 	viper.AutomaticEnv()
 	viper.BindEnv("token.private_key_path", "JA_PRIVATE_KEY")
 	viper.BindEnv("postgres.host", "JA_PSQL_HOST")
