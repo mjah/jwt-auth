@@ -2,23 +2,37 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
+	"github.com/mjah/jwt-auth/auth"
 	"github.com/spf13/cobra"
 )
 
+// RootCmd consists of commands available to the application.
+var RootCmd = &cobra.Command{
+	Use:   "jwt-auth",
+	Short: "A microservice to handle user authentication.",
+	Long: `JWT Authentication Microservice
+
+A microservice to handle user authentication.
+
+More information available at the repository:
+  https://github.com/mjah/jwt-auth`,
+}
+
 var runCmd = &cobra.Command{
 	Use:   "run",
-	Short: "Run the authentication server.",
-	Long:  `Run the authentication server.`,
+	Short: "Run authentication server.",
+	Long:  `Run authentication server.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Running authentication server...")
+		auth.Run()
 	},
 }
 
 var migrateCmd = &cobra.Command{
 	Use:   "migrate",
-	Short: "",
-	Long:  ``,
+	Short: "Run database migration.",
+	Long:  `Run database migration.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Running migrations...")
 	},
@@ -27,4 +41,12 @@ var migrateCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(runCmd)
 	RootCmd.AddCommand(migrateCmd)
+}
+
+// Execute is the entry point to Cobra.
+func Execute() {
+	if err := RootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }

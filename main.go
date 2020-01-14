@@ -1,11 +1,9 @@
 package main
 
 import (
-	// "github.com/mjah/jwt-auth/cmd"
-	"github.com/mjah/jwt-auth/auth"
+	"github.com/mjah/jwt-auth/cmd"
 )
 
 func main() {
-	// cmd.Execute()
-	auth.Run()
+	cmd.Execute()
 }

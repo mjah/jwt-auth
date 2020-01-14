@@ -1,0 +1,12 @@
+# token:
+#   private_key_path:
+#   access_token_expires: "5m"
+#   refresh_token_expires: "1d"
+#   refresh_token_expires_extended: "1y"
+
+# postgres:
+#   host:
+#   port:
+#   username:
+#   password:
+#   database:
