@@ -17,7 +17,11 @@ func init() {
 	RootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file `path`")
 
 	// Set default values
-	viper.SetDefault("token.access_token_expires", "5m")
+	viper.SetDefault("postgres.host", "localhost")
+	viper.SetDefault("postgres.port", 5432)
+	viper.SetDefault("postgres.username", "postgres")
+	viper.SetDefault("postgres.password", "postgres")
+	viper.SetDefault("postgres.password", "jwt-auth")
 	viper.SetDefault("token.refresh_token_expires", "1d")
 	viper.SetDefault("token.refresh_token_expires_extended", "1y")
 
