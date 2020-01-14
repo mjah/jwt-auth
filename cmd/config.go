@@ -24,11 +24,11 @@ func init() {
 	// Read in environment variables that match
 	// viper.AutomaticEnv()
 	viper.BindEnv("token.private_key_path", "JA_PRIVATE_KEY")
-	viper.BindEnv("postgres.host", "JA_HOST")
-	viper.BindEnv("postgres.port", "JA_PORT")
-	viper.BindEnv("postgres.username", "JA_USERNAME")
-	viper.BindEnv("postgres.password", "JA_PASSWORD")
-	viper.BindEnv("postgres.database", "JA_DATABASE")
+	viper.BindEnv("postgres.host", "JA_PSQL_HOST")
+	viper.BindEnv("postgres.port", "JA_PSQL_PORT")
+	viper.BindEnv("postgres.username", "JA_PSQL_USERNAME")
+	viper.BindEnv("postgres.password", "JA_PSQL_PASSWORD")
+	viper.BindEnv("postgres.database", "JA_PSQL_DATABASE")
 }
 
 func initConfig() {
