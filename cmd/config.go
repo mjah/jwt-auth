@@ -22,7 +22,7 @@ func init() {
 	viper.SetDefault("token.refresh_token_expires_extended", "1y")
 
 	// Read in environment variables that match
-	// viper.AutomaticEnv()
+	viper.AutomaticEnv()
 	viper.BindEnv("token.private_key_path", "JA_PRIVATE_KEY")
 	viper.BindEnv("postgres.host", "JA_PSQL_HOST")
 	viper.BindEnv("postgres.port", "JA_PSQL_PORT")
