@@ -1,50 +1,54 @@
 package database
 
-import "github.com/jinzhu/gorm"
+import (
+	"time"
+
+	"github.com/jinzhu/gorm"
+)
 
 // User ...
 type User struct {
 	gorm.Model
-	RoleID                int
-	Email                 string `gorm:"type:varchar(128);unique_index"`
-	Username              string
-	PasswordHash          string
-	Password              string
-	FirstName             string
-	LastName              string
-	IsConfirmed           string
-	IsActive              string
+	RoleID                int    `gorm:"not null"`
+	Email                 string `gorm:"type:varchar(128);unique_index;not null"`
+	Username              string `gorm:"type:varchar(40);unique;not null"`
+	PasswordHash          string `gorm:"type:varchar(100);not null"`
+	Password              string `gorm:"type:varchar(255);not null"`
+	FirstName             string `gorm:"type:varchar(32);not null"`
+	LastName              string `gorm:"type:varchar(32);not null"`
+	IsConfirmed           bool   `gorm:"not null"`
+	IsActive              bool   `gorm:"not null"`
 	ResetPassToken        string
-	ResetPassTokenCreated string
-	LastLogin             string
-	FailedLogin           string
-	LockExpires           string
+	ResetPassTokenCreated *time.Time
+	LastLogin             *time.Time
+	FailedLogin           *time.Time
+	LockExpires           *time.Time
 }
 
 // Role ...
 type Role struct {
 	gorm.Model
-	Role        string `gorm:"type:varchar(32);unique_index"`
+	Role        string `gorm:"type:varchar(32);unique_index;not null"`
 	Permissions string
 }
 
 // TokenRevocation ...
 type TokenRevocation struct {
 	gorm.Model
-	UserID        int
-	RefreshToken  string
-	LogoutAllTime string
+	UserID       int `gorm:"not null"`
+	RefreshToken string
+	LogoutAll    *time.Time
 }
 
 // EmailQueue ...
 type EmailQueue struct {
 	gorm.Model
-	UserID            int
-	RecipientEmail    string
-	RecipientName     string
-	EmailType         string
+	UserID            int    `gorm:"not null"`
+	RecipientEmail    string `gorm:"type:varchar(128);not null"`
+	RecipientName     string `gorm:"type:varchar(32);not null"`
+	EmailType         string `gorm:"type:varchar(32);not null"`
 	MessageParameters string
-	ProcessedAt       string
+	ProcessedAt       *time.Time
 }
 
 // Migrate ...
