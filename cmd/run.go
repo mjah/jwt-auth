@@ -26,6 +26,7 @@ var runCmd = &cobra.Command{
 	Short: "Run authentication server.",
 	Long:  `Run authentication server.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		database.Migrate()
 		auth.Run()
 	},
 }
