@@ -23,5 +23,7 @@ func Connect() *gorm.DB {
 		panic("Failed to connect to database.")
 	}
 
+	db.SingularTable(true)
+
 	return db
 }
