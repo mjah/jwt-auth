@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/mjah/jwt-auth/auth"
+	"github.com/mjah/jwt-auth/database"
 	"github.com/spf13/cobra"
 )
 
@@ -34,7 +35,7 @@ var migrateCmd = &cobra.Command{
 	Short: "Run database migration.",
 	Long:  `Run database migration.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Running migrations...")
+		database.Migrate()
 	},
 }
 

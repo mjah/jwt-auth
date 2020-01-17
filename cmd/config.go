@@ -21,7 +21,7 @@ func init() {
 	viper.SetDefault("postgres.port", 5432)
 	viper.SetDefault("postgres.username", "postgres")
 	viper.SetDefault("postgres.password", "postgres")
-	viper.SetDefault("postgres.password", "jwt-auth")
+	viper.SetDefault("postgres.database", "jwt-auth")
 	viper.SetDefault("token.refresh_token_expires", "1d")
 	viper.SetDefault("token.refresh_token_expires_extended", "1y")
 

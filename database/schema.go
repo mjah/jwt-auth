@@ -1,8 +1,6 @@
 package database
 
-import (
-	"github.com/jinzhu/gorm"
-)
+import "github.com/jinzhu/gorm"
 
 // User ...
 type User struct {
@@ -41,6 +39,7 @@ type TokenRevocation struct {
 
 // Migrate ...
 func Migrate() {
+	db := Connect()
 	defer db.Close()
 
 	db.AutoMigrate(&User{})
