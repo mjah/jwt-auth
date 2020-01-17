@@ -33,8 +33,18 @@ type TokenRevocation struct {
 	gorm.Model
 	UserID        int
 	RefreshToken  string
-	LogoutAll     bool
 	LogoutAllTime string
+}
+
+// EmailQueue ...
+type EmailQueue struct {
+	gorm.Model
+	UserID            int
+	RecipientEmail    string
+	RecipientName     string
+	EmailType         string
+	MessageParameters string
+	ProcessedAt       string
 }
 
 // Migrate ...
@@ -45,4 +55,5 @@ func Migrate() {
 	db.AutoMigrate(&User{})
 	db.AutoMigrate(&Role{})
 	db.AutoMigrate(&TokenRevocation{})
+	db.AutoMigrate(&EmailQueue{})
 }

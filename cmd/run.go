@@ -39,9 +39,19 @@ var migrateCmd = &cobra.Command{
 	},
 }
 
+var testEmailCmd = &cobra.Command{
+	Use:   "test-email",
+	Short: "Send a test email.",
+	Long:  `Send a test email.`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("Test Email...")
+	},
+}
+
 func init() {
 	RootCmd.AddCommand(runCmd)
 	RootCmd.AddCommand(migrateCmd)
+	RootCmd.AddCommand(testEmailCmd)
 }
 
 // Execute is the entry point to Cobra.
