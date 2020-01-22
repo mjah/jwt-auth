@@ -10,3 +10,10 @@ postgres:
   username: "postgres"
   password: "postgres"
   database: "jwt-auth"
+
+# email:
+#   smtp_host:
+#   smtp_port:
+#   username:
+#   password:
+#   test_receipient:

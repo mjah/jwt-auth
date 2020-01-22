@@ -10,3 +10,10 @@
 #   username:
 #   password:
 #   database:
+
+# email:
+#   smtp_host:
+#   smtp_port:
+#   username:
+#   password:
+#   test_receipient:

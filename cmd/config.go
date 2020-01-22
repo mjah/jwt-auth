@@ -33,6 +33,11 @@ func init() {
 	viper.BindEnv("postgres.username", "JA_PSQL_USERNAME")
 	viper.BindEnv("postgres.password", "JA_PSQL_PASSWORD")
 	viper.BindEnv("postgres.database", "JA_PSQL_DATABASE")
+	viper.BindEnv("email.smtp_host", "JA_SMTP_HOST")
+	viper.BindEnv("email.smtp_port", "JA_SMTP_PORT")
+	viper.BindEnv("email.username", "JA_SMTP_USERNAME")
+	viper.BindEnv("email.password", "JA_SMTP_PASSWORD")
+	viper.BindEnv("email.test_receipient", "JA_SMTP_TEST_RECEIPIENT")
 }
 
 func initConfig() {

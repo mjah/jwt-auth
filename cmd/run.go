@@ -6,6 +6,7 @@ import (
 
 	"github.com/mjah/jwt-auth/auth"
 	"github.com/mjah/jwt-auth/database"
+	"github.com/mjah/jwt-auth/email"
 	"github.com/spf13/cobra"
 )
 
@@ -45,7 +46,7 @@ var testEmailCmd = &cobra.Command{
 	Short: "Send a test email.",
 	Long:  `Send a test email.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Test Email...")
+		email.Test()
 	},
 }
 
