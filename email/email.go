@@ -13,19 +13,21 @@ import (
 
 // Sender ...
 type Sender struct {
-	SMTPHost string
-	SMTPPort int
-	Username string
-	Password string
+	SMTPHost     string
+	SMTPPort     int
+	SMTPUsername string
+	SMTPPassword string
+	FromAddress  string
 }
 
 // Setup ...
-func Setup(smtpHost string, smtpPort int, username, password string) *Sender {
+func Setup(smtpHost string, smtpPort int, smtpUsername, smtpPassword, fromAddress string) *Sender {
 	return &Sender{
-		SMTPHost: smtpHost,
-		SMTPPort: smtpPort,
-		Username: username,
-		Password: password,
+		SMTPHost:     smtpHost,
+		SMTPPort:     smtpPort,
+		SMTPUsername: smtpUsername,
+		SMTPPassword: smtpPassword,
+		FromAddress:  fromAddress,
 	}
 }
 
@@ -68,7 +70,7 @@ func (s *Sender) WritePlainEmail(subject, body string) string {
 // Send ...
 func (s *Sender) Send(dest []string, content string) error {
 	header := make(map[string]string)
-	header["From"] = s.Username
+	header["From"] = s.FromAddress
 	header["To"] = strings.Join(dest, ",")
 
 	message := ""
@@ -80,8 +82,8 @@ func (s *Sender) Send(dest []string, content string) error {
 	message += content
 
 	err := smtp.SendMail(s.SMTPHost+":"+strconv.Itoa(s.SMTPPort),
-		smtp.PlainAuth("", s.Username, s.Password, s.SMTPHost),
-		s.Username, dest, []byte(message))
+		smtp.PlainAuth("", s.SMTPUsername, s.SMTPPassword, s.SMTPHost),
+		s.SMTPUsername, dest, []byte(message))
 	if err != nil {
 		return err
 	}
@@ -93,11 +95,12 @@ func (s *Sender) Send(dest []string, content string) error {
 func Test() {
 	smtpHost := viper.GetString("email.smtp_host")
 	smtpPort := viper.GetInt("email.smtp_port")
-	username := viper.GetString("email.username")
-	password := viper.GetString("email.password")
+	smtpUsername := viper.GetString("email.smtp_username")
+	smtpPassword := viper.GetString("email.smtp_password")
+	fromAddress := viper.GetString("email.from_address")
 	receipient := viper.GetString("email.test_receipient")
 
-	testEmail := Setup(smtpHost, smtpPort, username, password)
+	testEmail := Setup(smtpHost, smtpPort, smtpUsername, smtpPassword, fromAddress)
 
 	emailContent := testEmail.WriteHTMLEmail("Test Email", "This is a test email.")
 

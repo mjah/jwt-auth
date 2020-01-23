@@ -27,17 +27,18 @@ func init() {
 
 	// Read binded and matching environment variables
 	viper.AutomaticEnv()
-	viper.BindEnv("token.private_key_path", "JA_PRIVATE_KEY")
+	viper.BindEnv("token.private_key_path", "JA_PRIVATE_KEY_PATH")
 	viper.BindEnv("postgres.host", "JA_PSQL_HOST")
 	viper.BindEnv("postgres.port", "JA_PSQL_PORT")
 	viper.BindEnv("postgres.username", "JA_PSQL_USERNAME")
 	viper.BindEnv("postgres.password", "JA_PSQL_PASSWORD")
 	viper.BindEnv("postgres.database", "JA_PSQL_DATABASE")
-	viper.BindEnv("email.smtp_host", "JA_SMTP_HOST")
-	viper.BindEnv("email.smtp_port", "JA_SMTP_PORT")
-	viper.BindEnv("email.username", "JA_SMTP_USERNAME")
-	viper.BindEnv("email.password", "JA_SMTP_PASSWORD")
-	viper.BindEnv("email.test_receipient", "JA_SMTP_TEST_RECEIPIENT")
+	viper.BindEnv("email.smtp_host", "JA_EMAIL_SMTP_HOST")
+	viper.BindEnv("email.smtp_port", "JA_EMAIL_SMTP_PORT")
+	viper.BindEnv("email.smtp_username", "JA_EMAIL_SMTP_USERNAME")
+	viper.BindEnv("email.smtp_password", "JA_EMAIL_SMTP_PASSWORD")
+	viper.BindEnv("email.from_address", "JA_EMAIL_FROM_ADDRESS")
+	viper.BindEnv("email.test_receipient", "JA_EMAIL_TEST_RECEIPIENT")
 }
 
 func initConfig() {
