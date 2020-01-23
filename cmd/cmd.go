@@ -22,8 +22,8 @@ More information available at the repository:
   https://github.com/mjah/jwt-auth`,
 }
 
-var runCmd = &cobra.Command{
-	Use:   "run",
+var serveCmd = &cobra.Command{
+	Use:   "serve",
 	Short: "Run authentication server.",
 	Long:  `Run authentication server.`,
 	PreRun: func(cmd *cobra.Command, args []string) {
@@ -53,7 +53,7 @@ var testEmailCmd = &cobra.Command{
 }
 
 func init() {
-	RootCmd.AddCommand(runCmd)
+	RootCmd.AddCommand(serveCmd)
 	RootCmd.AddCommand(migrateCmd)
 	RootCmd.AddCommand(testEmailCmd)
 }
