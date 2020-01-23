@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/mjah/jwt-auth/database"
+	"github.com/mjah/jwt-auth/utils"
 )
 
 // SignUpDetails ...
@@ -28,15 +29,21 @@ func CreateUser(user *SignUpDetails) error {
 	role := &database.Role{Role: "Guest"}
 	db.Where("role = ?", "Guest").First(&role)
 
+	generatedPassword, err := utils.GeneratePassword(user.Password)
+	if err != nil {
+		return err
+	}
+
 	submitUser := &database.User{
 		RoleID:    role.ID,
 		Email:     user.Email,
 		Username:  user.Username,
+		Password:  generatedPassword,
 		FirstName: user.FirstName,
 		LastName:  user.LastName,
 	}
 
-	err := db.FirstOrCreate(&database.User{}, submitUser).Error
+	err = db.FirstOrCreate(&database.User{}, submitUser).Error
 	if err != nil {
 		return err
 	}

@@ -12,8 +12,7 @@ type User struct {
 	RoleID                uint   `gorm:"not null"`
 	Email                 string `gorm:"type:varchar(128);unique_index;not null"`
 	Username              string `gorm:"type:varchar(40);unique_index;not null"`
-	PasswordHash          string `gorm:"type:varchar(100);not null"`
-	Password              string `gorm:"type:varchar(255);not null"`
+	Password              string `gorm:"type:varchar(60);not null"`
 	FirstName             string `gorm:"type:varchar(32);not null"`
 	LastName              string `gorm:"type:varchar(32);not null"`
 	IsConfirmed           bool   `gorm:"not null;default:false"`
