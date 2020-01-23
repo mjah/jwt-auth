@@ -11,6 +11,12 @@ func Run() {
 	keyPath := viper.GetString("token.private_key_path")
 	loadPrivateKey(&keyPath)
 
+	environment := viper.GetString("environment")
+
+	if environment == "production" {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	r := gin.Default()
 	r.Use(cors.Default())
 

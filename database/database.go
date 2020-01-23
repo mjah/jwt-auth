@@ -26,7 +26,7 @@ func Connect() *gorm.DB {
 
 	db.SingularTable(true)
 
-	if environment == "development" {
+	if environment != "production" {
 		db.LogMode(true)
 	}
 
