@@ -23,5 +23,5 @@
 * [ ] Set long refresh token time when remember me enabled
 * [ ] Avoid storing token in localStorage on client side, try storing in cookie
 
-* [ ] Implement logrus
+* [x] Implement logrus
 * [ ] Send out emails
