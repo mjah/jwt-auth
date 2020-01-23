@@ -14,7 +14,8 @@ const expireIn = time.Hour * 24
 
 var privateKey *rsa.PrivateKey
 
-func loadPrivateKey(keyPtr *string) {
+// LoadPrivateKey ...
+func LoadPrivateKey(keyPtr *string) {
 	privateKeyPem, err := ioutil.ReadFile(*keyPtr)
 	if err != nil {
 		log.Fatal("Error: ", err)

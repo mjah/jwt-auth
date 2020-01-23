@@ -18,6 +18,9 @@ func init() {
 
 	// Set default values
 	viper.SetDefault("environment", "development")
+	viper.SetDefault("log_level", "debug")
+	viper.SetDefault("serve.host", "localhost")
+	viper.SetDefault("serve.port", 9096)
 	viper.SetDefault("postgres.host", "localhost")
 	viper.SetDefault("postgres.port", 5432)
 	viper.SetDefault("postgres.username", "postgres")
@@ -29,6 +32,9 @@ func init() {
 	// Read binded and matching environment variables
 	viper.AutomaticEnv()
 	viper.BindEnv("environment", "JA_ENVIRONMENT")
+	viper.BindEnv("log_level", "JA_LOG_LEVEL")
+	viper.BindEnv("serve.host", "JA_SERVE_HOST")
+	viper.BindEnv("serve.port", "JA_SERVE_PORT")
 	viper.BindEnv("token.private_key_path", "JA_PRIVATE_KEY_PATH")
 	viper.BindEnv("postgres.host", "JA_PSQL_HOST")
 	viper.BindEnv("postgres.port", "JA_PSQL_PORT")

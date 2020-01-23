@@ -1,4 +1,9 @@
 environment: "production"
+# log_level: # if environment is set to production, log_level will be ignored
+
+# serve:
+#   host: "localhost"
+#   port: 9096
 
 # token:
 #   private_key_path:

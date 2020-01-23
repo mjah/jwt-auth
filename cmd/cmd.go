@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mjah/jwt-auth/auth"
 	"github.com/mjah/jwt-auth/database"
 	"github.com/mjah/jwt-auth/email"
+	"github.com/mjah/jwt-auth/server"
 	"github.com/spf13/cobra"
 )
 
@@ -30,7 +30,7 @@ var serveCmd = &cobra.Command{
 		database.Migrate()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		auth.Run()
+		server.Serve()
 	},
 }
 
