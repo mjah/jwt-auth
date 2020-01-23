@@ -10,6 +10,7 @@ import (
 
 // Connect ...
 func Connect() *gorm.DB {
+	environment := viper.GetString("environment")
 	host := viper.GetString("postgres.host")
 	port := viper.GetString("postgres.port")
 	username := viper.GetString("postgres.username")
@@ -24,6 +25,10 @@ func Connect() *gorm.DB {
 	}
 
 	db.SingularTable(true)
+
+	if environment == "development" {
+		db.LogMode(true)
+	}
 
 	return db
 }

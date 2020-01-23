@@ -17,6 +17,7 @@ func init() {
 	RootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file `path`")
 
 	// Set default values
+	viper.SetDefault("environment", "development")
 	viper.SetDefault("postgres.host", "localhost")
 	viper.SetDefault("postgres.port", 5432)
 	viper.SetDefault("postgres.username", "postgres")
@@ -27,6 +28,7 @@ func init() {
 
 	// Read binded and matching environment variables
 	viper.AutomaticEnv()
+	viper.BindEnv("environment", "JA_ENVIRONMENT")
 	viper.BindEnv("token.private_key_path", "JA_PRIVATE_KEY_PATH")
 	viper.BindEnv("postgres.host", "JA_PSQL_HOST")
 	viper.BindEnv("postgres.port", "JA_PSQL_PORT")

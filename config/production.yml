@@ -1,3 +1,5 @@
+environment: "production"
+
 # token:
 #   private_key_path:
 #   access_token_expires: "5m"
