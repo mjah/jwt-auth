@@ -18,8 +18,8 @@ func Run() {
 
 	auth := api.Group("/auth")
 	{
-		auth.GET("/logout", Logout)
-		auth.POST("/login", Login)
+		auth.GET("/signout", SignOut)
+		auth.POST("/signin", SignIn)
 		auth.POST("/signup", SignUp)
 		auth.POST("/refreshtoken", RefreshToken)
 		auth.POST("/resetpassword", ResetPassword)

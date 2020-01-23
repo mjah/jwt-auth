@@ -6,12 +6,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type userCredentials struct {
+// SignInDetails ...
+type SignInDetails struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 
-func authenticateUserCredentials(user *userCredentials) bool {
+func authenticateUserCredentials(user *SignInDetails) bool {
 	// authentication logic here
 
 	// testing
@@ -21,9 +22,9 @@ func authenticateUserCredentials(user *userCredentials) bool {
 	return false
 }
 
-// Login ...
-func Login(c *gin.Context) {
-	var user userCredentials
+// SignIn ...
+func SignIn(c *gin.Context) {
+	var user SignInDetails
 
 	err := c.BindJSON(&user)
 	if err != nil {
