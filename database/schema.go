@@ -9,15 +9,15 @@ import (
 // User ...
 type User struct {
 	gorm.Model
-	RoleID                int    `gorm:"not null"`
+	RoleID                uint   `gorm:"not null"`
 	Email                 string `gorm:"type:varchar(128);unique_index;not null"`
-	Username              string `gorm:"type:varchar(40);unique;not null"`
+	Username              string `gorm:"type:varchar(40);unique_index;not null"`
 	PasswordHash          string `gorm:"type:varchar(100);not null"`
 	Password              string `gorm:"type:varchar(255);not null"`
 	FirstName             string `gorm:"type:varchar(32);not null"`
 	LastName              string `gorm:"type:varchar(32);not null"`
-	IsConfirmed           bool   `gorm:"not null"`
-	IsActive              bool   `gorm:"not null"`
+	IsConfirmed           bool   `gorm:"not null;default:false"`
+	IsActive              bool   `gorm:"not null;default:false"`
 	ResetPassToken        string
 	ResetPassTokenCreated *time.Time
 	LastLogin             *time.Time
@@ -35,7 +35,7 @@ type Role struct {
 // TokenRevocation ...
 type TokenRevocation struct {
 	gorm.Model
-	UserID       int `gorm:"not null"`
+	UserID       uint `gorm:"not null"`
 	RefreshToken string
 	LogoutAll    *time.Time
 }
@@ -43,7 +43,7 @@ type TokenRevocation struct {
 // EmailQueue ...
 type EmailQueue struct {
 	gorm.Model
-	UserID            int    `gorm:"not null"`
+	UserID            uint   `gorm:"not null"`
 	RecipientEmail    string `gorm:"type:varchar(128);not null"`
 	RecipientName     string `gorm:"type:varchar(32);not null"`
 	EmailType         string `gorm:"type:varchar(32);not null"`
