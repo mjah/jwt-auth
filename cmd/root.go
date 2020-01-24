@@ -1,10 +1,9 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
+	"github.com/mjah/jwt-auth/logger"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // RootCmd consists of commands available to the application.
@@ -27,8 +26,10 @@ func init() {
 
 // Execute is the entry point to Cobra.
 func Execute() {
+	logLevel := viper.GetString("log_level")
+	logger.SetupLog(logLevel)
+
 	if err := RootCmd.Execute(); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		logger.Log().Fatal(err)
 	}
 }

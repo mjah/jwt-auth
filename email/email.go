@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/mjah/jwt-auth/logger"
 	"github.com/spf13/viper"
 )
 
@@ -106,8 +107,8 @@ func Test() {
 
 	err := testEmail.Send([]string{receipient}, emailContent)
 	if err != nil {
-		fmt.Printf("SMTP Error: %s\n", err)
+		logger.Log().Error("SMTP Error: %s", err)
 	} else {
-		fmt.Println("Email successfully sent.")
+		logger.Log().Info("Test email successfully sent.")
 	}
 }

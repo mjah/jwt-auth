@@ -5,6 +5,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres" // required
+	"github.com/mjah/jwt-auth/logger"
 	"github.com/spf13/viper"
 )
 
@@ -21,7 +22,7 @@ func Connect() *gorm.DB {
 
 	db, err := gorm.Open("postgres", dbDetails)
 	if err != nil {
-		panic("Failed to connect to database.")
+		logger.Log().Fatal("Failed to connect to database.")
 	}
 
 	db.SingularTable(true)

@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
+	"github.com/mjah/jwt-auth/logger"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -53,8 +51,7 @@ func initConfig() {
 	if cfgFile != "" {
 		viper.SetConfigFile(cfgFile)
 		if err := viper.ReadInConfig(); err != nil {
-			fmt.Println("Can't read config: ", err)
-			os.Exit(1)
+			logger.Log().Fatal("Can't read config: ", err)
 		}
 	}
 }

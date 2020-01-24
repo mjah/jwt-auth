@@ -1,5 +1,5 @@
 environment: "development"
-log_level: "debug" # if environment is set to production, log_level will be ignored
+log_level: "debug" # if environment is set to production, log_level will default to error
 
 serve:
   host: "localhost"
