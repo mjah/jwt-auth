@@ -18,6 +18,12 @@ environment: "production"
 #   password:
 #   database:
 
+# amqp:
+#   host:
+#   port:
+#   username:
+#   password:
+
 # email:
 #   smtp_host:
 #   smtp_port:

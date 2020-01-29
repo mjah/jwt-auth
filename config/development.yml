@@ -18,6 +18,12 @@ postgres:
   password: "postgres"
   database: "jwt-auth"
 
+amqp:
+  host: "localhost"
+  port: 5672
+  username: "guest"
+  password: "guest"
+
 # email:
 #   smtp_host:
 #   smtp_port:
