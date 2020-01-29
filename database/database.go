@@ -31,8 +31,9 @@ func Connect() *gorm.DB {
 
 	if environment != "production" {
 		db.LogMode(true)
-		db.SetLogger(logger.Log())
 	}
+
+	// db.SetLogger(logger.Log())
 
 	dbInstance = db
 
