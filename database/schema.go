@@ -18,12 +18,12 @@ type User struct {
 	IsConfirmed           bool   `gorm:"not null;default:false"`
 	IsActive              bool   `gorm:"not null;default:false"`
 	ConfirmToken          string
-	ConfirmTokenExpires   *time.Time
+	ConfirmTokenExpires   time.Time
 	ResetPassToken        string
-	ResetPassTokenExpires *time.Time
-	LastLogin             *time.Time
-	FailedLogin           *time.Time
-	LockExpires           *time.Time
+	ResetPassTokenExpires time.Time
+	LastLogin             time.Time
+	FailedLogin           time.Time
+	LockExpires           time.Time
 }
 
 // Role ...
@@ -38,7 +38,7 @@ type TokenRevocation struct {
 	gorm.Model
 	UserID       uint `gorm:"not null"`
 	RefreshToken string
-	LogoutAll    *time.Time
+	LogoutAll    time.Time
 }
 
 // EmailQueue ...
@@ -49,5 +49,5 @@ type EmailQueue struct {
 	RecipientName     string `gorm:"type:varchar(32);not null"`
 	EmailType         string `gorm:"type:varchar(32);not null"`
 	MessageParameters string
-	ProcessedAt       *time.Time
+	ProcessedAt       time.Time
 }
