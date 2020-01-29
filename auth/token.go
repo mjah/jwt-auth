@@ -29,7 +29,8 @@ func LoadPrivateKey() {
 	}
 }
 
-func issueToken() (string, error) {
+// IssueToken ...
+func IssueToken() (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.MapClaims{
 		"iss": issuer,
 		"exp": time.Now().Add(expireIn).Unix(),
@@ -39,10 +40,12 @@ func issueToken() (string, error) {
 	return token.SignedString(privateKey)
 }
 
-func refreshToken() {
+// RefreshToken ...
+func RefreshToken() {
 
 }
 
-func revokeToken() {
+// RevokeToken ...
+func RevokeToken() {
 
 }

@@ -1,11 +1,11 @@
-package server
+package api
 
 import (
 	"net/http"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/mjah/jwt-auth/auth"
+	"github.com/mjah/jwt-auth/api/auth"
 	"github.com/spf13/viper"
 )
 

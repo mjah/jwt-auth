@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mjah/jwt-auth/auth"
 )
 
 // SignInDetails ...
@@ -38,7 +39,7 @@ func SignIn(c *gin.Context) {
 		return
 	}
 
-	tokenString, err := issueToken()
+	tokenString, err := auth.IssueToken()
 	if err != nil {
 		c.AbortWithStatus(http.StatusInternalServerError)
 		return
