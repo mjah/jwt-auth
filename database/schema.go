@@ -18,9 +18,9 @@ type User struct {
 	IsConfirmed           bool   `gorm:"not null;default:false"`
 	IsActive              bool   `gorm:"not null;default:false"`
 	ConfirmToken          string
-	ConfirmTokenCreated   *time.Time
+	ConfirmTokenExpires   *time.Time
 	ResetPassToken        string
-	ResetPassTokenCreated *time.Time
+	ResetPassTokenExpires *time.Time
 	LastLogin             *time.Time
 	FailedLogin           *time.Time
 	LockExpires           *time.Time
