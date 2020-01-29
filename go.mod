@@ -11,5 +11,6 @@ require (
 	github.com/sirupsen/logrus v1.2.0
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/viper v1.6.1
+	github.com/streadway/amqp v0.0.0-20200108173154-1c71cc93ed71
 	golang.org/x/crypto v0.0.0-20191205180655-e7c4368fe9dd
 )
