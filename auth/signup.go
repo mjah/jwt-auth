@@ -23,7 +23,7 @@ func sendConfirmationEmail() {
 
 // CreateUser ...
 func CreateUser(user *SignUpDetails) error {
-	db := database.Connect()
+	db := database.GetConnection()
 	defer db.Close()
 
 	role := &database.Role{Role: "Guest"}

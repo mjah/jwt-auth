@@ -52,7 +52,7 @@ type EmailQueue struct {
 
 // Migrate ...
 func Migrate() {
-	db := Connect()
+	db := GetConnection()
 	defer db.Close()
 
 	db.AutoMigrate(&User{})
