@@ -17,6 +17,8 @@ type User struct {
 	LastName              string `gorm:"type:varchar(32);not null"`
 	IsConfirmed           bool   `gorm:"not null;default:false"`
 	IsActive              bool   `gorm:"not null;default:false"`
+	ConfirmToken          string
+	ConfirmTokenCreated   *time.Time
 	ResetPassToken        string
 	ResetPassTokenCreated *time.Time
 	LastLogin             *time.Time
