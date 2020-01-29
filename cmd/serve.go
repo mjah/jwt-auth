@@ -13,6 +13,7 @@ var serveCmd = &cobra.Command{
 	Short: "Run authentication server.",
 	Long:  `Run authentication server.`,
 	PreRun: func(cmd *cobra.Command, args []string) {
+		database.Connect()
 		database.Migrate()
 		queue.Connect()
 		auth.LoadPrivateKey()

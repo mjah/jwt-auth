@@ -10,6 +10,7 @@ var migrateCmd = &cobra.Command{
 	Short: "Run database migration.",
 	Long:  `Run database migration.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		database.Connect()
 		database.Migrate()
 	},
 }
