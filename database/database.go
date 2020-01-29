@@ -9,6 +9,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+var dbInstance *gorm.DB
+
 // Connect ...
 func Connect() *gorm.DB {
 	environment := viper.GetString("environment")
@@ -29,7 +31,18 @@ func Connect() *gorm.DB {
 
 	if environment != "production" {
 		db.LogMode(true)
+		db.SetLogger(logger.Log())
 	}
 
+	dbInstance = db
+
 	return db
+}
+
+// GetConnection ...
+func GetConnection() *gorm.DB {
+	if err := dbInstance.DB().Ping(); err != nil {
+		Connect()
+	}
+	return dbInstance
 }
