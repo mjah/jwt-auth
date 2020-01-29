@@ -26,10 +26,9 @@ func init() {
 
 // Execute is the entry point to Cobra.
 func Execute() {
-	logLevel := viper.GetString("log_level")
-	logger.SetupLog(logLevel)
+	logger.SetupLog(viper.GetString("log_level"))
 
 	if err := RootCmd.Execute(); err != nil {
-		logger.Log().Fatal(err)
+		// logger.Log().Fatal(err)
 	}
 }
