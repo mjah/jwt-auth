@@ -11,12 +11,7 @@ import (
 
 // GetRouter ...
 func GetRouter() http.Handler {
-	keyPath := viper.GetString("token.private_key_path")
-	auth.LoadPrivateKey(&keyPath)
-
-	environment := viper.GetString("environment")
-
-	if environment == "production" {
+	if viper.GetString("environment") == "production" {
 		gin.SetMode(gin.ReleaseMode)
 	}
 

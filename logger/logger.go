@@ -7,8 +7,8 @@ import (
 
 var logger *logrus.Logger
 
-// SetupLog ...
-func SetupLog(logLevel string) {
+// Setup ...
+func Setup() {
 	logger = logrus.New()
 
 	if viper.GetString("environment") == "production" {
@@ -16,7 +16,7 @@ func SetupLog(logLevel string) {
 		return
 	}
 
-	switch logLevel {
+	switch viper.GetString("log_level") {
 	case "trace":
 		logger.SetLevel(logrus.TraceLevel)
 	case "debug":

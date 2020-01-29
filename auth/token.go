@@ -3,10 +3,11 @@ package auth
 import (
 	"crypto/rsa"
 	"io/ioutil"
-	"log"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/mjah/jwt-auth/logger"
+	"github.com/spf13/viper"
 )
 
 const issuer = "auth-server"
@@ -15,16 +16,16 @@ const expireIn = time.Hour * 24
 var privateKey *rsa.PrivateKey
 
 // LoadPrivateKey ...
-func LoadPrivateKey(keyPtr *string) {
-	privateKeyPem, err := ioutil.ReadFile(*keyPtr)
+func LoadPrivateKey() {
+	privateKeyPem, err := ioutil.ReadFile(viper.GetString("token.private_key_path"))
 	if err != nil {
-		log.Fatal("Error: ", err)
+		logger.Log().Fatal("Error: ", err)
 	}
 
 	var err2 error
 	privateKey, err2 = jwt.ParseRSAPrivateKeyFromPEM(privateKeyPem)
 	if err2 != nil {
-		log.Fatal("Error: ", err2)
+		logger.Log().Fatal("Error: ", err2)
 	}
 }
 
