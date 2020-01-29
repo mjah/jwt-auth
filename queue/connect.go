@@ -11,25 +11,26 @@ import (
 var amqpInstance *amqp.Connection
 
 // Connect ...
-func Connect() *amqp.Connection {
-	host := viper.GetString("amqp.host")
-	port := viper.GetString("amqp.port")
-	username := viper.GetString("amqp.username")
-	password := viper.GetString("amqp.password")
-
-	amqpDetails := fmt.Sprintf("amqp://%s:%s@%s:%s/", username, password, host, port)
+func Connect() (*amqp.Connection, error) {
+	amqpDetails := fmt.Sprintf("amqp://%s:%s@%s:%s/",
+		viper.GetString("amqp.username"),
+		viper.GetString("amqp.password"),
+		viper.GetString("amqp.host"),
+		viper.GetString("amqp.port"),
+	)
 
 	conn, err := amqp.Dial(amqpDetails)
 	if err != nil {
 		logger.Log().Fatal("Failed to connect to message-broker.")
+		return nil, err
 	}
 
 	amqpInstance = conn
 
-	return conn
+	return conn, nil
 }
 
 // GetConnection ...
-func GetConnection() *amqp.Connection {
-	return amqpInstance
+func GetConnection() (*amqp.Connection, error) {
+	return amqpInstance, nil
 }

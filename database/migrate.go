@@ -1,8 +1,13 @@
 package database
 
+import "github.com/mjah/jwt-auth/logger"
+
 // Migrate ...
 func Migrate() {
-	db := GetConnection()
+	db, err := GetConnection()
+	if err != nil {
+		logger.Log().Fatal(err)
+	}
 	defer db.Close()
 
 	db.AutoMigrate(&User{})

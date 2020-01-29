@@ -5,45 +5,44 @@ import (
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres" // required
-	"github.com/mjah/jwt-auth/logger"
 	"github.com/spf13/viper"
 )
 
 var dbInstance *gorm.DB
 
 // Connect ...
-func Connect() *gorm.DB {
-	environment := viper.GetString("environment")
-	host := viper.GetString("postgres.host")
-	port := viper.GetString("postgres.port")
-	username := viper.GetString("postgres.username")
-	password := viper.GetString("postgres.password")
-	database := viper.GetString("postgres.database")
-
-	dbDetails := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s", host, port, username, password, database)
+func Connect() (*gorm.DB, error) {
+	dbDetails := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
+		viper.GetString("postgres.host"),
+		viper.GetString("postgres.port"),
+		viper.GetString("postgres.username"),
+		viper.GetString("postgres.password"),
+		viper.GetString("postgres.database"),
+	)
 
 	db, err := gorm.Open("postgres", dbDetails)
 	if err != nil {
-		logger.Log().Fatal("Failed to connect to database.")
+		return nil, err
 	}
 
-	db.SingularTable(true)
-
-	if environment != "production" {
+	if viper.GetString("environment") != "production" {
 		db.LogMode(true)
 	}
 
+	db.SingularTable(true)
 	// db.SetLogger(logger.Log())
 
 	dbInstance = db
 
-	return db
+	return db, nil
 }
 
 // GetConnection ...
-func GetConnection() *gorm.DB {
+func GetConnection() (*gorm.DB, error) {
 	if err := dbInstance.DB().Ping(); err != nil {
-		Connect()
+		if _, err := Connect(); err != nil {
+			return nil, err
+		}
 	}
-	return dbInstance
+	return dbInstance, nil
 }
