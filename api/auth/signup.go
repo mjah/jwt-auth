@@ -9,16 +9,14 @@ import (
 
 // SignUp ...
 func SignUp(c *gin.Context) {
-	var user auth.SignUpDetails
+	var details auth.SignUpDetails
 
-	err := c.BindJSON(&user)
-	if err != nil {
+	if err := c.BindJSON(&details); err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 
-	err = user.SignUp()
-	if err != nil {
+	if err := details.SignUp(); err != nil {
 		c.AbortWithStatusJSON(http.StatusConflict, gin.H{
 			"message": err,
 		})

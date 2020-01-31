@@ -18,8 +18,8 @@ type SignUpDetails struct {
 }
 
 // SignUp ...
-func (user *SignUpDetails) SignUp() error {
-	if _, err := govalidator.ValidateStruct(user); err != nil {
+func (details *SignUpDetails) SignUp() error {
+	if _, err := govalidator.ValidateStruct(details); err != nil {
 		return err
 	}
 
@@ -32,18 +32,18 @@ func (user *SignUpDetails) SignUp() error {
 	role := &database.Role{Role: "Guest"}
 	db.Where("role = ?", "Guest").First(&role)
 
-	generatedPassword, err := utils.GeneratePassword(user.Password)
+	generatedPassword, err := utils.GeneratePassword(details.Password)
 	if err != nil {
 		return err
 	}
 
 	submitUser := &database.User{
 		RoleID:              role.ID,
-		Email:               user.Email,
-		Username:            user.Username,
+		Email:               details.Email,
+		Username:            details.Username,
 		Password:            generatedPassword,
-		FirstName:           user.FirstName,
-		LastName:            user.LastName,
+		FirstName:           details.FirstName,
+		LastName:            details.LastName,
 		ConfirmToken:        utils.GenerateUUID(),
 		ConfirmTokenExpires: time.Now().Add(time.Hour * 24),
 	}
