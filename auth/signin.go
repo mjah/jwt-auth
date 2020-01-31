@@ -44,7 +44,7 @@ func (details *SignInDetails) SignIn() (string, *errors.ErrorCode) {
 	// Issue token
 	tokenString, err := IssueToken()
 	if err != nil {
-		return "", errors.New(errors.PasswordCheckFailed, nil)
+		return "", errors.New(errors.TokenIssueFailed, nil)
 	}
 
 	return tokenString, nil
