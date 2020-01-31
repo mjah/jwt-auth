@@ -5,6 +5,7 @@ import (
 
 	"github.com/asaskevich/govalidator"
 	"github.com/mjah/jwt-auth/database"
+	"github.com/mjah/jwt-auth/errors"
 	"github.com/mjah/jwt-auth/utils"
 )
 
@@ -18,24 +19,27 @@ type SignUpDetails struct {
 }
 
 // SignUp ...
-func (details *SignUpDetails) SignUp() error {
+func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 	if _, err := govalidator.ValidateStruct(details); err != nil {
-		return err
+		return errors.New(errors.SignUpDetailsValidationFailed, err)
 	}
 
 	db, err := database.GetConnection()
 	if err != nil {
-		return err
+		return errors.New(errors.DatabaseConnectionFailed, nil)
 	}
 
+	// Get Guest role ID
 	role := &database.Role{Role: "Guest"}
 	db.Where("role = ?", "Guest").First(&role)
 
+	// Generate password
 	generatedPassword, err := utils.GeneratePassword(details.Password)
 	if err != nil {
-		return err
+		return errors.New(errors.PasswordGenerationFailed, nil)
 	}
 
+	// Populate details to be submitted
 	submitUser := &database.User{
 		RoleID:              role.ID,
 		Email:               details.Email,
@@ -47,9 +51,10 @@ func (details *SignUpDetails) SignUp() error {
 		ConfirmTokenExpires: time.Now().Add(time.Hour * 24),
 	}
 
+	// Execute query
 	err = db.FirstOrCreate(&database.User{}, submitUser).Error
 	if err != nil {
-		return err
+		return errors.New(errors.DatabaseQueryFailed, err)
 	}
 
 	return nil

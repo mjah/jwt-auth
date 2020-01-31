@@ -17,22 +17,27 @@ type ErrorCode struct {
 var (
 	DatabaseConnectionFailed = ErrorCode{
 		HTTPStatus: http.StatusInternalServerError,
-		Code:       001,
+		Code:       1001,
 		Title:      "DatabaseConnectionError",
+	}
+	DatabaseQueryFailed = ErrorCode{
+		HTTPStatus: http.StatusInternalServerError,
+		Code:       1002,
+		Title:      "DatabaseQueryFailed",
 	}
 	PasswordGenerationFailed = ErrorCode{
 		HTTPStatus: http.StatusInternalServerError,
-		Code:       002,
+		Code:       2001,
 		Title:      "PasswordGenerationFailed",
 	}
 	SignUpDetailsInvalid = ErrorCode{
 		HTTPStatus: http.StatusBadRequest,
-		Code:       101,
+		Code:       3001,
 		Title:      "UserSignUpDetailsInvalid",
 	}
 	SignUpDetailsValidationFailed = ErrorCode{
 		HTTPStatus: http.StatusBadRequest,
-		Code:       102,
+		Code:       3002,
 		Title:      "SignUpDetailsValidationFailed",
 	}
 )
