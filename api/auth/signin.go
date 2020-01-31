@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/mjah/jwt-auth/auth"
+	"github.com/mjah/jwt-auth/errors"
 )
 
 // SignIn ...
@@ -12,15 +13,14 @@ func SignIn(c *gin.Context) {
 	var details auth.SignInDetails
 
 	if err := c.BindJSON(&details); err != nil {
-		c.AbortWithStatus(http.StatusBadRequest)
+		err := errors.New(errors.SignInDetailsInvalid, err)
+		c.AbortWithStatusJSON(err.HTTPStatus, gin.H{"message": err})
 		return
 	}
 
 	tokenString, err := details.SignIn()
 	if err != nil {
-		c.AbortWithStatusJSON(http.StatusConflict, gin.H{
-			"message": err.Error(),
-		})
+		c.AbortWithStatusJSON(err.HTTPStatus, gin.H{"message": err})
 		return
 	}
 

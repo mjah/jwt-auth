@@ -3,6 +3,7 @@ package auth
 import (
 	"github.com/asaskevich/govalidator"
 	"github.com/mjah/jwt-auth/database"
+	"github.com/mjah/jwt-auth/errors"
 	"github.com/mjah/jwt-auth/utils"
 )
 
@@ -14,14 +15,14 @@ type SignInDetails struct {
 }
 
 // SignIn ...
-func (details *SignInDetails) SignIn() (string, error) {
+func (details *SignInDetails) SignIn() (string, *errors.ErrorCode) {
 	if _, err := govalidator.ValidateStruct(details); err != nil {
-		return "", err
+		return "", errors.New(errors.SignInDetailsValidationFailed, err)
 	}
 
 	db, err := database.GetConnection()
 	if err != nil {
-		return "", err
+		return "", errors.New(errors.DatabaseConnectionFailed, nil)
 	}
 
 	query := &database.User{
@@ -32,18 +33,18 @@ func (details *SignInDetails) SignIn() (string, error) {
 
 	// Check email exists
 	if err := db.Where(query).First(result).Error; err != nil {
-		return "", err
+		return "", errors.New(errors.DatabaseQueryFailed, err)
 	}
 
 	// Check password is correct
 	if err := utils.CheckPassword(result.Password, details.Password); err != nil {
-		return "", err
+		return "", errors.New(errors.PasswordCheckFailed, nil)
 	}
 
 	// Issue token
 	tokenString, err := IssueToken()
 	if err != nil {
-		return "", err
+		return "", errors.New(errors.PasswordCheckFailed, nil)
 	}
 
 	return tokenString, nil

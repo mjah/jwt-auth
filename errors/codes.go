@@ -30,6 +30,16 @@ var (
 		Code:       2001,
 		Title:      "PasswordGenerationFailed",
 	}
+	PasswordCheckFailed = ErrorCode{
+		HTTPStatus: http.StatusUnauthorized,
+		Code:       2002,
+		Title:      "PasswordCheckFailed",
+	}
+	TokenIssueFailed = ErrorCode{
+		HTTPStatus: http.StatusInternalServerError,
+		Code:       2101,
+		Title:      "TokenIssueFailed",
+	}
 	SignUpDetailsInvalid = ErrorCode{
 		HTTPStatus: http.StatusBadRequest,
 		Code:       3001,
@@ -39,6 +49,16 @@ var (
 		HTTPStatus: http.StatusBadRequest,
 		Code:       3002,
 		Title:      "SignUpDetailsValidationFailed",
+	}
+	SignInDetailsInvalid = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3101,
+		Title:      "SignInDetailsInvalid",
+	}
+	SignInDetailsValidationFailed = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3102,
+		Title:      "SignInDetailsValidationFailed",
 	}
 )
 
