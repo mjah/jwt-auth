@@ -27,7 +27,6 @@ func (details *SignUpDetails) SignUp() error {
 	if err != nil {
 		return err
 	}
-	defer db.Close()
 
 	role := &database.Role{Role: "Guest"}
 	db.Where("role = ?", "Guest").First(&role)
