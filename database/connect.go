@@ -25,7 +25,9 @@ func Connect() (*gorm.DB, error) {
 		return nil, err
 	}
 
-	if viper.GetString("environment") != "production" {
+	if viper.GetString("environment") == "production" {
+		db.LogMode(false)
+	} else {
 		db.LogMode(true)
 	}
 
