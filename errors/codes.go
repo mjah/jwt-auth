@@ -43,12 +43,32 @@ var (
 	SignUpDetailsInvalid = ErrorCode{
 		HTTPStatus: http.StatusBadRequest,
 		Code:       3001,
-		Title:      "UserSignUpDetailsInvalid",
+		Title:      "SignUpDetailsInvalid",
 	}
 	SignUpDetailsValidationFailed = ErrorCode{
 		HTTPStatus: http.StatusBadRequest,
 		Code:       3002,
 		Title:      "SignUpDetailsValidationFailed",
+	}
+	EmailAlreadyExists = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3003,
+		Title:      "EmailAlreadyExists",
+	}
+	UsernameAlreadyExists = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3004,
+		Title:      "UsernameAlreadyExists",
+	}
+	EmailAndUsernameAlreadyExists = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3005,
+		Title:      "EmailAndUsernameAlreadyExists",
+	}
+	DefaultRoleDoesNotExist = ErrorCode{
+		HTTPStatus: http.StatusInternalServerError,
+		Code:       3006,
+		Title:      "DefaultRoleDoesNotExist",
 	}
 	SignInDetailsInvalid = ErrorCode{
 		HTTPStatus: http.StatusBadRequest,
@@ -59,6 +79,11 @@ var (
 		HTTPStatus: http.StatusBadRequest,
 		Code:       3102,
 		Title:      "SignInDetailsValidationFailed",
+	}
+	EmailDoesNotExist = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3103,
+		Title:      "EmailDoesNotExist",
 	}
 )
 

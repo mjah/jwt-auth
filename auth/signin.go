@@ -33,6 +33,9 @@ func (details *SignInDetails) SignIn() (string, *errors.ErrorCode) {
 
 	// Check email exists
 	if err := db.Where(query).First(result).Error; err != nil {
+		if database.IsRecordNotFoundError(err) {
+			return "", errors.New(errors.EmailDoesNotExist, err)
+		}
 		return "", errors.New(errors.DatabaseQueryFailed, err)
 	}
 
