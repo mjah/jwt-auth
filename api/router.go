@@ -18,18 +18,23 @@ func GetRouter() http.Handler {
 	r := gin.Default()
 	r.Use(cors.Default())
 
-	apiVersion := r.Group("/v1")
-
-	authGroup := apiVersion.Group("/auth")
+	public := r.Group("/v1")
+	publicAuth := public.Group("/auth")
 	{
-		authGroup.GET("/signout", auth.SignOut)
-		authGroup.POST("/signin", auth.SignIn)
-		authGroup.POST("/signup", auth.SignUp)
-		authGroup.POST("/refreshtoken", auth.RefreshToken)
-		authGroup.POST("/resetpassword", auth.ResetPassword)
-		authGroup.PATCH("/confirm", auth.Confirm)
-		authGroup.PATCH("/update", auth.Update)
-		authGroup.DELETE("/delete", auth.Delete)
+		publicAuth.POST("/signin", auth.SignIn)
+		publicAuth.POST("/signup", auth.SignUp)
+		publicAuth.POST("/refreshtoken", auth.RefreshToken)
+		publicAuth.POST("/resetpassword", auth.ResetPassword)
+		publicAuth.PATCH("/confirm", auth.Confirm)
+	}
+
+	private := r.Group("/v1")
+	private.Use(ValidateAccessTokenMiddleware())
+	privateAuth := private.Group("/auth")
+	{
+		privateAuth.GET("/signout", auth.SignOut)
+		privateAuth.PATCH("/update", auth.Update)
+		privateAuth.DELETE("/delete", auth.Delete)
 	}
 
 	return r

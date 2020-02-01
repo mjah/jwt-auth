@@ -16,6 +16,7 @@ var serveCmd = &cobra.Command{
 		database.Connect()
 		database.Migrate()
 		queue.Connect()
+		auth.LoadPublicKey()
 		auth.LoadPrivateKey()
 	},
 	Run: func(cmd *cobra.Command, args []string) {

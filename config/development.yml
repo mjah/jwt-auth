@@ -13,6 +13,7 @@ serve:
   port: 9096
 
 token:
+  # public_key_path:
   # private_key_path:
   access_token_expires: "5m"
   refresh_token_expires: "1d"
