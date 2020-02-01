@@ -1,6 +1,9 @@
 package database
 
-import "github.com/mjah/jwt-auth/logger"
+import (
+	"github.com/mjah/jwt-auth/logger"
+	"github.com/spf13/viper"
+)
 
 // Migrate ...
 func Migrate() {
@@ -15,12 +18,8 @@ func Migrate() {
 	db.AutoMigrate(&TokenRevocation{})
 	db.AutoMigrate(&EmailQueue{})
 
-	adminRole := &Role{Role: "Admin"}
-	db.FirstOrCreate(adminRole, adminRole)
-
-	memberRole := &Role{Role: "Member"}
-	db.FirstOrCreate(memberRole, memberRole)
-
-	guestRole := &Role{Role: "Guest"}
-	db.FirstOrCreate(guestRole, guestRole)
+	for _, role := range viper.GetStringSlice("roles.define") {
+		submitRole := &Role{Role: role}
+		db.FirstOrCreate(&Role{}, submitRole)
+	}
 }

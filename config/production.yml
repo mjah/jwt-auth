@@ -1,6 +1,13 @@
 environment: "production"
 # log_level: # if environment is set to production, log_level will default to error
 
+# roles:
+#   define:
+#   - "admin"
+#   - "member"
+#   - "guest"
+#   default: "guest" # must exist in roles.define
+
 # serve:
 #   host: "localhost"
 #   port: 9096
