@@ -29,7 +29,7 @@ func GetRouter() http.Handler {
 	}
 
 	private := r.Group("/v1")
-	private.Use(ValidateAccessTokenMiddleware())
+	private.Use(ValidateRefreshTokenMiddleware())
 	privateAuth := private.Group("/auth")
 	{
 		privateAuth.GET("/signout", auth.SignOut)

@@ -16,8 +16,8 @@ func stripBearerPrefix(tokenBearer string) string {
 	return tokenBearer
 }
 
-// ValidateAccessTokenMiddleware ...
-func ValidateAccessTokenMiddleware() gin.HandlerFunc {
+// ValidateRefreshTokenMiddleware ...
+func ValidateRefreshTokenMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenBearer := c.GetHeader("Authorization")
 
@@ -28,7 +28,7 @@ func ValidateAccessTokenMiddleware() gin.HandlerFunc {
 		}
 
 		tokenString := stripBearerPrefix(tokenBearer)
-		if _, err := jwt.ValidateAccessToken(tokenString); err != nil {
+		if _, err := jwt.ValidateRefreshToken(tokenString); err != nil {
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
