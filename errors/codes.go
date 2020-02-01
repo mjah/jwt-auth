@@ -18,7 +18,7 @@ var (
 	DatabaseConnectionFailed = ErrorCode{
 		HTTPStatus: http.StatusInternalServerError,
 		Code:       1001,
-		Title:      "DatabaseConnectionError",
+		Title:      "DatabaseConnectionFailed",
 	}
 	DatabaseQueryFailed = ErrorCode{
 		HTTPStatus: http.StatusInternalServerError,
@@ -35,10 +35,15 @@ var (
 		Code:       2002,
 		Title:      "PasswordCheckFailed",
 	}
-	TokenIssueFailed = ErrorCode{
+	AccessTokenIssueFailed = ErrorCode{
 		HTTPStatus: http.StatusInternalServerError,
 		Code:       2101,
-		Title:      "TokenIssueFailed",
+		Title:      "AccessTokenIssueFailed",
+	}
+	AuthorizationBearerTokenEmpty = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       2102,
+		Title:      "AuthorizationBearerTokenEmpty",
 	}
 	SignUpDetailsInvalid = ErrorCode{
 		HTTPStatus: http.StatusBadRequest,

@@ -36,9 +36,9 @@ type Role struct {
 // TokenRevocation ...
 type TokenRevocation struct {
 	gorm.Model
-	UserID       uint `gorm:"not null"`
-	RefreshToken string
-	LogoutAll    time.Time
+	UserID          uint `gorm:"not null"`
+	RefreshToken    string
+	RevokeAllBefore time.Time
 }
 
 // EmailQueue ...

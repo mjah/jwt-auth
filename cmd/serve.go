@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/mjah/jwt-auth/api"
-	"github.com/mjah/jwt-auth/auth"
+	"github.com/mjah/jwt-auth/auth/jwt"
 	"github.com/mjah/jwt-auth/database"
 	"github.com/mjah/jwt-auth/queue"
 	"github.com/spf13/cobra"
@@ -16,8 +16,8 @@ var serveCmd = &cobra.Command{
 		database.Connect()
 		database.Migrate()
 		queue.Connect()
-		auth.LoadPublicKey()
-		auth.LoadPrivateKey()
+		jwt.LoadPublicKey()
+		jwt.LoadPrivateKey()
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		api.Serve()

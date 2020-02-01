@@ -2,6 +2,7 @@ package auth
 
 import (
 	"github.com/asaskevich/govalidator"
+	"github.com/mjah/jwt-auth/auth/jwt"
 	"github.com/mjah/jwt-auth/database"
 	"github.com/mjah/jwt-auth/errors"
 	"github.com/mjah/jwt-auth/utils"
@@ -44,10 +45,10 @@ func (details *SignInDetails) SignIn() (string, *errors.ErrorCode) {
 		return "", errors.New(errors.PasswordCheckFailed, nil)
 	}
 
-	// Issue token
-	tokenString, err := IssueToken()
+	// Issue access token
+	tokenString, err := jwt.IssueAccessToken()
 	if err != nil {
-		return "", errors.New(errors.TokenIssueFailed, nil)
+		return "", errors.New(errors.AccessTokenIssueFailed, nil)
 	}
 
 	return tokenString, nil

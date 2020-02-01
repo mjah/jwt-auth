@@ -1,13 +1,12 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
-	"github.com/mjah/jwt-auth/auth"
+	"github.com/mjah/jwt-auth/auth/jwt"
+	"github.com/mjah/jwt-auth/errors"
 )
 
 func stripBearerPrefix(tokenBearer string) string {
@@ -23,23 +22,21 @@ func ValidateAccessTokenMiddleware() gin.HandlerFunc {
 		tokenBearer := c.GetHeader("Authorization")
 
 		if len(tokenBearer) == 0 {
-			c.AbortWithStatus(http.StatusBadRequest)
+			err := errors.New(errors.AuthorizationBearerTokenEmpty, nil)
+			c.AbortWithStatusJSON(err.HTTPStatus, gin.H{"message": err})
 			return
 		}
 
 		tokenString := stripBearerPrefix(tokenBearer)
-		token, err := auth.ValidateToken(tokenString)
-		if err != nil {
+		if _, err := jwt.ValidateAccessToken(tokenString); err != nil {
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
 
-		claims, ok := token.Claims.(jwt.MapClaims)
-		if !ok || !token.Valid {
-			c.AbortWithStatus(http.StatusUnauthorized)
-			return
-		}
-
-		fmt.Println(claims["iss"], claims["exp"], claims["grp"]) // temp
+		// claims, ok := token.Claims.(jwt.MapClaims)
+		// if !ok || !token.Valid {
+		// 	c.AbortWithStatus(http.StatusUnauthorized)
+		// 	return
+		// }
 	}
 }
