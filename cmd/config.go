@@ -23,6 +23,9 @@ func init() {
 	viper.SetDefault("roles.default", "guest")
 	viper.SetDefault("serve.host", "localhost")
 	viper.SetDefault("serve.port", 9096)
+	viper.SetDefault("token.access_token_expires", "5m")
+	viper.SetDefault("token.refresh_token_expires", "8h00m")
+	viper.SetDefault("token.refresh_token_expires_extended", "8760h00m")
 	viper.SetDefault("postgres.host", "localhost")
 	viper.SetDefault("postgres.port", 5432)
 	viper.SetDefault("postgres.username", "postgres")
@@ -32,8 +35,6 @@ func init() {
 	viper.SetDefault("amqp.port", 5672)
 	viper.SetDefault("amqp.username", "guest")
 	viper.SetDefault("amqp.password", "guest")
-	viper.SetDefault("token.refresh_token_expires", "1d")
-	viper.SetDefault("token.refresh_token_expires_extended", "1y")
 
 	// Read environment variables
 	viper.SetEnvPrefix("JA")
