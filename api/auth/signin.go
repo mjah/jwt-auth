@@ -18,15 +18,14 @@ func SignIn(c *gin.Context) {
 		return
 	}
 
-	tokenString, err := details.SignIn()
+	accessToken, refreshToken, err := details.SignIn()
 	if err != nil {
 		c.AbortWithStatusJSON(err.HTTPStatus, gin.H{"message": err})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"access_token":  tokenString,
-		"token_type":    "bearer",
-		"refresh_token": "00000000000",
+		"access_token":  accessToken,
+		"refresh_token": refreshToken,
 	})
 }

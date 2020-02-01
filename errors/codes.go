@@ -40,6 +40,11 @@ var (
 		Code:       2101,
 		Title:      "AccessTokenIssueFailed",
 	}
+	RefreshTokenIssueFailed = ErrorCode{
+		HTTPStatus: http.StatusInternalServerError,
+		Code:       2103,
+		Title:      "RefreshTokenIssueFailed",
+	}
 	AuthorizationBearerTokenEmpty = ErrorCode{
 		HTTPStatus: http.StatusBadRequest,
 		Code:       2102,

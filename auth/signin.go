@@ -16,14 +16,14 @@ type SignInDetails struct {
 }
 
 // SignIn ...
-func (details *SignInDetails) SignIn() (string, *errors.ErrorCode) {
+func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 	if _, err := govalidator.ValidateStruct(details); err != nil {
-		return "", errors.New(errors.SignInDetailsValidationFailed, err)
+		return "", "", errors.New(errors.SignInDetailsValidationFailed, err)
 	}
 
 	db, err := database.GetConnection()
 	if err != nil {
-		return "", errors.New(errors.DatabaseConnectionFailed, nil)
+		return "", "", errors.New(errors.DatabaseConnectionFailed, nil)
 	}
 
 	query := &database.User{
@@ -35,21 +35,27 @@ func (details *SignInDetails) SignIn() (string, *errors.ErrorCode) {
 	// Check email exists
 	if err := db.Where(query).First(result).Error; err != nil {
 		if database.IsRecordNotFoundError(err) {
-			return "", errors.New(errors.EmailDoesNotExist, err)
+			return "", "", errors.New(errors.EmailDoesNotExist, err)
 		}
-		return "", errors.New(errors.DatabaseQueryFailed, err)
+		return "", "", errors.New(errors.DatabaseQueryFailed, err)
 	}
 
 	// Check password is correct
 	if err := utils.CheckPassword(result.Password, details.Password); err != nil {
-		return "", errors.New(errors.PasswordCheckFailed, nil)
+		return "", "", errors.New(errors.PasswordCheckFailed, nil)
 	}
 
 	// Issue access token
-	tokenString, err := jwt.IssueAccessToken()
+	accessTokenString, err := jwt.IssueAccessToken()
 	if err != nil {
-		return "", errors.New(errors.AccessTokenIssueFailed, nil)
+		return "", "", errors.New(errors.AccessTokenIssueFailed, nil)
 	}
 
-	return tokenString, nil
+	// Issue refresh token
+	refreshTokenString, err := jwt.IssueRefreshToken(details.RememberMe)
+	if err != nil {
+		return "", "", errors.New(errors.RefreshTokenIssueFailed, nil)
+	}
+
+	return accessTokenString, refreshTokenString, nil
 }
