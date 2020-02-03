@@ -16,13 +16,13 @@ var privateKey *rsa.PrivateKey
 func LoadPublicKey() {
 	publicKeyPem, err := ioutil.ReadFile(viper.GetString("token.public_key_path"))
 	if err != nil {
-		logger.Log().Fatal("Error: ", err)
+		logger.Log().Fatal("Could not load public key. ", err)
 	}
 
 	var err2 error
 	publicKey, err2 = jwt.ParseRSAPublicKeyFromPEM(publicKeyPem)
 	if err2 != nil {
-		logger.Log().Fatal("Error: ", err2)
+		logger.Log().Fatal("Could not load public key. ", err2)
 	}
 }
 
@@ -30,12 +30,12 @@ func LoadPublicKey() {
 func LoadPrivateKey() {
 	privateKeyPem, err := ioutil.ReadFile(viper.GetString("token.private_key_path"))
 	if err != nil {
-		logger.Log().Fatal("Error: ", err)
+		logger.Log().Fatal("Could not load private key. ", err)
 	}
 
 	var err2 error
 	privateKey, err2 = jwt.ParseRSAPrivateKeyFromPEM(privateKeyPem)
 	if err2 != nil {
-		logger.Log().Fatal("Error: ", err2)
+		logger.Log().Fatal("Could not load private key. ", err2)
 	}
 }

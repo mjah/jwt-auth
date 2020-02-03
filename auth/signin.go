@@ -12,7 +12,7 @@ import (
 type SignInDetails struct {
 	Email      string `json:"email" binding:"required" valid:"email"`
 	Password   string `json:"password" binding:"required" valid:"length(8|60)"`
-	RememberMe bool   `json:"remember_me" binding:"required"`
+	RememberMe bool   `json:"remember_me"`
 }
 
 // SignIn ...
@@ -21,18 +21,16 @@ func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 		return "", "", errors.New(errors.SignInDetailsValidationFailed, err)
 	}
 
+	// Get database connection
 	db, err := database.GetConnection()
 	if err != nil {
 		return "", "", errors.New(errors.DatabaseConnectionFailed, nil)
 	}
 
-	query := &database.User{
-		Email: details.Email,
-	}
-
+	// Check email exists
+	query := &database.User{Email: details.Email}
 	result := &database.User{}
 
-	// Check email exists
 	if err := db.Where(query).First(result).Error; err != nil {
 		if database.IsRecordNotFoundError(err) {
 			return "", "", errors.New(errors.EmailDoesNotExist, err)
@@ -45,14 +43,20 @@ func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 		return "", "", errors.New(errors.PasswordCheckFailed, nil)
 	}
 
+	// Get role name
+	role := &database.Role{}
+	if err := db.Where("id = ?", result.RoleID).First(&role).Error; err != nil {
+		return "", "", errors.New(errors.DatabaseQueryFailed, err)
+	}
+
 	// Issue access token
-	accessTokenString, err := jwt.IssueAccessToken()
+	accessTokenString, err := jwt.IssueAccessToken(result.ID, role.Role)
 	if err != nil {
 		return "", "", errors.New(errors.AccessTokenIssueFailed, nil)
 	}
 
 	// Issue refresh token
-	refreshTokenString, err := jwt.IssueRefreshToken(details.RememberMe)
+	refreshTokenString, err := jwt.IssueRefreshToken(result.ID, details.RememberMe)
 	if err != nil {
 		return "", "", errors.New(errors.RefreshTokenIssueFailed, nil)
 	}

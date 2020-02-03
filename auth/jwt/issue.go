@@ -7,32 +7,32 @@ import (
 	"github.com/spf13/viper"
 )
 
-const issuer = "jwt-auth-server"
-
-var expireIn time.Duration
+const issuer = "jwt-auth"
 
 // IssueAccessToken ...
-func IssueAccessToken() (string, error) {
-	expireIn = viper.GetDuration("token.access_token_expires")
-	token := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.MapClaims{
-		"iss": issuer,
-		"exp": time.Now().Add(expireIn).Unix(),
-		"grp": "admin",
-	})
-	return token.SignedString(privateKey)
+func IssueAccessToken(userID uint, role string) (string, error) {
+	expireIn := viper.GetDuration("token.access_token_expires")
+	accessTokenClaims := jwt.MapClaims{
+		"iss":     issuer,
+		"iat":     time.Now().Unix(),
+		"exp":     time.Now().Add(expireIn).Unix(),
+		"user_id": userID,
+		"role":    role,
+	}
+	return jwt.NewWithClaims(jwt.SigningMethodRS256, accessTokenClaims).SignedString(privateKey)
 }
 
 // IssueRefreshToken ...
-func IssueRefreshToken(extendedRefresh bool) (string, error) {
+func IssueRefreshToken(userID uint, extendedRefresh bool) (string, error) {
+	expireIn := viper.GetDuration("token.refresh_token_expires")
 	if extendedRefresh {
 		expireIn = viper.GetDuration("token.refresh_token_expires_extended")
-	} else {
-		expireIn = viper.GetDuration("token.refresh_token_expires")
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodRS256, jwt.MapClaims{
-		"iss": issuer,
-		"exp": time.Now().Add(expireIn).Unix(),
-		"grp": "admin",
-	})
-	return token.SignedString(privateKey)
+	refreshTokenClaims := jwt.MapClaims{
+		"iss":     issuer,
+		"iat":     time.Now().Unix(),
+		"exp":     time.Now().Add(expireIn).Unix(),
+		"user_id": userID,
+	}
+	return jwt.NewWithClaims(jwt.SigningMethodRS256, refreshTokenClaims).SignedString(privateKey)
 }
