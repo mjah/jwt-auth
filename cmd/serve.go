@@ -4,6 +4,7 @@ import (
 	"github.com/mjah/jwt-auth/api"
 	"github.com/mjah/jwt-auth/auth/jwt"
 	"github.com/mjah/jwt-auth/database"
+	"github.com/mjah/jwt-auth/logger"
 	"github.com/mjah/jwt-auth/queue"
 	"github.com/spf13/cobra"
 )
@@ -13,7 +14,9 @@ var serveCmd = &cobra.Command{
 	Short: "Run authentication server.",
 	Long:  `Run authentication server.`,
 	PreRun: func(cmd *cobra.Command, args []string) {
-		database.Connect()
+		if _, err := database.Connect(); err != nil {
+			logger.Log().Fatal("Failed to connect to database.")
+		}
 		database.Migrate()
 		queue.Connect()
 		jwt.LoadPublicKey()
