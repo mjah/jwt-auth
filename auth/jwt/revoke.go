@@ -4,3 +4,8 @@ package jwt
 func RevokeRefreshToken() {
 
 }
+
+// RevokeRefreshTokenAllBefore ...
+func RevokeRefreshTokenAllBefore() {
+
+}

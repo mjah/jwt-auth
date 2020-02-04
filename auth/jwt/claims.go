@@ -1,7 +1,7 @@
 package jwt
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/dgrijalva/jwt-go"
 )
@@ -27,10 +27,10 @@ type RefreshTokenClaims struct {
 func ParseAccessTokenClaims(token *jwt.Token) (AccessTokenClaims, error) {
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
-		return AccessTokenClaims{}, fmt.Errorf("Could not parse claims. ") // to-do: return errorcode
+		return AccessTokenClaims{}, errors.New("could not parse claims")
 	}
 	if claims["sub"] != "access" {
-		return AccessTokenClaims{}, fmt.Errorf("Not an access token. ") // to-do: return errorcode
+		return AccessTokenClaims{}, errors.New("not an access token")
 	}
 	atc := AccessTokenClaims{
 		Iss:    claims["iss"].(string),
@@ -46,10 +46,10 @@ func ParseAccessTokenClaims(token *jwt.Token) (AccessTokenClaims, error) {
 func ParseRefreshTokenClaims(token *jwt.Token) (RefreshTokenClaims, error) {
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
-		return RefreshTokenClaims{}, fmt.Errorf("Could not parse claims. ") // to-do: return errorcode
+		return RefreshTokenClaims{}, errors.New("could not parse claims")
 	}
 	if claims["sub"] != "refresh" {
-		return RefreshTokenClaims{}, fmt.Errorf("Not a refresh token. ") // to-do: return errorcode
+		return RefreshTokenClaims{}, errors.New("not a refresh token")
 	}
 	rtc := RefreshTokenClaims{
 		Iss:    claims["iss"].(string),

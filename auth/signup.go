@@ -76,8 +76,8 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 		return errors.New(errors.PasswordGenerationFailed, nil)
 	}
 
-	// Populate details to be submitted
-	submitDetails := &database.User{
+	// Populate user details to be submitted
+	submitUser := &database.User{
 		RoleID:              role.ID,
 		Email:               details.Email,
 		Username:            details.Username,
@@ -89,7 +89,7 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 	}
 
 	// Execute query
-	if err := db.Create(submitDetails).Error; err != nil {
+	if err := db.Create(submitUser).Error; err != nil {
 		return errors.New(errors.DatabaseQueryFailed, err)
 	}
 

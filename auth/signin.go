@@ -17,6 +17,7 @@ type SignInDetails struct {
 
 // SignIn ...
 func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
+	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {
 		return "", "", errors.New(errors.SignInDetailsValidationFailed, err)
 	}
@@ -27,11 +28,13 @@ func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 		return "", "", errors.New(errors.DatabaseConnectionFailed, nil)
 	}
 
-	// Check email exists
-	query := &database.User{Email: details.Email}
-	result := &database.User{}
+	// Declare variables
+	condition := &database.User{Email: details.Email}
+	user := &database.User{}
+	role := &database.Role{}
 
-	if err := db.Where(query).First(result).Error; err != nil {
+	// Check email exists
+	if err := db.Where(condition).First(user).Error; err != nil {
 		if database.IsRecordNotFoundError(err) {
 			return "", "", errors.New(errors.EmailDoesNotExist, err)
 		}
@@ -39,24 +42,23 @@ func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 	}
 
 	// Check password is correct
-	if err := utils.CheckPassword(result.Password, details.Password); err != nil {
+	if err := utils.CheckPassword(user.Password, details.Password); err != nil {
 		return "", "", errors.New(errors.PasswordCheckFailed, nil)
 	}
 
 	// Get role name
-	role := &database.Role{}
-	if err := db.Where("id = ?", result.RoleID).First(&role).Error; err != nil {
+	if err := db.Where("id = ?", user.RoleID).First(&role).Error; err != nil {
 		return "", "", errors.New(errors.DatabaseQueryFailed, err)
 	}
 
 	// Issue access token
-	accessTokenString, err := jwt.IssueAccessToken(result.ID, role.Role)
+	accessTokenString, err := jwt.IssueAccessToken(user, role.Role)
 	if err != nil {
 		return "", "", errors.New(errors.AccessTokenIssueFailed, nil)
 	}
 
 	// Issue refresh token
-	refreshTokenString, err := jwt.IssueRefreshToken(result.ID, details.RememberMe)
+	refreshTokenString, err := jwt.IssueRefreshToken(user, details.RememberMe)
 	if err != nil {
 		return "", "", errors.New(errors.RefreshTokenIssueFailed, nil)
 	}

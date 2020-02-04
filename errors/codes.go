@@ -97,6 +97,31 @@ var (
 		Code:       3103,
 		Title:      "EmailDoesNotExist",
 	}
+	ConfirmDetailsInvalid = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3201,
+		Title:      "ConfirmDetailsInvalid",
+	}
+	ConfirmDetailsValidationFailed = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3202,
+		Title:      "ConfirmDetailsValidationFailed",
+	}
+	UserAlreadyConfirmed = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3203,
+		Title:      "UserAlreadyConfirmed",
+	}
+	ConfirmTokenDoesNotMatch = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3204,
+		Title:      "ConfirmTokenDoesNotMatch",
+	}
+	ConfirmTokenExpired = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3205,
+		Title:      "ConfirmTokenExpired",
+	}
 )
 
 func (e *ErrorCode) Error() string {

@@ -21,10 +21,12 @@ func GetRouter() http.Handler {
 	public := r.Group("/v1")
 	publicAuth := public.Group("/auth")
 	{
-		publicAuth.POST("/signin", auth.SignIn)
 		publicAuth.POST("/signup", auth.SignUp)
-		publicAuth.POST("/resetpassword", auth.ResetPassword)
+		publicAuth.POST("/signin", auth.SignIn)
 		publicAuth.POST("/confirm", auth.Confirm)
+		publicAuth.POST("/resetpassword", auth.ResetPassword)
+		publicAuth.POST("/send_confirm_email", auth.SendConfirmEmail)
+		publicAuth.POST("/send_resetpassword_email", auth.SendResetPasswordEmail)
 	}
 
 	private := r.Group("/v1")
@@ -32,7 +34,8 @@ func GetRouter() http.Handler {
 	privateAuth := private.Group("/auth")
 	{
 		privateAuth.GET("/signout", auth.SignOut)
-		privateAuth.POST("/refreshtoken", auth.RefreshToken)
+		privateAuth.GET("/signout_all", auth.SignOutAll)
+		privateAuth.POST("/refresh_token", auth.RefreshToken)
 		privateAuth.PATCH("/update", auth.Update)
 		privateAuth.DELETE("/delete", auth.Delete)
 	}
