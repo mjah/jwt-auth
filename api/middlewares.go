@@ -28,7 +28,7 @@ func ValidateRefreshTokenMiddleware() gin.HandlerFunc {
 		}
 
 		tokenString := stripBearerPrefix(tokenBearer)
-		if _, err := jwt.ValidateRefreshToken(tokenString); err != nil {
+		if _, err := jwt.ValidateToken(tokenString); err != nil {
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
