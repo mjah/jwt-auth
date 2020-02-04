@@ -23,7 +23,7 @@ func Serve() {
 	go func() {
 		// service connections
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			logger.Log().Fatal("listen: %s", err)
+			logger.Log().Fatal("Serve error: ", err)
 		}
 	}()
 
@@ -35,13 +35,13 @@ func Serve() {
 	// kill -9 is syscall.SIGKILL but can't be catch, so don't need add it
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM, os.Interrupt)
 	<-quit
-	logger.Log().Info("Shutdown Server ...")
+	logger.Log().Info("Shutdown server...")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
-		logger.Log().Fatal("Server Shutdown: ", err)
+		logger.Log().Fatal("Server shutdown: ", err)
 	}
 
-	logger.Log().Info("Server exiting")
+	logger.Log().Info("Server exiting.")
 }
