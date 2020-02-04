@@ -16,14 +16,9 @@ func keyFunc(token *jwt.Token) (interface{}, error) {
 
 // ValidateToken ...
 func ValidateToken(tokenString string) (*jwt.Token, *errors.ErrorCode) {
-	// to-do: check against database if revoked
-	//        check if locked
-	//        check if active
-
 	token, err := jwt.Parse(tokenString, keyFunc)
 	if err != nil {
 		return nil, errors.New(errors.TokenValidationFailed, err)
 	}
-
 	return token, nil
 }

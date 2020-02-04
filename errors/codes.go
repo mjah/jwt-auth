@@ -67,6 +67,11 @@ var (
 		Code:       2102,
 		Title:      "AuthorizationBearerTokenEmpty",
 	}
+	RefreshTokenIsRevoked = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       2107,
+		Title:      "RefreshTokenIsRevoked",
+	}
 	SignUpDetailsInvalid = ErrorCode{
 		HTTPStatus: http.StatusBadRequest,
 		Code:       3001,
@@ -111,6 +116,16 @@ var (
 		HTTPStatus: http.StatusBadRequest,
 		Code:       3103,
 		Title:      "EmailDoesNotExist",
+	}
+	UserDoesNotExist = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3104,
+		Title:      "UserDoesNotExist",
+	}
+	UserIsNotActive = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3105,
+		Title:      "UserIsNotActive",
 	}
 	ConfirmDetailsInvalid = ErrorCode{
 		HTTPStatus: http.StatusBadRequest,
