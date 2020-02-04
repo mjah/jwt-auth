@@ -23,7 +23,6 @@ type User struct {
 	ResetPassTokenExpires time.Time
 	LastSignin            time.Time
 	FailedSignin          time.Time
-	LockExpires           time.Time
 }
 
 // Role ...

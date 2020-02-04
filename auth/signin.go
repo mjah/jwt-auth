@@ -1,7 +1,10 @@
 package auth
 
 import (
+	"time"
+
 	"github.com/asaskevich/govalidator"
+	"github.com/jinzhu/gorm"
 	"github.com/mjah/jwt-auth/auth/jwt"
 	"github.com/mjah/jwt-auth/database"
 	"github.com/mjah/jwt-auth/errors"
@@ -13,6 +16,20 @@ type SignInDetails struct {
 	Email      string `json:"email" binding:"required" valid:"email"`
 	Password   string `json:"password" binding:"required" valid:"length(8|60)"`
 	RememberMe bool   `json:"remember_me"`
+}
+
+// UpdateSignInHistory ...
+func UpdateSignInHistory(db *gorm.DB, user *database.User, signInSuccess *bool) *errors.ErrorCode {
+	if *signInSuccess {
+		if err := db.Model(user).Update(database.User{LastSignin: time.Now()}).Error; err != nil {
+			return errors.New(errors.DatabaseQueryFailed, err)
+		}
+	} else {
+		if err := db.Model(user).Update(database.User{FailedSignin: time.Now()}).Error; err != nil {
+			return errors.New(errors.DatabaseQueryFailed, err)
+		}
+	}
+	return nil
 }
 
 // SignIn ...
@@ -41,6 +58,9 @@ func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 		return "", "", errors.New(errors.DatabaseQueryFailed, err)
 	}
 
+	signInSuccess := false
+	defer UpdateSignInHistory(db, user, &signInSuccess)
+
 	// Check password is correct
 	if err := utils.CheckPassword(user.Password, details.Password); err != nil {
 		return "", "", errors.New(errors.PasswordCheckFailed, err)
@@ -63,9 +83,7 @@ func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 		return "", "", errCode
 	}
 
-	// to-do: update last_signin or failed_signin field
-	//        check if locked
-	//        check if active
+	signInSuccess = true
 
 	return accessTokenString, refreshTokenString, nil
 }
