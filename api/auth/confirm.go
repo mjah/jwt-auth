@@ -13,13 +13,13 @@ func Confirm(c *gin.Context) {
 	var details auth.ConfirmDetails
 
 	if err := c.BindJSON(&details); err != nil {
-		err := errors.New(errors.ConfirmDetailsInvalid, err)
-		c.AbortWithStatusJSON(err.HTTPStatus, gin.H{"message": err.OmitDetailsInProd()})
+		errCode := errors.New(errors.ConfirmDetailsInvalid, err)
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
 		return
 	}
 
-	if err := details.Confirm(); err != nil {
-		c.AbortWithStatusJSON(err.HTTPStatus, gin.H{"message": err.OmitDetailsInProd()})
+	if errCode := details.Confirm(); errCode != nil {
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
 		return
 	}
 

@@ -25,7 +25,7 @@ func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 	// Get database connection
 	db, err := database.GetConnection()
 	if err != nil {
-		return "", "", errors.New(errors.DatabaseConnectionFailed, nil)
+		return "", "", errors.New(errors.DatabaseConnectionFailed, err)
 	}
 
 	// Declare variables
@@ -43,7 +43,7 @@ func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 
 	// Check password is correct
 	if err := utils.CheckPassword(user.Password, details.Password); err != nil {
-		return "", "", errors.New(errors.PasswordCheckFailed, nil)
+		return "", "", errors.New(errors.PasswordCheckFailed, err)
 	}
 
 	// Get role name
@@ -52,16 +52,20 @@ func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 	}
 
 	// Issue access token
-	accessTokenString, err := jwt.IssueAccessToken(user, role.Role)
+	accessTokenString, errCode := jwt.IssueAccessToken(user, role.Role)
 	if err != nil {
-		return "", "", errors.New(errors.AccessTokenIssueFailed, nil)
+		return "", "", errCode
 	}
 
 	// Issue refresh token
-	refreshTokenString, err := jwt.IssueRefreshToken(user, details.RememberMe)
+	refreshTokenString, errCode := jwt.IssueRefreshToken(user, details.RememberMe)
 	if err != nil {
-		return "", "", errors.New(errors.RefreshTokenIssueFailed, nil)
+		return "", "", errCode
 	}
+
+	// to-do: update last_signin or failed_signin field
+	//        check if locked
+	//        check if active
 
 	return accessTokenString, refreshTokenString, nil
 }

@@ -29,7 +29,7 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 	// Get database connection
 	db, err := database.GetConnection()
 	if err != nil {
-		return errors.New(errors.DatabaseConnectionFailed, nil)
+		return errors.New(errors.DatabaseConnectionFailed, err)
 	}
 
 	// Check email already exists
@@ -73,7 +73,7 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 	// Generate password
 	generatedPassword, err := utils.GeneratePassword(details.Password)
 	if err != nil {
-		return errors.New(errors.PasswordGenerationFailed, nil)
+		return errors.New(errors.PasswordGenerationFailed, err)
 	}
 
 	// Populate user details to be submitted

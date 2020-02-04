@@ -13,14 +13,14 @@ func SignIn(c *gin.Context) {
 	var details auth.SignInDetails
 
 	if err := c.BindJSON(&details); err != nil {
-		err := errors.New(errors.SignInDetailsInvalid, err)
-		c.AbortWithStatusJSON(err.HTTPStatus, gin.H{"message": err.OmitDetailsInProd()})
+		errCode := errors.New(errors.SignInDetailsInvalid, err)
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
 		return
 	}
 
-	accessToken, refreshToken, err := details.SignIn()
-	if err != nil {
-		c.AbortWithStatusJSON(err.HTTPStatus, gin.H{"message": err.OmitDetailsInProd()})
+	accessToken, refreshToken, errCode := details.SignIn()
+	if errCode != nil {
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
 		return
 	}
 

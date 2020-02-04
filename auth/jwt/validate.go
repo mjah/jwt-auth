@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/mjah/jwt-auth/errors"
 )
 
 func keyFunc(token *jwt.Token) (interface{}, error) {
@@ -14,7 +15,15 @@ func keyFunc(token *jwt.Token) (interface{}, error) {
 }
 
 // ValidateToken ...
-func ValidateToken(tokenString string) (*jwt.Token, error) {
+func ValidateToken(tokenString string) (*jwt.Token, *errors.ErrorCode) {
 	// to-do: check against database if revoked
-	return jwt.Parse(tokenString, keyFunc)
+	//        check if locked
+	//        check if active
+
+	token, err := jwt.Parse(tokenString, keyFunc)
+	if err != nil {
+		return nil, errors.New(errors.TokenValidationFailed, err)
+	}
+
+	return token, nil
 }

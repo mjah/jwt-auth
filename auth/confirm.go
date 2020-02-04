@@ -24,7 +24,7 @@ func (details *ConfirmDetails) Confirm() *errors.ErrorCode {
 	// Get database connection
 	db, err := database.GetConnection()
 	if err != nil {
-		return errors.New(errors.DatabaseConnectionFailed, nil)
+		return errors.New(errors.DatabaseConnectionFailed, err)
 	}
 
 	// Declare variables

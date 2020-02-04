@@ -21,23 +21,21 @@ func ValidateRefreshTokenMiddleware() gin.HandlerFunc {
 		tokenBearer := c.GetHeader("Authorization")
 
 		if len(tokenBearer) == 0 {
-			err := errors.New(errors.AuthorizationBearerTokenEmpty, nil)
-			c.AbortWithStatusJSON(err.HTTPStatus, gin.H{"message": err})
+			errCode := errors.New(errors.AuthorizationBearerTokenEmpty, nil)
+			c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode})
 			return
 		}
 
 		tokenString := stripBearerPrefix(tokenBearer)
-		token, err := jwt.ValidateToken(tokenString)
-		if err != nil {
-			err := errors.New(errors.RefreshTokenValidationFailed, err)
-			c.AbortWithStatusJSON(err.HTTPStatus, gin.H{"message": err})
+		token, errCode := jwt.ValidateToken(tokenString)
+		if errCode != nil {
+			c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode})
 			return
 		}
 
-		claims, err := jwt.ParseRefreshTokenClaims(token)
-		if err != nil {
-			err := errors.New(errors.RefreshTokenClaimsParseFailed, err)
-			c.AbortWithStatusJSON(err.HTTPStatus, gin.H{"message": err})
+		claims, errCode := jwt.ParseRefreshTokenClaims(token)
+		if errCode != nil {
+			c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode})
 			return
 		}
 
