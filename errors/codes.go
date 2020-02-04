@@ -47,6 +47,16 @@ var (
 		Code:       2103,
 		Title:      "RefreshTokenIssueFailed",
 	}
+	RefreshTokenValidationFailed = ErrorCode{
+		HTTPStatus: http.StatusUnauthorized,
+		Code:       2104,
+		Title:      "RefreshTokenValidationFailed",
+	}
+	RefreshTokenClaimsParseFailed = ErrorCode{
+		HTTPStatus: http.StatusUnauthorized,
+		Code:       2105,
+		Title:      "RefreshTokenClaimsParseFailed",
+	}
 	AuthorizationBearerTokenEmpty = ErrorCode{
 		HTTPStatus: http.StatusBadRequest,
 		Code:       2102,

@@ -1,7 +1,6 @@
 package api
 
 import (
-	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -27,17 +26,22 @@ func ValidateRefreshTokenMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		token, err := jwt.ValidateToken(stripBearerPrefix(tokenBearer))
+		tokenString := stripBearerPrefix(tokenBearer)
+		token, err := jwt.ValidateToken(tokenString)
 		if err != nil {
-			c.AbortWithStatus(http.StatusUnauthorized)
+			err := errors.New(errors.RefreshTokenValidationFailed, err)
+			c.AbortWithStatusJSON(err.HTTPStatus, gin.H{"message": err})
 			return
 		}
 
 		claims, err := jwt.ParseRefreshTokenClaims(token)
 		if err != nil {
-			c.AbortWithStatus(http.StatusUnauthorized)
+			err := errors.New(errors.RefreshTokenClaimsParseFailed, err)
+			c.AbortWithStatusJSON(err.HTTPStatus, gin.H{"message": err})
 			return
 		}
+
+		c.Set("refresh_token_string", tokenString)
 		c.Set("refresh_token_claims", claims)
 	}
 }

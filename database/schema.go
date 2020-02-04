@@ -21,8 +21,8 @@ type User struct {
 	ConfirmTokenExpires   time.Time
 	ResetPassToken        string
 	ResetPassTokenExpires time.Time
-	LastLogin             time.Time
-	FailedLogin           time.Time
+	LastSignin            time.Time
+	FailedSignin          time.Time
 	LockExpires           time.Time
 }
 
