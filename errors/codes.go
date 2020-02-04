@@ -3,6 +3,8 @@ package errors
 import (
 	"fmt"
 	"net/http"
+
+	"github.com/spf13/viper"
 )
 
 // ErrorCode ...
@@ -99,6 +101,14 @@ var (
 
 func (e *ErrorCode) Error() string {
 	return fmt.Sprintf("[%d] %s - %v", e.Code, e.Title, e.Errors)
+}
+
+// OmitDetailsInProd ...
+func (e *ErrorCode) OmitDetailsInProd() *ErrorCode {
+	if viper.GetString("environment") == "production" {
+		e.Errors = nil
+	}
+	return e
 }
 
 // New ...
