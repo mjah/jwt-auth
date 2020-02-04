@@ -15,5 +15,6 @@ func keyFunc(token *jwt.Token) (interface{}, error) {
 
 // ValidateToken ...
 func ValidateToken(tokenString string) (*jwt.Token, error) {
-	return jwt.Parse(tokenString, keyFunc)
+	// to-do: check against database if revoked
+	return jwt.Parse(tokenString, keyFunc) // to-do: return errorcode
 }

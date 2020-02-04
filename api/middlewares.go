@@ -27,16 +27,17 @@ func ValidateRefreshTokenMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		tokenString := stripBearerPrefix(tokenBearer)
-		if _, err := jwt.ValidateToken(tokenString); err != nil {
+		token, err := jwt.ValidateToken(stripBearerPrefix(tokenBearer))
+		if err != nil {
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
 
-		// claims, ok := token.Claims.(jwt.MapClaims)
-		// if !ok || !token.Valid {
-		// 	c.AbortWithStatus(http.StatusUnauthorized)
-		// 	return
-		// }
+		claims, err := jwt.ParseRefreshTokenClaims(token)
+		if err != nil {
+			c.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+		c.Set("refresh_token_claims", claims)
 	}
 }
