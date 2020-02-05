@@ -40,7 +40,7 @@ func RevokeRefreshTokenAllBefore(refreshTokenClaims RefreshTokenClaims) *errors.
 	// Populate token revocation details
 	submitToken := &database.TokenRevocation{
 		UserID:          refreshTokenClaims.UserID,
-		RevokeAllBefore: time.Now(),
+		RevokeAllBefore: time.Now().UTC(),
 	}
 
 	// Revoke
@@ -82,7 +82,7 @@ func CheckRefreshTokenRevoked(claims RefreshTokenClaims, tokenString string) *er
 		return errors.New(errors.RefreshTokenIsRevoked, nil)
 	}
 
-	if err := db.Where("user_id = ? AND revoke_all_before > ?", claims.UserID, time.Unix(claims.Iat, 0)).First(&database.TokenRevocation{}).Error; err != nil {
+	if err := db.Where("user_id = ? AND revoke_all_before > ?", claims.UserID, time.Unix(claims.Iat, 0).UTC()).First(&database.TokenRevocation{}).Error; err != nil {
 		if !database.IsRecordNotFoundError(err) {
 			return errors.New(errors.DatabaseQueryFailed, err)
 		}

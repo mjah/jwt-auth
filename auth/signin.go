@@ -21,11 +21,11 @@ type SignInDetails struct {
 // UpdateSignInHistory ...
 func UpdateSignInHistory(db *gorm.DB, user *database.User, signInSuccess *bool) *errors.ErrorCode {
 	if *signInSuccess {
-		if err := db.Model(user).Update(database.User{LastSignin: time.Now()}).Error; err != nil {
+		if err := db.Model(user).Update(database.User{LastSignin: time.Now().UTC()}).Error; err != nil {
 			return errors.New(errors.DatabaseQueryFailed, err)
 		}
 	} else {
-		if err := db.Model(user).Update(database.User{FailedSignin: time.Now()}).Error; err != nil {
+		if err := db.Model(user).Update(database.User{FailedSignin: time.Now().UTC()}).Error; err != nil {
 			return errors.New(errors.DatabaseQueryFailed, err)
 		}
 	}

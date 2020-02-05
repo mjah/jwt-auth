@@ -85,7 +85,7 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 		FirstName:           details.FirstName,
 		LastName:            details.LastName,
 		ConfirmToken:        utils.GenerateUUID(),
-		ConfirmTokenExpires: time.Now().Add(time.Hour * 24),
+		ConfirmTokenExpires: time.Now().Add(time.Hour * 24).UTC(),
 	}
 
 	// Execute query
