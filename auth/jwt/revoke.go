@@ -62,7 +62,7 @@ func CheckRefreshTokenRevoked(claims RefreshTokenClaims, tokenString string) *er
 	// Check if user is active
 	user := &database.User{}
 
-	if err := db.Where("ID = ?", claims.UserID).First(user).Error; err != nil {
+	if err := db.Where("id = ?", claims.UserID).First(user).Error; err != nil {
 		if database.IsRecordNotFoundError(err) {
 			return errors.New(errors.UserDoesNotExist, err)
 		}
