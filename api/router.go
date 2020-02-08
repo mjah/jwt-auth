@@ -35,7 +35,7 @@ func GetRouter() http.Handler {
 	{
 		privateAuth.GET("/signout", auth.SignOut)
 		privateAuth.GET("/signout_all", auth.SignOutAll)
-		privateAuth.POST("/refresh_token", auth.RefreshToken)
+		privateAuth.GET("/refreshtoken", auth.RefreshToken)
 		privateAuth.PATCH("/update", auth.Update)
 		privateAuth.DELETE("/delete", auth.Delete)
 	}
