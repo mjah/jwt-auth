@@ -18,8 +18,7 @@ type SignInDetails struct {
 	RememberMe bool   `json:"remember_me"`
 }
 
-// UpdateSignInHistory ...
-func UpdateSignInHistory(db *gorm.DB, user *database.User, signInSuccess *bool) *errors.ErrorCode {
+func updateSignInHistory(db *gorm.DB, user *database.User, signInSuccess *bool) *errors.ErrorCode {
 	if *signInSuccess {
 		if err := db.Model(user).Update(database.User{LastSignin: time.Now().UTC()}).Error; err != nil {
 			return errors.New(errors.DatabaseQueryFailed, err)
@@ -59,7 +58,7 @@ func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 	}
 
 	signInSuccess := false
-	defer UpdateSignInHistory(db, user, &signInSuccess)
+	defer updateSignInHistory(db, user, &signInSuccess)
 
 	// Check password is correct
 	if err := utils.CheckPassword(user.Password, details.Password); err != nil {

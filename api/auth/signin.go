@@ -25,6 +25,7 @@ func SignIn(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
+		"message":       "Signed In.",
 		"access_token":  accessToken,
 		"refresh_token": refreshToken,
 	})
