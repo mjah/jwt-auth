@@ -137,6 +137,16 @@ var (
 		Code:       3107,
 		Title:      "UpdateDetailsValidationFailed",
 	}
+	ResetPasswordDetailsInvalid = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3108,
+		Title:      "ResetPasswordDetailsInvalid",
+	}
+	ResetPasswordDetailsValidationFailed = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3109,
+		Title:      "ResetPasswordDetailsValidationFailed",
+	}
 	ConfirmDetailsInvalid = ErrorCode{
 		HTTPStatus: http.StatusBadRequest,
 		Code:       3201,
@@ -161,6 +171,16 @@ var (
 		HTTPStatus: http.StatusBadRequest,
 		Code:       3205,
 		Title:      "ConfirmTokenExpired",
+	}
+	ResetPasswordTokenDoesNotMatch = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3301,
+		Title:      "ResetPasswordTokenDoesNotMatch",
+	}
+	ResetPasswordTokenExpired = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3302,
+		Title:      "ResetPasswordTokenExpired",
 	}
 )
 

@@ -4,12 +4,27 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mjah/jwt-auth/auth"
+	"github.com/mjah/jwt-auth/errors"
 )
 
 // ResetPassword ...
 func ResetPassword(c *gin.Context) {
+	var details auth.ResetPasswordDetails
+
+	if err := c.BindJSON(&details); err != nil {
+		errCode := errors.New(errors.ResetPasswordDetailsInvalid, err)
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		return
+	}
+
+	if errCode := details.ResetPassword(); errCode != nil {
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"status": "ok",
+		"message": "Account password reset.",
 	})
 }
 
