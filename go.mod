@@ -16,3 +16,5 @@ require (
 	github.com/streadway/amqp v0.0.0-20200108173154-1c71cc93ed71
 	golang.org/x/crypto v0.0.0-20191205180655-e7c4368fe9dd
 )
+
+replace github.com/asaskevich/govalidator => github.com/asaskevich/govalidator v0.0.0-20200108184127-ac8f5a34c3f7
