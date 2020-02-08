@@ -127,6 +127,16 @@ var (
 		Code:       3105,
 		Title:      "UserIsNotActive",
 	}
+	UpdateDetailsInvalid = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3106,
+		Title:      "UpdateDetailsInvalid",
+	}
+	UpdateDetailsValidationFailed = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3107,
+		Title:      "UpdateDetailsValidationFailed",
+	}
 	ConfirmDetailsInvalid = ErrorCode{
 		HTTPStatus: http.StatusBadRequest,
 		Code:       3201,

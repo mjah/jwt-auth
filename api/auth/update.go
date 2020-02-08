@@ -4,11 +4,29 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mjah/jwt-auth/auth"
+	"github.com/mjah/jwt-auth/auth/jwt"
+	"github.com/mjah/jwt-auth/errors"
 )
 
 // Update ...
 func Update(c *gin.Context) {
+	var details auth.UpdateDetails
+
+	details.Claims = c.MustGet("refresh_token_claims").(jwt.RefreshTokenClaims)
+
+	if err := c.BindJSON(&details); err != nil {
+		errCode := errors.New(errors.UpdateDetailsInvalid, err)
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		return
+	}
+
+	if errCode := details.Update(); errCode != nil {
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		return
+	}
+
 	c.JSON(http.StatusOK, gin.H{
-		"status": "ok",
+		"message": "Account updated.",
 	})
 }
