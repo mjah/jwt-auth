@@ -1,13 +1,17 @@
 package auth
 
 import (
-	"github.com/mjah/jwt-auth/auth/jwt"
 	"github.com/mjah/jwt-auth/database"
 	"github.com/mjah/jwt-auth/errors"
 )
 
+// DeleteDetails ...
+type DeleteDetails struct {
+	UserID uint
+}
+
 // Delete ...
-func Delete(refreshTokenClaims jwt.RefreshTokenClaims) *errors.ErrorCode {
+func (details *DeleteDetails) Delete() *errors.ErrorCode {
 	// Get database connection
 	db, err := database.GetConnection()
 	if err != nil {
@@ -15,7 +19,7 @@ func Delete(refreshTokenClaims jwt.RefreshTokenClaims) *errors.ErrorCode {
 	}
 
 	// Delete account
-	if err := db.Unscoped().Where("id = ?", refreshTokenClaims.UserID).Delete(&database.User{}).Error; err != nil {
+	if err := db.Unscoped().Where("id = ?", details.UserID).Delete(&database.User{}).Error; err != nil {
 		return errors.New(errors.DatabaseQueryFailed, err)
 	}
 

@@ -10,9 +10,13 @@ import (
 
 // RefreshToken ...
 func RefreshToken(c *gin.Context) {
-	refreshTokenClaims := c.MustGet("refresh_token_claims").(jwt.RefreshTokenClaims)
+	var details auth.RefreshTokenDetails
 
-	accessToken, errCode := auth.RefreshToken(refreshTokenClaims)
+	claims := c.MustGet("refresh_token_claims").(jwt.RefreshTokenClaims)
+
+	details.UserID = claims.UserID
+
+	accessToken, errCode := details.RefreshToken()
 	if errCode != nil {
 		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
 		return

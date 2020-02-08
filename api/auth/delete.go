@@ -10,9 +10,13 @@ import (
 
 // Delete ...
 func Delete(c *gin.Context) {
-	refreshTokenClaims := c.MustGet("refresh_token_claims").(jwt.RefreshTokenClaims)
+	var details auth.DeleteDetails
 
-	if errCode := auth.Delete(refreshTokenClaims); errCode != nil {
+	claims := c.MustGet("refresh_token_claims").(jwt.RefreshTokenClaims)
+
+	details.UserID = claims.UserID
+
+	if errCode := details.Delete(); errCode != nil {
 		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
 		return
 	}

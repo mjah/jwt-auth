@@ -6,8 +6,13 @@ import (
 	"github.com/mjah/jwt-auth/errors"
 )
 
+// RefreshTokenDetails ...
+type RefreshTokenDetails struct {
+	UserID uint
+}
+
 // RefreshToken ...
-func RefreshToken(refreshTokenClaims jwt.RefreshTokenClaims) (string, *errors.ErrorCode) {
+func (details *RefreshTokenDetails) RefreshToken() (string, *errors.ErrorCode) {
 	// Get database connection
 	db, err := database.GetConnection()
 	if err != nil {
@@ -19,7 +24,7 @@ func RefreshToken(refreshTokenClaims jwt.RefreshTokenClaims) (string, *errors.Er
 	role := &database.Role{}
 
 	// Get user by ID
-	if err := db.Where("id = ?", refreshTokenClaims.UserID).First(user).Error; err != nil {
+	if err := db.Where("id = ?", details.UserID).First(user).Error; err != nil {
 		if database.IsRecordNotFoundError(err) {
 			return "", errors.New(errors.UserDoesNotExist, err)
 		}

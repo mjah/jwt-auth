@@ -10,10 +10,12 @@ import (
 
 // SignOut ...
 func SignOut(c *gin.Context) {
-	refreshTokenString := c.MustGet("refresh_token_string").(string)
-	refreshTokenClaims := c.MustGet("refresh_token_claims").(jwt.RefreshTokenClaims)
+	var details auth.SignOutDetails
 
-	if errCode := auth.SignOut(refreshTokenString, refreshTokenClaims); errCode != nil {
+	details.TokenString = c.MustGet("refresh_token_string").(string)
+	details.Claims = c.MustGet("refresh_token_claims").(jwt.RefreshTokenClaims)
+
+	if errCode := details.SignOut(); errCode != nil {
 		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
 		return
 	}
@@ -25,9 +27,11 @@ func SignOut(c *gin.Context) {
 
 // SignOutAll ...
 func SignOutAll(c *gin.Context) {
-	refreshTokenClaims := c.MustGet("refresh_token_claims").(jwt.RefreshTokenClaims)
+	var details auth.SignOutDetails
 
-	if errCode := auth.SignOutAll(refreshTokenClaims); errCode != nil {
+	details.Claims = c.MustGet("refresh_token_claims").(jwt.RefreshTokenClaims)
+
+	if errCode := details.SignOutAll(); errCode != nil {
 		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
 		return
 	}
