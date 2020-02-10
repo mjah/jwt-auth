@@ -8,7 +8,7 @@ import (
 )
 
 // RevokeRefreshToken ...
-func RevokeRefreshToken(refreshTokenString string, refreshTokenClaims RefreshTokenClaims) *errors.ErrorCode {
+func RevokeRefreshToken(userID uint, tokenString string) *errors.ErrorCode {
 	// Get database connection
 	db, err := database.GetConnection()
 	if err != nil {
@@ -17,8 +17,8 @@ func RevokeRefreshToken(refreshTokenString string, refreshTokenClaims RefreshTok
 
 	// Populate token revocation details
 	submitToken := &database.TokenRevocation{
-		UserID:       refreshTokenClaims.UserID,
-		RefreshToken: refreshTokenString,
+		UserID:       userID,
+		RefreshToken: tokenString,
 	}
 
 	// Revoke
@@ -30,7 +30,7 @@ func RevokeRefreshToken(refreshTokenString string, refreshTokenClaims RefreshTok
 }
 
 // RevokeRefreshTokenAllBefore ...
-func RevokeRefreshTokenAllBefore(refreshTokenClaims RefreshTokenClaims) *errors.ErrorCode {
+func RevokeRefreshTokenAllBefore(userID uint) *errors.ErrorCode {
 	// Get database connection
 	db, err := database.GetConnection()
 	if err != nil {
@@ -39,7 +39,7 @@ func RevokeRefreshTokenAllBefore(refreshTokenClaims RefreshTokenClaims) *errors.
 
 	// Populate token revocation details
 	submitToken := &database.TokenRevocation{
-		UserID:          refreshTokenClaims.UserID,
+		UserID:          userID,
 		RevokeAllBefore: time.Now().UTC(),
 	}
 
@@ -52,7 +52,7 @@ func RevokeRefreshTokenAllBefore(refreshTokenClaims RefreshTokenClaims) *errors.
 }
 
 // CheckRefreshTokenRevoked ...
-func CheckRefreshTokenRevoked(claims RefreshTokenClaims, tokenString string) *errors.ErrorCode {
+func CheckRefreshTokenRevoked(userID uint, iat int64, tokenString string) *errors.ErrorCode {
 	// Get database connection
 	db, err := database.GetConnection()
 	if err != nil {
@@ -62,7 +62,7 @@ func CheckRefreshTokenRevoked(claims RefreshTokenClaims, tokenString string) *er
 	// Check if user is active
 	user := &database.User{}
 
-	if err := db.Where("id = ?", claims.UserID).First(user).Error; err != nil {
+	if err := db.Where("id = ?", userID).First(user).Error; err != nil {
 		if database.IsRecordNotFoundError(err) {
 			return errors.New(errors.UserDoesNotExist, err)
 		}
@@ -74,7 +74,7 @@ func CheckRefreshTokenRevoked(claims RefreshTokenClaims, tokenString string) *er
 	}
 
 	// Check if token is revoked
-	if err := db.Where("user_id = ? AND refresh_token = ?", claims.UserID, tokenString).First(&database.TokenRevocation{}).Error; err != nil {
+	if err := db.Where("user_id = ? AND refresh_token = ?", userID, tokenString).First(&database.TokenRevocation{}).Error; err != nil {
 		if !database.IsRecordNotFoundError(err) {
 			return errors.New(errors.DatabaseQueryFailed, err)
 		}
@@ -82,7 +82,7 @@ func CheckRefreshTokenRevoked(claims RefreshTokenClaims, tokenString string) *er
 		return errors.New(errors.RefreshTokenIsRevoked, nil)
 	}
 
-	if err := db.Where("user_id = ? AND revoke_all_before > ?", claims.UserID, time.Unix(claims.Iat, 0).UTC()).First(&database.TokenRevocation{}).Error; err != nil {
+	if err := db.Where("user_id = ? AND revoke_all_before > ?", userID, time.Unix(iat, 0).UTC()).First(&database.TokenRevocation{}).Error; err != nil {
 		if !database.IsRecordNotFoundError(err) {
 			return errors.New(errors.DatabaseQueryFailed, err)
 		}

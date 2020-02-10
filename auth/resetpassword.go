@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/asaskevich/govalidator"
+	"github.com/mjah/jwt-auth/auth/jwt"
 	"github.com/mjah/jwt-auth/database"
 	"github.com/mjah/jwt-auth/errors"
 	"github.com/mjah/jwt-auth/utils"
@@ -61,7 +62,9 @@ func (details *ResetPasswordDetails) ResetPassword() *errors.ErrorCode {
 		return errors.New(errors.DatabaseQueryFailed, err)
 	}
 
-	// to-do: revoke all refresh token before
+	if errCode := jwt.RevokeRefreshTokenAllBefore(user.ID); errCode != nil {
+		return errCode
+	}
 
 	return nil
 }

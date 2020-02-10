@@ -106,7 +106,7 @@ func (details *UpdateDetails) Update() *errors.ErrorCode {
 
 	// Revoke refresh token all before on password change
 	if details.Password != "" {
-		if errCode := jwt.RevokeRefreshTokenAllBefore(details.Claims); errCode != nil {
+		if errCode := jwt.RevokeRefreshTokenAllBefore(details.Claims.UserID); errCode != nil {
 			return errCode
 		}
 	}

@@ -13,7 +13,7 @@ type SignOutDetails struct {
 
 // SignOut ...
 func (details *SignOutDetails) SignOut() *errors.ErrorCode {
-	if errCode := jwt.RevokeRefreshToken(details.TokenString, details.Claims); errCode != nil {
+	if errCode := jwt.RevokeRefreshToken(details.Claims.UserID, details.TokenString); errCode != nil {
 		return errCode
 	}
 
@@ -22,7 +22,7 @@ func (details *SignOutDetails) SignOut() *errors.ErrorCode {
 
 // SignOutAll ...
 func (details *SignOutDetails) SignOutAll() *errors.ErrorCode {
-	if errCode := jwt.RevokeRefreshTokenAllBefore(details.Claims); errCode != nil {
+	if errCode := jwt.RevokeRefreshTokenAllBefore(details.Claims.UserID); errCode != nil {
 		return errCode
 	}
 

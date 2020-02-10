@@ -39,7 +39,7 @@ func ValidateRefreshTokenMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		if errCode := jwt.CheckRefreshTokenRevoked(claims, tokenString); errCode != nil {
+		if errCode := jwt.CheckRefreshTokenRevoked(claims.UserID, claims.Iat, tokenString); errCode != nil {
 			c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
 			return
 		}
