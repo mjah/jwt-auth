@@ -1,9 +1,12 @@
 package auth
 
 import (
+	"time"
+
 	"github.com/mjah/jwt-auth/auth/jwt"
 	"github.com/mjah/jwt-auth/database"
 	"github.com/mjah/jwt-auth/errors"
+	"github.com/spf13/viper"
 )
 
 // RefreshTokenDetails ...
@@ -37,8 +40,15 @@ func (details *RefreshTokenDetails) RefreshToken() (string, *errors.ErrorCode) {
 	}
 
 	// Issue access token
-	accessTokenString, errCode := jwt.IssueAccessToken(user, role.Role)
-	if err != nil {
+	atc := jwt.AccessTokenClaims{
+		Iat:    time.Now().Unix(),
+		Exp:    time.Now().Add(viper.GetDuration("token.access_token_expires")).Unix(),
+		UserID: user.ID,
+		Role:   role.Role,
+	}
+
+	accessTokenString, errCode := atc.IssueAccessToken()
+	if errCode != nil {
 		return "", errCode
 	}
 

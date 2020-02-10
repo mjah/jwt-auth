@@ -7,7 +7,6 @@ import (
 
 // AccessTokenClaims ...
 type AccessTokenClaims struct {
-	Iss    string
 	Iat    int64
 	Exp    int64
 	UserID uint
@@ -16,7 +15,6 @@ type AccessTokenClaims struct {
 
 // RefreshTokenClaims ...
 type RefreshTokenClaims struct {
-	Iss    string
 	Iat    int64
 	Exp    int64
 	UserID uint
@@ -28,11 +26,12 @@ func ParseAccessTokenClaims(token *jwt.Token) (AccessTokenClaims, *errors.ErrorC
 	if !ok || !token.Valid {
 		return AccessTokenClaims{}, errors.New(errors.AccessTokenClaimsParseFailed, nil)
 	}
-	if claims["sub"] != "access" {
+
+	if claims["type"].(string) != "access" {
 		return AccessTokenClaims{}, errors.New(errors.AccessTokenClaimsParseFailed, nil)
 	}
+
 	atc := AccessTokenClaims{
-		Iss:    claims["iss"].(string),
 		Iat:    int64(claims["iat"].(float64)),
 		Exp:    int64(claims["exp"].(float64)),
 		UserID: uint(claims["user_id"].(float64)),
@@ -47,11 +46,12 @@ func ParseRefreshTokenClaims(token *jwt.Token) (RefreshTokenClaims, *errors.Erro
 	if !ok || !token.Valid {
 		return RefreshTokenClaims{}, errors.New(errors.RefreshTokenClaimsParseFailed, nil)
 	}
-	if claims["sub"] != "refresh" {
+
+	if claims["type"].(string) != "refresh" {
 		return RefreshTokenClaims{}, errors.New(errors.RefreshTokenClaimsParseFailed, nil)
 	}
+
 	rtc := RefreshTokenClaims{
-		Iss:    claims["iss"].(string),
 		Iat:    int64(claims["iat"].(float64)),
 		Exp:    int64(claims["exp"].(float64)),
 		UserID: uint(claims["user_id"].(float64)),

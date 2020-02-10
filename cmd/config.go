@@ -23,6 +23,7 @@ func init() {
 	viper.SetDefault("roles.default", "guest")
 	viper.SetDefault("serve.host", "localhost")
 	viper.SetDefault("serve.port", 9096)
+	viper.SetDefault("token.issuer", "jwt-auth")
 	viper.SetDefault("token.access_token_expires", "5m")
 	viper.SetDefault("token.refresh_token_expires", "8h00m")
 	viper.SetDefault("token.refresh_token_expires_extended", "8760h00m")

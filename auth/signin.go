@@ -9,6 +9,7 @@ import (
 	"github.com/mjah/jwt-auth/database"
 	"github.com/mjah/jwt-auth/errors"
 	"github.com/mjah/jwt-auth/utils"
+	"github.com/spf13/viper"
 )
 
 // SignInDetails ...
@@ -71,17 +72,36 @@ func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 	}
 
 	// Issue access token
-	accessTokenString, errCode := jwt.IssueAccessToken(user, role.Role)
-	if err != nil {
+	atc := jwt.AccessTokenClaims{
+		Iat:    time.Now().Unix(),
+		Exp:    time.Now().Add(viper.GetDuration("token.access_token_expires")).Unix(),
+		UserID: user.ID,
+		Role:   role.Role,
+	}
+
+	accessTokenString, errCode := atc.IssueAccessToken()
+	if errCode != nil {
 		return "", "", errCode
 	}
 
 	// Issue refresh token
-	refreshTokenString, errCode := jwt.IssueRefreshToken(user, details.RememberMe)
-	if err != nil {
+	expireIn := viper.GetDuration("token.refresh_token_expires")
+	if details.RememberMe {
+		expireIn = viper.GetDuration("token.refresh_token_expires_extended")
+	}
+
+	rtc := jwt.RefreshTokenClaims{
+		Iat:    time.Now().Unix(),
+		Exp:    time.Now().Add(expireIn).Unix(),
+		UserID: user.ID,
+	}
+
+	refreshTokenString, errCode := rtc.IssueRefreshToken()
+	if errCode != nil {
 		return "", "", errCode
 	}
 
+	// Success
 	signInSuccess = true
 
 	return accessTokenString, refreshTokenString, nil

@@ -15,6 +15,7 @@ serve:
 token:
   # public_key_path:
   # private_key_path:
+  issuer: "jwt-auth"
   access_token_expires: "5m"
   refresh_token_expires: "8h00m"
   refresh_token_expires_extended: "8760h00m"
