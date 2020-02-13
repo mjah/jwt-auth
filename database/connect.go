@@ -5,6 +5,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres" // required
+	"github.com/mjah/jwt-auth/logger"
 	"github.com/spf13/viper"
 )
 
@@ -43,6 +44,7 @@ func Connect() (*gorm.DB, error) {
 func GetConnection() (*gorm.DB, error) {
 	if err := dbInstance.DB().Ping(); err != nil {
 		if _, err := Connect(); err != nil {
+			logger.Log().Error(err)
 			return nil, err
 		}
 	}
