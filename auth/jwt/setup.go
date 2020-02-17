@@ -31,7 +31,6 @@ func loadPublicKey() {
 	}
 }
 
-// loadPrivateKey ...
 func loadPrivateKey() {
 	privateKeyPem, err := ioutil.ReadFile(viper.GetString("token.private_key_path"))
 	if err != nil {
