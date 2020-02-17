@@ -39,4 +39,5 @@ environment: "production"
 #   smtp_username:
 #   smtp_password:
 #   from_address:
+#   from_name:
 #   test_receipient:
