@@ -1,6 +1,8 @@
 package queue
 
-type messageConsumer func([]byte)
+import "github.com/mjah/jwt-auth/logger"
+
+type messageConsumer func([]byte) error
 
 func (q *Queue) registerConsumer(consumer messageConsumer) error {
 	msgs, err := q.channel.Consume(
@@ -18,8 +20,12 @@ func (q *Queue) registerConsumer(consumer messageConsumer) error {
 
 	go func() {
 		for d := range msgs {
-			consumer(d.Body)
-			d.Ack(false)
+			err := consumer(d.Body)
+			if err != nil {
+				logger.Log().Error(err)
+			} else {
+				d.Ack(false)
+			}
 		}
 	}()
 

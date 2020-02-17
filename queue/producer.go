@@ -8,7 +8,7 @@ func (q *Queue) SetContentType(contentType string) {
 }
 
 // Produce ...
-func (q *Queue) Produce(message string) error {
+func (q *Queue) Produce(message []byte) error {
 	return q.channel.Publish(
 		"",     // exchange
 		q.name, // routing key
@@ -17,7 +17,7 @@ func (q *Queue) Produce(message string) error {
 		amqp.Publishing{
 			DeliveryMode: amqp.Persistent,
 			ContentType:  q.contentType,
-			Body:         []byte(message),
+			Body:         message,
 		},
 	)
 }
