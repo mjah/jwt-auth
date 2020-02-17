@@ -84,9 +84,10 @@ func (q *Queue) openConnection() error {
 
 func (q *Queue) handleError() {
 	err := <-q.notifyErr
-	logger.Log().Error(err)
 
 	if err != nil {
+		logger.Log().Error(err)
+
 		retries := 0
 		sleepSec := 0
 
