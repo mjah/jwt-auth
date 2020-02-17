@@ -9,7 +9,7 @@ func (q *Queue) SetContentType(contentType string) {
 
 // Produce ...
 func (q *Queue) Produce(message string) error {
-	err := q.channel.Publish(
+	return q.channel.Publish(
 		"",     // exchange
 		q.name, // routing key
 		false,  // mandatory
@@ -20,8 +20,4 @@ func (q *Queue) Produce(message string) error {
 			Body:         []byte(message),
 		},
 	)
-	if err != nil {
-		return err
-	}
-	return nil
 }

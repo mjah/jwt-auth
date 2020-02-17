@@ -17,6 +17,7 @@ type Queue struct {
 	connection *amqp.Connection
 	notifyErr  chan *amqp.Error
 	channel    *amqp.Channel
+	consumers  []messageConsumer
 }
 
 // New ...
@@ -88,19 +89,30 @@ func (q *Queue) handleError() {
 	if err != nil {
 		retries := 0
 		sleepSec := 0
+
 		for {
 			retries++
 			if retries <= 60 {
 				sleepSec++
 			}
+
 			logger.Log().Info("Attempting message-broker reconnection.")
 			if err := q.setup(); err != nil {
-				logger.Log().Error(err)
+				logger.Log().Error("Failed message-broker reconnection: ", err)
 				time.Sleep(time.Duration(sleepSec) * time.Second)
-			} else {
-				logger.Log().Info("Reconnected to message-broker.")
-				return
+				continue
 			}
+			logger.Log().Info("Reconnected to message-broker.")
+
+			logger.Log().Info("Attempting consumer(s) recovery.")
+			if err := q.recoverConsumer(); err != nil {
+				logger.Log().Error("Failed consumer(s) recovery: ", err)
+				time.Sleep(time.Duration(sleepSec) * time.Second)
+				continue
+			}
+			logger.Log().Info("Recovered consumer(s).")
+
+			return
 		}
 	}
 }
