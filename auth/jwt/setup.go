@@ -12,8 +12,13 @@ import (
 var publicKey *rsa.PublicKey
 var privateKey *rsa.PrivateKey
 
-// LoadPublicKey ...
-func LoadPublicKey() {
+// Setup ...
+func Setup() {
+	loadPublicKey()
+	loadPrivateKey()
+}
+
+func loadPublicKey() {
 	publicKeyPem, err := ioutil.ReadFile(viper.GetString("token.public_key_path"))
 	if err != nil {
 		logger.Log().Fatal("Could not load public key. ", err)
@@ -26,8 +31,8 @@ func LoadPublicKey() {
 	}
 }
 
-// LoadPrivateKey ...
-func LoadPrivateKey() {
+// loadPrivateKey ...
+func loadPrivateKey() {
 	privateKeyPem, err := ioutil.ReadFile(viper.GetString("token.private_key_path"))
 	if err != nil {
 		logger.Log().Fatal("Could not load private key. ", err)
