@@ -10,6 +10,6 @@ var testEmailCmd = &cobra.Command{
 	Short: "Send a test email.",
 	Long:  `Send a test email.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		email.Test()
+		email.SendTestEmail()
 	},
 }
