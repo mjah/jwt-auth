@@ -9,6 +9,8 @@ import (
 	"github.com/streadway/amqp"
 )
 
+var globalQueue *Queue
+
 // Queue ...
 type Queue struct {
 	name        string
@@ -32,6 +34,16 @@ func New(queueName string) (*Queue, error) {
 	}
 
 	return q, nil
+}
+
+// SetQueue ...
+func SetQueue(queue *Queue) {
+	globalQueue = queue
+}
+
+// GetQueue ...
+func GetQueue() *Queue {
+	return globalQueue
 }
 
 // Close ...
