@@ -19,6 +19,7 @@ func init() {
 	// Set default values
 	viper.SetDefault("environment", "development")
 	viper.SetDefault("log_level", "debug")
+	viper.SetDefault("account.password_cost", 11)
 	viper.SetDefault("account.confirm_token_expires", "24h00m")
 	viper.SetDefault("account.reset_password_token_expires", "1h00m")
 	viper.SetDefault("roles.define", []string{"admin", "member", "guest"})
