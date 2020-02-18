@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/mjah/jwt-auth/logger"
 	"github.com/spf13/viper"
 )
 
@@ -13,33 +12,42 @@ var publicKey *rsa.PublicKey
 var privateKey *rsa.PrivateKey
 
 // Setup ...
-func Setup() {
-	loadPublicKey()
-	loadPrivateKey()
+func Setup() error {
+	if err := loadPublicKey(); err != nil {
+		return err
+	}
+
+	if err := loadPrivateKey(); err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func loadPublicKey() {
+func loadPublicKey() error {
 	publicKeyPem, err := ioutil.ReadFile(viper.GetString("token.public_key_path"))
 	if err != nil {
-		logger.Log().Fatal("Could not load public key. ", err)
+		return err
 	}
 
-	var err2 error
-	publicKey, err2 = jwt.ParseRSAPublicKeyFromPEM(publicKeyPem)
-	if err2 != nil {
-		logger.Log().Fatal("Could not load public key. ", err2)
+	publicKey, err = jwt.ParseRSAPublicKeyFromPEM(publicKeyPem)
+	if err != nil {
+		return err
 	}
+
+	return nil
 }
 
-func loadPrivateKey() {
+func loadPrivateKey() error {
 	privateKeyPem, err := ioutil.ReadFile(viper.GetString("token.private_key_path"))
 	if err != nil {
-		logger.Log().Fatal("Could not load private key. ", err)
+		return err
 	}
 
-	var err2 error
-	privateKey, err2 = jwt.ParseRSAPrivateKeyFromPEM(privateKeyPem)
-	if err2 != nil {
-		logger.Log().Fatal("Could not load private key. ", err2)
+	privateKey, err = jwt.ParseRSAPrivateKeyFromPEM(privateKeyPem)
+	if err != nil {
+		return err
 	}
+
+	return nil
 }

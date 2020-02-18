@@ -1,15 +1,14 @@
 package database
 
 import (
-	"github.com/mjah/jwt-auth/logger"
 	"github.com/spf13/viper"
 )
 
 // Migrate ...
-func Migrate() {
+func Migrate() error {
 	db, err := GetConnection()
 	if err != nil {
-		logger.Log().Fatal(err)
+		return err
 	}
 	defer db.Close()
 
@@ -22,4 +21,6 @@ func Migrate() {
 		submitRole := &Role{Role: role}
 		db.FirstOrCreate(&Role{}, submitRole)
 	}
+
+	return nil
 }

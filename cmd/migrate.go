@@ -12,8 +12,11 @@ var migrateCmd = &cobra.Command{
 	Long:  `Run database migration.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if _, err := database.Connect(); err != nil {
-			logger.Log().Fatal("Failed to connect to database.")
+			logger.Log().Fatal("Could not connect to database. ", err)
 		}
-		database.Migrate()
+
+		if err := database.Migrate(); err != nil {
+			logger.Log().Fatal("Could not migrate database. ", err)
+		}
 	},
 }
