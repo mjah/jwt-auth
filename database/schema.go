@@ -39,14 +39,3 @@ type TokenRevocation struct {
 	RefreshToken    string
 	RevokeAllBefore time.Time
 }
-
-// EmailQueue ...
-type EmailQueue struct {
-	gorm.Model
-	UserID            uint   `gorm:"not null"`
-	RecipientEmail    string `gorm:"type:varchar(128);not null"`
-	RecipientName     string `gorm:"type:varchar(32);not null"`
-	EmailType         string `gorm:"type:varchar(32);not null"`
-	MessageParameters string
-	ProcessedAt       time.Time
-}
