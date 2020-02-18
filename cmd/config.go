@@ -19,6 +19,8 @@ func init() {
 	// Set default values
 	viper.SetDefault("environment", "development")
 	viper.SetDefault("log_level", "debug")
+	viper.SetDefault("account.confirm_token_expires", "24h00m")
+	viper.SetDefault("account.reset_password_token_expires", "1h00m")
 	viper.SetDefault("roles.define", []string{"admin", "member", "guest"})
 	viper.SetDefault("roles.default", "guest")
 	viper.SetDefault("serve.host", "localhost")
@@ -47,7 +49,7 @@ func initConfig() {
 	if cfgFile != "" {
 		viper.SetConfigFile(cfgFile)
 		if err := viper.ReadInConfig(); err != nil {
-			logger.Log().Fatal("Can't read config: ", err)
+			logger.Log().Fatal("Could not read config. ", err)
 		}
 	}
 }

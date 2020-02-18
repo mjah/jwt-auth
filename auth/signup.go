@@ -85,7 +85,7 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 		FirstName:           details.FirstName,
 		LastName:            details.LastName,
 		ConfirmToken:        utils.GenerateUUID(),
-		ConfirmTokenExpires: time.Now().Add(time.Hour * 24).UTC(),
+		ConfirmTokenExpires: time.Now().Add(viper.GetDuration("account.confirm_token_expires")).UTC(),
 	}
 
 	// Execute query

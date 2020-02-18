@@ -1,6 +1,12 @@
 environment: "production"
 # log_level: # if environment is set to production, log_level will default to error
 
+# account:
+#   confirm_token_expires: "24h00m"
+#   confirm_token_endpoint:
+#   reset_password_token_expires: "1h00m"
+#   reset_password_token_endpoint:
+
 # roles:
 #   define:
 #   - "admin"
