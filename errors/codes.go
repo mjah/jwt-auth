@@ -147,6 +147,16 @@ var (
 		Code:       3109,
 		Title:      "ResetPasswordDetailsValidationFailed",
 	}
+	SendResetPasswordEmailDetailsInvalid = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3110,
+		Title:      "SendResetPasswordEmailDetailsInvalid",
+	}
+	SendResetPasswordEmailDetailsValidationFailed = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3111,
+		Title:      "SendResetPasswordEmailDetailsValidationFailed",
+	}
 	ConfirmDetailsInvalid = ErrorCode{
 		HTTPStatus: http.StatusBadRequest,
 		Code:       3201,
@@ -156,6 +166,16 @@ var (
 		HTTPStatus: http.StatusBadRequest,
 		Code:       3202,
 		Title:      "ConfirmDetailsValidationFailed",
+	}
+	SendConfirmEmailDetailsInvalid = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3210,
+		Title:      "SendResetPasswordEmailDetailsInvalid",
+	}
+	SendConfirmEmailDetailsValidationFailed = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3211,
+		Title:      "SendResetPasswordEmailDetailsValidationFailed",
 	}
 	UserAlreadyConfirmed = ErrorCode{
 		HTTPStatus: http.StatusBadRequest,

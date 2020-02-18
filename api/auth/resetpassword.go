@@ -30,5 +30,20 @@ func ResetPassword(c *gin.Context) {
 
 // SendResetPasswordEmail ...
 func SendResetPasswordEmail(c *gin.Context) {
+	var details auth.SendResetPasswordEmailDetails
 
+	if err := c.BindJSON(&details); err != nil {
+		errCode := errors.New(errors.SendResetPasswordEmailDetailsInvalid, err)
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		return
+	}
+
+	if errCode := details.SendResetPasswordEmail(); errCode != nil {
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Sent reset password email.",
+	})
 }
