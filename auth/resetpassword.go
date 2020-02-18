@@ -90,11 +90,14 @@ func (details *SendResetPasswordEmailDetails) SendResetPasswordEmail() *errors.E
 		return errors.New(errors.DatabaseConnectionFailed, err)
 	}
 
-	// Get user by email
+	// Declare variables
+	condition := &database.User{Email: details.Email}
 	user := &database.User{}
-	if err := db.Where("email = ?", details.Email).First(user).Error; err != nil {
+
+	// Check email exists
+	if err := db.Where(condition).First(user).Error; err != nil {
 		if database.IsRecordNotFoundError(err) {
-			return errors.New(errors.UserDoesNotExist, err)
+			return errors.New(errors.EmailDoesNotExist, err)
 		}
 		return errors.New(errors.DatabaseQueryFailed, err)
 	}
