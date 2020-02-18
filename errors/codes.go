@@ -182,6 +182,11 @@ var (
 		Code:       3302,
 		Title:      "ResetPasswordTokenExpired",
 	}
+	MessageQueueFailed = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       3303,
+		Title:      "MessageQueueFailed",
+	}
 )
 
 func (e *ErrorCode) Error() string {

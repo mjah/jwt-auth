@@ -1,10 +1,12 @@
 package auth
 
 import (
+	"net/url"
 	"time"
 
 	"github.com/asaskevich/govalidator"
 	"github.com/mjah/jwt-auth/database"
+	"github.com/mjah/jwt-auth/email"
 	"github.com/mjah/jwt-auth/errors"
 	"github.com/mjah/jwt-auth/utils"
 	"github.com/spf13/viper"
@@ -77,6 +79,7 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 	}
 
 	// Populate user details to be submitted
+	confirmToken := utils.GenerateUUID()
 	submitUser := &database.User{
 		RoleID:              role.ID,
 		Email:               details.Email,
@@ -84,13 +87,42 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 		Password:            generatedPassword,
 		FirstName:           details.FirstName,
 		LastName:            details.LastName,
-		ConfirmToken:        utils.GenerateUUID(),
+		ConfirmToken:        confirmToken,
 		ConfirmTokenExpires: time.Now().Add(viper.GetDuration("account.confirm_token_expires")).UTC(),
 	}
 
 	// Execute query
 	if err := db.Create(submitUser).Error; err != nil {
 		return errors.New(errors.DatabaseQueryFailed, err)
+	}
+
+	// Send welcome email
+	welcomeEmail := email.WelcomeEmailParams{
+		ReceipientEmail: details.Email,
+		UserFirstName:   details.FirstName,
+		EmailFromName:   viper.GetString("email.from_name"),
+	}
+
+	if err := welcomeEmail.AddToQueue(); err != nil {
+		return errors.New(errors.MessageQueueFailed, err)
+	}
+
+	// Send confirm email
+	confirmLink, _ := url.Parse(viper.GetString("account.confirm_token_endpoint"))
+	params := url.Values{}
+	params.Add("email", details.Email)
+	params.Add("confirm_token", confirmToken)
+	confirmLink.RawQuery = params.Encode()
+
+	confirmEmail := email.ConfirmEmailParams{
+		ReceipientEmail:  details.Email,
+		UserFirstName:    details.FirstName,
+		ConfirmationLink: confirmLink.String(),
+		EmailFromName:    viper.GetString("email.from_name"),
+	}
+
+	if err := confirmEmail.AddToQueue(); err != nil {
+		return errors.New(errors.MessageQueueFailed, err)
 	}
 
 	return nil
