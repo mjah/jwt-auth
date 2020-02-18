@@ -30,5 +30,20 @@ func Confirm(c *gin.Context) {
 
 // SendConfirmEmail ...
 func SendConfirmEmail(c *gin.Context) {
+	var details auth.SendConfirmEmailDetails
 
+	if err := c.BindJSON(&details); err != nil {
+		errCode := errors.New(errors.SendConfirmEmailDetailsInvalid, err)
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		return
+	}
+
+	if errCode := details.SendConfirmEmail(); errCode != nil {
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Sent confirm email.",
+	})
 }
