@@ -25,7 +25,7 @@ type SignUpDetails struct {
 func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 	// Validate details
 	if _, err := govalidator.ValidateStruct(details); err != nil {
-		return errors.New(errors.SignUpDetailsValidationFailed, err)
+		return errors.New(errors.DetailsInvalid, err)
 	}
 
 	// Get database connection
@@ -67,7 +67,7 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 	role := &database.Role{}
 	if err := db.Where("role = ?", viper.GetString("roles.default")).First(&role).Error; err != nil {
 		if database.IsRecordNotFoundError(err) {
-			return errors.New(errors.DefaultRoleDoesNotExist, err)
+			return errors.New(errors.DefaultRoleAssignFailed, err)
 		}
 		return errors.New(errors.DatabaseQueryFailed, err)
 	}

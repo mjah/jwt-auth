@@ -22,7 +22,7 @@ type UpdateDetails struct {
 func (details *UpdateDetails) Update() *errors.ErrorCode {
 	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {
-		return errors.New(errors.UpdateDetailsValidationFailed, err)
+		return errors.New(errors.DetailsInvalid, err)
 	}
 
 	// Get database connection

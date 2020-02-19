@@ -1,3 +1,4 @@
+// Package errors implements custom error handling.
 package errors
 
 import (
@@ -7,7 +8,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// ErrorCode ...
+// ErrorCode holds the error code information.
 type ErrorCode struct {
 	HTTPStatus int
 	Code       int
@@ -17,195 +18,121 @@ type ErrorCode struct {
 
 // Error Codes
 var (
+	// 202 Accepted
+	MessageQueueFailed = ErrorCode{
+		HTTPStatus: http.StatusAccepted,
+		Code:       202001,
+		Title:      "MessageQueueFailed",
+	}
+
+	// 400 Bad Request
+	DetailsInvalid = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       400001,
+		Title:      "DetailsInvalid",
+	}
+	AuthorizationBearerTokenEmpty = ErrorCode{
+		HTTPStatus: http.StatusBadRequest,
+		Code:       400002,
+		Title:      "AuthorizationBearerTokenEmpty",
+	}
+
+	// 401 Unauthorized
+	PasswordInvalid = ErrorCode{
+		HTTPStatus: http.StatusUnauthorized,
+		Code:       401001,
+		Title:      "PasswordInvalid",
+	}
+	JWTTokenInvalid = ErrorCode{
+		HTTPStatus: http.StatusUnauthorized,
+		Code:       401002,
+		Title:      "JWTTokenInvalid",
+	}
+	RefreshTokenIsRevoked = ErrorCode{
+		HTTPStatus: http.StatusUnauthorized,
+		Code:       401003,
+		Title:      "RefreshTokenIsRevoked",
+	}
+	UserIsNotActive = ErrorCode{
+		HTTPStatus: http.StatusUnauthorized,
+		Code:       401004,
+		Title:      "UserIsNotActive",
+	}
+	UUIDTokenDoesNotMatch = ErrorCode{
+		HTTPStatus: http.StatusUnauthorized,
+		Code:       401005,
+		Title:      "UUIDTokenDoesNotMatch",
+	}
+	UUIDTokenExpired = ErrorCode{
+		HTTPStatus: http.StatusUnauthorized,
+		Code:       401006,
+		Title:      "UUIDTokenExpired",
+	}
+
+	// 404 Not Found
+	EmailDoesNotExist = ErrorCode{
+		HTTPStatus: http.StatusNotFound,
+		Code:       404001,
+		Title:      "EmailDoesNotExist",
+	}
+	UserDoesNotExist = ErrorCode{
+		HTTPStatus: http.StatusNotFound,
+		Code:       404002,
+		Title:      "UserDoesNotExist",
+	}
+
+	// 409 Conflict
+	EmailAlreadyExists = ErrorCode{
+		HTTPStatus: http.StatusConflict,
+		Code:       409001,
+		Title:      "EmailAlreadyExists",
+	}
+	UsernameAlreadyExists = ErrorCode{
+		HTTPStatus: http.StatusConflict,
+		Code:       409002,
+		Title:      "UsernameAlreadyExists",
+	}
+	EmailAndUsernameAlreadyExists = ErrorCode{
+		HTTPStatus: http.StatusConflict,
+		Code:       409003,
+		Title:      "EmailAndUsernameAlreadyExists",
+	}
+	UserAlreadyConfirmed = ErrorCode{
+		HTTPStatus: http.StatusConflict,
+		Code:       409004,
+		Title:      "UserAlreadyConfirmed",
+	}
+
+	// 500 Internal Server Error
 	DatabaseConnectionFailed = ErrorCode{
 		HTTPStatus: http.StatusInternalServerError,
-		Code:       1001,
+		Code:       500001,
 		Title:      "DatabaseConnectionFailed",
 	}
 	DatabaseQueryFailed = ErrorCode{
 		HTTPStatus: http.StatusInternalServerError,
-		Code:       1002,
+		Code:       500002,
 		Title:      "DatabaseQueryFailed",
 	}
 	PasswordGenerationFailed = ErrorCode{
 		HTTPStatus: http.StatusInternalServerError,
-		Code:       2001,
+		Code:       500003,
 		Title:      "PasswordGenerationFailed",
-	}
-	PasswordCheckFailed = ErrorCode{
-		HTTPStatus: http.StatusUnauthorized,
-		Code:       2002,
-		Title:      "PasswordCheckFailed",
 	}
 	AccessTokenIssueFailed = ErrorCode{
 		HTTPStatus: http.StatusInternalServerError,
-		Code:       2101,
+		Code:       500004,
 		Title:      "AccessTokenIssueFailed",
 	}
 	RefreshTokenIssueFailed = ErrorCode{
 		HTTPStatus: http.StatusInternalServerError,
-		Code:       2103,
+		Code:       500005,
 		Title:      "RefreshTokenIssueFailed",
 	}
-	AccessTokenClaimsParseFailed = ErrorCode{
-		HTTPStatus: http.StatusUnauthorized,
-		Code:       2104,
-		Title:      "AccessTokenClaimsParseFailed",
-	}
-	RefreshTokenClaimsParseFailed = ErrorCode{
-		HTTPStatus: http.StatusUnauthorized,
-		Code:       2105,
-		Title:      "RefreshTokenClaimsParseFailed",
-	}
-	TokenValidationFailed = ErrorCode{
+	DefaultRoleAssignFailed = ErrorCode{
 		HTTPStatus: http.StatusInternalServerError,
-		Code:       2106,
-		Title:      "TokenValidationFailed",
-	}
-	AuthorizationBearerTokenEmpty = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       2102,
-		Title:      "AuthorizationBearerTokenEmpty",
-	}
-	RefreshTokenIsRevoked = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       2107,
-		Title:      "RefreshTokenIsRevoked",
-	}
-	SignUpDetailsInvalid = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3001,
-		Title:      "SignUpDetailsInvalid",
-	}
-	SignUpDetailsValidationFailed = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3002,
-		Title:      "SignUpDetailsValidationFailed",
-	}
-	EmailAlreadyExists = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3003,
-		Title:      "EmailAlreadyExists",
-	}
-	UsernameAlreadyExists = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3004,
-		Title:      "UsernameAlreadyExists",
-	}
-	EmailAndUsernameAlreadyExists = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3005,
-		Title:      "EmailAndUsernameAlreadyExists",
-	}
-	DefaultRoleDoesNotExist = ErrorCode{
-		HTTPStatus: http.StatusInternalServerError,
-		Code:       3006,
-		Title:      "DefaultRoleDoesNotExist",
-	}
-	SignInDetailsInvalid = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3101,
-		Title:      "SignInDetailsInvalid",
-	}
-	SignInDetailsValidationFailed = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3102,
-		Title:      "SignInDetailsValidationFailed",
-	}
-	EmailDoesNotExist = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3103,
-		Title:      "EmailDoesNotExist",
-	}
-	UserDoesNotExist = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3104,
-		Title:      "UserDoesNotExist",
-	}
-	UserIsNotActive = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3105,
-		Title:      "UserIsNotActive",
-	}
-	UpdateDetailsInvalid = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3106,
-		Title:      "UpdateDetailsInvalid",
-	}
-	UpdateDetailsValidationFailed = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3107,
-		Title:      "UpdateDetailsValidationFailed",
-	}
-	ResetPasswordDetailsInvalid = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3108,
-		Title:      "ResetPasswordDetailsInvalid",
-	}
-	ResetPasswordDetailsValidationFailed = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3109,
-		Title:      "ResetPasswordDetailsValidationFailed",
-	}
-	SendResetPasswordEmailDetailsInvalid = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3110,
-		Title:      "SendResetPasswordEmailDetailsInvalid",
-	}
-	SendResetPasswordEmailDetailsValidationFailed = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3111,
-		Title:      "SendResetPasswordEmailDetailsValidationFailed",
-	}
-	ConfirmDetailsInvalid = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3201,
-		Title:      "ConfirmDetailsInvalid",
-	}
-	ConfirmDetailsValidationFailed = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3202,
-		Title:      "ConfirmDetailsValidationFailed",
-	}
-	SendConfirmEmailDetailsInvalid = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3210,
-		Title:      "SendResetPasswordEmailDetailsInvalid",
-	}
-	SendConfirmEmailDetailsValidationFailed = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3211,
-		Title:      "SendResetPasswordEmailDetailsValidationFailed",
-	}
-	UserAlreadyConfirmed = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3203,
-		Title:      "UserAlreadyConfirmed",
-	}
-	ConfirmTokenDoesNotMatch = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3204,
-		Title:      "ConfirmTokenDoesNotMatch",
-	}
-	ConfirmTokenExpired = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3205,
-		Title:      "ConfirmTokenExpired",
-	}
-	ResetPasswordTokenDoesNotMatch = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3301,
-		Title:      "ResetPasswordTokenDoesNotMatch",
-	}
-	ResetPasswordTokenExpired = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3302,
-		Title:      "ResetPasswordTokenExpired",
-	}
-	MessageQueueFailed = ErrorCode{
-		HTTPStatus: http.StatusBadRequest,
-		Code:       3303,
-		Title:      "MessageQueueFailed",
+		Code:       500006,
+		Title:      "DefaultRoleAssignFailed",
 	}
 )
 
@@ -213,7 +140,7 @@ func (e *ErrorCode) Error() string {
 	return fmt.Sprintf("[%d] %s - %v", e.Code, e.Title, e.Errors)
 }
 
-// OmitDetailsInProd ...
+// OmitDetailsInProd hides the error details when in production.
 func (e *ErrorCode) OmitDetailsInProd() *ErrorCode {
 	if viper.GetString("environment") == "production" {
 		e.Errors = nil
@@ -221,7 +148,7 @@ func (e *ErrorCode) OmitDetailsInProd() *ErrorCode {
 	return e
 }
 
-// New ...
+// New allows for an error code to be created.
 func New(errorCode ErrorCode, errors error) *ErrorCode {
 	return &ErrorCode{
 		HTTPStatus: errorCode.HTTPStatus,

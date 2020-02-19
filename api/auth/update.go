@@ -16,7 +16,7 @@ func Update(c *gin.Context) {
 	details.Claims = c.MustGet("refresh_token_claims").(jwt.RefreshTokenClaims)
 
 	if err := c.BindJSON(&details); err != nil {
-		errCode := errors.New(errors.UpdateDetailsInvalid, err)
+		errCode := errors.New(errors.DetailsInvalid, err)
 		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
 		return
 	}

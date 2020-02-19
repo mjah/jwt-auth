@@ -13,7 +13,7 @@ func SignUp(c *gin.Context) {
 	var details auth.SignUpDetails
 
 	if err := c.BindJSON(&details); err != nil {
-		errCode := errors.New(errors.SignUpDetailsInvalid, err)
+		errCode := errors.New(errors.DetailsInvalid, err)
 		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
 		return
 	}

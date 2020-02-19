@@ -36,7 +36,7 @@ func updateSignInHistory(db *gorm.DB, user *database.User, signInSuccess *bool) 
 func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {
-		return "", "", errors.New(errors.SignInDetailsValidationFailed, err)
+		return "", "", errors.New(errors.DetailsInvalid, err)
 	}
 
 	// Get database connection
@@ -63,7 +63,7 @@ func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 
 	// Check password is correct
 	if err := utils.CheckPassword(user.Password, details.Password); err != nil {
-		return "", "", errors.New(errors.PasswordCheckFailed, err)
+		return "", "", errors.New(errors.PasswordInvalid, err)
 	}
 
 	// Get role name

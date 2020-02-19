@@ -22,7 +22,7 @@ type ConfirmDetails struct {
 func (details *ConfirmDetails) Confirm() *errors.ErrorCode {
 	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {
-		return errors.New(errors.ConfirmDetailsValidationFailed, err)
+		return errors.New(errors.DetailsInvalid, err)
 	}
 
 	// Get database connection
@@ -50,12 +50,12 @@ func (details *ConfirmDetails) Confirm() *errors.ErrorCode {
 
 	// Check if confirmation token matches
 	if user.ConfirmToken != details.ConfirmToken {
-		return errors.New(errors.ConfirmTokenDoesNotMatch, nil)
+		return errors.New(errors.UUIDTokenDoesNotMatch, nil)
 	}
 
 	// Check if confirmation token expired
 	if user.ConfirmTokenExpires.Unix() < time.Now().Unix() {
-		return errors.New(errors.ConfirmTokenExpired, nil)
+		return errors.New(errors.UUIDTokenExpired, nil)
 	}
 
 	// Confirm user
@@ -75,7 +75,7 @@ type SendConfirmEmailDetails struct {
 func (details *SendConfirmEmailDetails) SendConfirmEmail() *errors.ErrorCode {
 	// Validate details
 	if _, err := govalidator.ValidateStruct(details); err != nil {
-		return errors.New(errors.SendConfirmEmailDetailsValidationFailed, err)
+		return errors.New(errors.DetailsInvalid, err)
 	}
 
 	// Get database connection

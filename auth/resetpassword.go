@@ -24,7 +24,7 @@ type ResetPasswordDetails struct {
 func (details *ResetPasswordDetails) ResetPassword() *errors.ErrorCode {
 	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {
-		return errors.New(errors.ResetPasswordDetailsValidationFailed, err)
+		return errors.New(errors.DetailsInvalid, err)
 	}
 
 	// Get database connection
@@ -47,12 +47,12 @@ func (details *ResetPasswordDetails) ResetPassword() *errors.ErrorCode {
 
 	// Check if reset password token matches
 	if user.ResetPassToken != details.ResetPasswordToken {
-		return errors.New(errors.ResetPasswordTokenDoesNotMatch, nil)
+		return errors.New(errors.UUIDTokenDoesNotMatch, nil)
 	}
 
 	// Check if reset password token expired
 	if user.ResetPassTokenExpires.Unix() < time.Now().Unix() {
-		return errors.New(errors.ResetPasswordTokenExpired, nil)
+		return errors.New(errors.UUIDTokenExpired, nil)
 	}
 
 	// Update password
@@ -81,7 +81,7 @@ type SendResetPasswordEmailDetails struct {
 func (details *SendResetPasswordEmailDetails) SendResetPasswordEmail() *errors.ErrorCode {
 	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {
-		return errors.New(errors.SendResetPasswordEmailDetailsValidationFailed, err)
+		return errors.New(errors.DetailsInvalid, err)
 	}
 
 	// Get database connection

@@ -13,7 +13,7 @@ func ResetPassword(c *gin.Context) {
 	var details auth.ResetPasswordDetails
 
 	if err := c.BindJSON(&details); err != nil {
-		errCode := errors.New(errors.ResetPasswordDetailsInvalid, err)
+		errCode := errors.New(errors.DetailsInvalid, err)
 		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
 		return
 	}
@@ -33,7 +33,7 @@ func SendResetPasswordEmail(c *gin.Context) {
 	var details auth.SendResetPasswordEmailDetails
 
 	if err := c.BindJSON(&details); err != nil {
-		errCode := errors.New(errors.SendResetPasswordEmailDetailsInvalid, err)
+		errCode := errors.New(errors.DetailsInvalid, err)
 		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
 		return
 	}
