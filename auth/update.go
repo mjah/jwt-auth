@@ -8,7 +8,7 @@ import (
 	"github.com/mjah/jwt-auth/utils"
 )
 
-// UpdateDetails ...
+// UpdateDetails holds the details required to update the user.
 type UpdateDetails struct {
 	Claims    jwt.RefreshTokenClaims
 	Email     string `json:"email" valid:"optional,email"`
@@ -18,7 +18,7 @@ type UpdateDetails struct {
 	LastName  string `json:"last_name" valid:"optional,length(1|32)"`
 }
 
-// Update ...
+// Update handles the user update.
 func (details *UpdateDetails) Update() *errors.ErrorCode {
 	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {

@@ -8,7 +8,7 @@ import (
 	"github.com/mjah/jwt-auth/auth/jwt"
 )
 
-// RefreshToken ...
+// RefreshToken route handler.
 func RefreshToken(c *gin.Context) {
 	var details auth.RefreshTokenDetails
 

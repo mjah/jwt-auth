@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// SignInDetails ...
+// SignInDetails holds the details required to sign in the user.
 type SignInDetails struct {
 	Email      string `json:"email" binding:"required" valid:"email"`
 	Password   string `json:"password" binding:"required" valid:"length(8|60)"`
@@ -32,7 +32,7 @@ func updateSignInHistory(db *gorm.DB, user *database.User, signInSuccess *bool) 
 	return nil
 }
 
-// SignIn ...
+// SignIn handlers the user sign in.
 func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {

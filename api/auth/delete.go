@@ -8,7 +8,7 @@ import (
 	"github.com/mjah/jwt-auth/auth/jwt"
 )
 
-// Delete ...
+// Delete route handler.
 func Delete(c *gin.Context) {
 	var details auth.DeleteDetails
 

@@ -12,13 +12,13 @@ import (
 	"github.com/spf13/viper"
 )
 
-// ConfirmDetails ...
+// ConfirmDetails holds the details required to confirm the user.
 type ConfirmDetails struct {
 	Email        string `json:"email" binding:"required" valid:"email"`
 	ConfirmToken string `json:"confirm_token" binding:"required" valid:"length(36|36)"`
 }
 
-// Confirm ...
+// Confirm handles the user confirmation.
 func (details *ConfirmDetails) Confirm() *errors.ErrorCode {
 	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {
@@ -66,12 +66,12 @@ func (details *ConfirmDetails) Confirm() *errors.ErrorCode {
 	return nil
 }
 
-// SendConfirmEmailDetails ...
+// SendConfirmEmailDetails holds the details required to send the email.
 type SendConfirmEmailDetails struct {
 	Email string `json:"email" binding:"required" valid:"email"`
 }
 
-// SendConfirmEmail ...
+// SendConfirmEmail sends the user confirmation email to queue.
 func (details *SendConfirmEmailDetails) SendConfirmEmail() *errors.ErrorCode {
 	// Validate details
 	if _, err := govalidator.ValidateStruct(details); err != nil {

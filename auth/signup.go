@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// SignUpDetails ...
+// SignUpDetails holds the details required to sign up the user.
 type SignUpDetails struct {
 	Email     string `json:"email" binding:"required" valid:"email"`
 	Username  string `json:"username" binding:"required" valid:"length(3|40)"`
@@ -21,7 +21,7 @@ type SignUpDetails struct {
 	LastName  string `json:"last_name" binding:"required" valid:"length(1|32)"`
 }
 
-// SignUp ...
+// SignUp handles the user sign up.
 func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 	// Validate details
 	if _, err := govalidator.ValidateStruct(details); err != nil {

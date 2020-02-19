@@ -8,7 +8,7 @@ import (
 	"github.com/mjah/jwt-auth/auth/jwt"
 )
 
-// SignOut ...
+// SignOut route handler.
 func SignOut(c *gin.Context) {
 	var details auth.SignOutDetails
 
@@ -25,7 +25,7 @@ func SignOut(c *gin.Context) {
 	})
 }
 
-// SignOutAll ...
+// SignOutAll route handler.
 func SignOutAll(c *gin.Context) {
 	var details auth.SignOutDetails
 

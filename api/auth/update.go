@@ -9,7 +9,7 @@ import (
 	"github.com/mjah/jwt-auth/errors"
 )
 
-// Update ...
+// Update route handler.
 func Update(c *gin.Context) {
 	var details auth.UpdateDetails
 

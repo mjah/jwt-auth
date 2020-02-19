@@ -13,14 +13,14 @@ import (
 	"github.com/spf13/viper"
 )
 
-// ResetPasswordDetails ...
+// ResetPasswordDetails holds the details required to reset the user's password.
 type ResetPasswordDetails struct {
 	Email              string `json:"email" binding:"required" valid:"email"`
 	ResetPasswordToken string `json:"reset_password_token" binding:"required" valid:"length(36|36)"`
 	Password           string `json:"password" binding:"required" valid:"length(8|60)"`
 }
 
-// ResetPassword ...
+// ResetPassword handles the user password reset.
 func (details *ResetPasswordDetails) ResetPassword() *errors.ErrorCode {
 	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {
@@ -72,12 +72,12 @@ func (details *ResetPasswordDetails) ResetPassword() *errors.ErrorCode {
 	return nil
 }
 
-// SendResetPasswordEmailDetails ...
+// SendResetPasswordEmailDetails holds the details required to send the email.
 type SendResetPasswordEmailDetails struct {
 	Email string `json:"email" binding:"required" valid:"email"`
 }
 
-// SendResetPasswordEmail ...
+// SendResetPasswordEmail sends the reset password email to queue.
 func (details *SendResetPasswordEmailDetails) SendResetPasswordEmail() *errors.ErrorCode {
 	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {

@@ -5,12 +5,12 @@ import (
 	"github.com/mjah/jwt-auth/errors"
 )
 
-// DeleteDetails ...
+// DeleteDetails holds the details required to delete the user.
 type DeleteDetails struct {
 	UserID uint
 }
 
-// Delete ...
+// Delete handles the user deletion.
 func (details *DeleteDetails) Delete() *errors.ErrorCode {
 	// Get database connection
 	db, err := database.GetConnection()

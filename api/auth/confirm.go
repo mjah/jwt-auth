@@ -8,7 +8,7 @@ import (
 	"github.com/mjah/jwt-auth/errors"
 )
 
-// Confirm ...
+// Confirm route handler.
 func Confirm(c *gin.Context) {
 	var details auth.ConfirmDetails
 
@@ -28,7 +28,7 @@ func Confirm(c *gin.Context) {
 	})
 }
 
-// SendConfirmEmail ...
+// SendConfirmEmail route handler.
 func SendConfirmEmail(c *gin.Context) {
 	var details auth.SendConfirmEmailDetails
 

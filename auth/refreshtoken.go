@@ -9,12 +9,12 @@ import (
 	"github.com/spf13/viper"
 )
 
-// RefreshTokenDetails ...
+// RefreshTokenDetails holds the details required to refresh the access token.
 type RefreshTokenDetails struct {
 	UserID uint
 }
 
-// RefreshToken ...
+// RefreshToken handles the access token refresh.
 func (details *RefreshTokenDetails) RefreshToken() (string, *errors.ErrorCode) {
 	// Get database connection
 	db, err := database.GetConnection()

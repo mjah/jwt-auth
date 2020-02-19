@@ -8,7 +8,7 @@ import (
 	"github.com/mjah/jwt-auth/errors"
 )
 
-// ResetPassword ...
+// ResetPassword route handler.
 func ResetPassword(c *gin.Context) {
 	var details auth.ResetPasswordDetails
 
@@ -28,7 +28,7 @@ func ResetPassword(c *gin.Context) {
 	})
 }
 
-// SendResetPasswordEmail ...
+// SendResetPasswordEmail route handler.
 func SendResetPasswordEmail(c *gin.Context) {
 	var details auth.SendResetPasswordEmailDetails
 

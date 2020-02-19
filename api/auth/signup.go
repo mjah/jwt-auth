@@ -8,7 +8,7 @@ import (
 	"github.com/mjah/jwt-auth/errors"
 )
 
-// SignUp ...
+// SignUp route handler.
 func SignUp(c *gin.Context) {
 	var details auth.SignUpDetails
 
