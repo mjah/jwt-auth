@@ -1,3 +1,4 @@
+// Package database implements postgres connection, schema, and migration.
 package database
 
 import (
@@ -11,17 +12,15 @@ import (
 
 var dbInstance *gorm.DB
 
-// Connect ...
+// Connect opens a database connection and returns it.
 func Connect() (*gorm.DB, error) {
-	dbDetails := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
+	db, err := gorm.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
 		viper.GetString("postgres.host"),
 		viper.GetString("postgres.port"),
 		viper.GetString("postgres.username"),
 		viper.GetString("postgres.password"),
 		viper.GetString("postgres.database"),
-	)
-
-	db, err := gorm.Open("postgres", dbDetails)
+	))
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +39,7 @@ func Connect() (*gorm.DB, error) {
 	return db, nil
 }
 
-// GetConnection ...
+// GetConnection returns an existing connection, otherwise opens a new one.
 func GetConnection() (*gorm.DB, error) {
 	if err := dbInstance.DB().Ping(); err != nil {
 		if _, err := Connect(); err != nil {

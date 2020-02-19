@@ -4,7 +4,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Migrate ...
+// Migrate automatically migrates the database to the latest schema.
 func Migrate() error {
 	db, err := GetConnection()
 	if err != nil {

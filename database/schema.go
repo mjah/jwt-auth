@@ -6,7 +6,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// User ...
+// User details.
 type User struct {
 	gorm.Model
 	RoleID                uint   `gorm:"not null"`
@@ -25,14 +25,14 @@ type User struct {
 	FailedSignin          time.Time
 }
 
-// Role ...
+// Role details.
 type Role struct {
 	gorm.Model
 	Role        string `gorm:"type:varchar(32);unique_index;not null"`
 	Permissions string
 }
 
-// TokenRevocation ...
+// TokenRevocation details.
 type TokenRevocation struct {
 	gorm.Model
 	UserID          uint `gorm:"not null"`
