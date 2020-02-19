@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// GetRouter ...
+// GetRouter sets up and handles the routes.
 func GetRouter() http.Handler {
 	if viper.GetString("environment") == "production" {
 		gin.SetMode(gin.ReleaseMode)

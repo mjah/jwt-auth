@@ -15,7 +15,8 @@ func stripBearerPrefix(tokenBearer string) string {
 	return tokenBearer
 }
 
-// ValidateRefreshTokenMiddleware ...
+// ValidateRefreshTokenMiddleware checks to see if the refresh token is valid
+// before accessing private resources.
 func ValidateRefreshTokenMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenBearer := c.GetHeader("Authorization")
