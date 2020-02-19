@@ -41,13 +41,8 @@ func (q *Queue) recoverConsumer() error {
 	return nil
 }
 
-// Consume ...
+// Consume registers the consumer with the message-broker.
 func (q *Queue) Consume(consumer messageConsumer) error {
 	q.consumers = append(q.consumers, consumer)
-
-	if err := q.registerConsumer(consumer); err != nil {
-		return err
-	}
-
-	return nil
+	return q.registerConsumer(consumer)
 }

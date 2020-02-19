@@ -1,3 +1,4 @@
+// Package queue provides basic direct queue functionality.
 package queue
 
 import (
@@ -9,7 +10,7 @@ import (
 	"github.com/streadway/amqp"
 )
 
-// Queue ...
+// Queue contains the relevant information about the queue.
 type Queue struct {
 	name        string
 	contentType string
@@ -20,26 +21,19 @@ type Queue struct {
 	consumers  []messageConsumer
 }
 
-// New ...
+// New declares a queue with the given name. Returns the queue, and an error on
+// failure.
 func New(queueName string) (*Queue, error) {
 	q := &Queue{
 		name:        queueName,
 		contentType: "text/plain",
 	}
-
-	if err := q.setup(); err != nil {
-		return nil, err
-	}
-
-	return q, nil
+	return q, q.setup()
 }
 
-// Close ...
+// Close gracefully closes the connection.
 func (q *Queue) Close() error {
-	if err := q.connection.Close(); err != nil {
-		return err
-	}
-	return nil
+	return q.connection.Close()
 }
 
 func (q *Queue) setup() error {
@@ -65,17 +59,16 @@ func (q *Queue) setup() error {
 }
 
 func (q *Queue) openConnection() error {
-	amqpDetails := fmt.Sprintf("amqp://%s:%s@%s:%s/",
+	conn, err := amqp.Dial(fmt.Sprintf("amqp://%s:%s@%s:%s/",
 		viper.GetString("amqp.username"),
 		viper.GetString("amqp.password"),
 		viper.GetString("amqp.host"),
 		viper.GetString("amqp.port"),
-	)
-
-	conn, err := amqp.Dial(amqpDetails)
+	))
 	if err != nil {
 		return err
 	}
+
 	q.connection = conn
 	q.notifyErr = q.connection.NotifyClose(make(chan *amqp.Error))
 
@@ -84,13 +77,11 @@ func (q *Queue) openConnection() error {
 
 func (q *Queue) handleError() {
 	err := <-q.notifyErr
-
 	if err != nil {
 		logger.Log().Error(err)
 
 		retries := 0
 		sleepSec := 0
-
 		for {
 			retries++
 			if retries <= 60 {
