@@ -1,3 +1,4 @@
+// Package logger provides logging with logrus.
 package logger
 
 import (
@@ -7,7 +8,7 @@ import (
 
 var logger *logrus.Logger
 
-// Setup ...
+// Setup configures logrus and sets the log level.
 func Setup() {
 	logger = logrus.New()
 
@@ -36,7 +37,7 @@ func Setup() {
 	}
 }
 
-// Log ...
+// Log returns a pointer to the logger.
 func Log() *logrus.Logger {
 	return logger
 }
