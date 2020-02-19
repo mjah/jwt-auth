@@ -14,7 +14,7 @@ func keyFunc(token *jwt.Token) (interface{}, error) {
 	return publicKey, nil
 }
 
-// ValidateToken ...
+// ValidateToken checks if a token is valid.
 func ValidateToken(tokenString string) (*jwt.Token, *errors.ErrorCode) {
 	token, err := jwt.Parse(tokenString, keyFunc)
 	if err != nil {

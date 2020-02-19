@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// IssueAccessToken ...
+// IssueAccessToken issues an access token.
 func (atc *AccessTokenClaims) IssueAccessToken() (string, *errors.ErrorCode) {
 	tokenString, err := jwt.NewWithClaims(
 		jwt.SigningMethodRS256,
@@ -27,7 +27,7 @@ func (atc *AccessTokenClaims) IssueAccessToken() (string, *errors.ErrorCode) {
 	return tokenString, nil
 }
 
-// IssueRefreshToken ...
+// IssueRefreshToken issues a refresh token.
 func (rtc *RefreshTokenClaims) IssueRefreshToken() (string, *errors.ErrorCode) {
 	tokenString, err := jwt.NewWithClaims(
 		jwt.SigningMethodRS256,

@@ -11,7 +11,7 @@ import (
 var publicKey *rsa.PublicKey
 var privateKey *rsa.PrivateKey
 
-// Setup ...
+// Setup loads the RSA keys used to sign/verify the JWT signature.
 func Setup() error {
 	if err := loadPublicKey(); err != nil {
 		return err

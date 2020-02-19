@@ -5,7 +5,7 @@ import (
 	"github.com/mjah/jwt-auth/errors"
 )
 
-// AccessTokenClaims ...
+// AccessTokenClaims holds the access token claims details.
 type AccessTokenClaims struct {
 	Iat    int64
 	Exp    int64
@@ -13,14 +13,14 @@ type AccessTokenClaims struct {
 	Role   string
 }
 
-// RefreshTokenClaims ...
+// RefreshTokenClaims holds the refresh token claims details.
 type RefreshTokenClaims struct {
 	Iat    int64
 	Exp    int64
 	UserID uint
 }
 
-// ParseAccessTokenClaims ...
+// ParseAccessTokenClaims parses the access token claims.
 func ParseAccessTokenClaims(token *jwt.Token) (AccessTokenClaims, *errors.ErrorCode) {
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
@@ -40,7 +40,7 @@ func ParseAccessTokenClaims(token *jwt.Token) (AccessTokenClaims, *errors.ErrorC
 	return atc, nil
 }
 
-// ParseRefreshTokenClaims ...
+// ParseRefreshTokenClaims parses the refresh token claims.
 func ParseRefreshTokenClaims(token *jwt.Token) (RefreshTokenClaims, *errors.ErrorCode) {
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {

@@ -7,7 +7,7 @@ import (
 	"github.com/mjah/jwt-auth/errors"
 )
 
-// RevokeRefreshToken ...
+// RevokeRefreshToken revokes the refresh token.
 func RevokeRefreshToken(userID uint, tokenString string) *errors.ErrorCode {
 	// Get database connection
 	db, err := database.GetConnection()
@@ -29,7 +29,7 @@ func RevokeRefreshToken(userID uint, tokenString string) *errors.ErrorCode {
 	return nil
 }
 
-// RevokeRefreshTokenAllBefore ...
+// RevokeRefreshTokenAllBefore revokes all refresh token before now.
 func RevokeRefreshTokenAllBefore(userID uint) *errors.ErrorCode {
 	// Get database connection
 	db, err := database.GetConnection()
@@ -51,7 +51,7 @@ func RevokeRefreshTokenAllBefore(userID uint) *errors.ErrorCode {
 	return nil
 }
 
-// CheckRefreshTokenRevoked ...
+// CheckRefreshTokenRevoked checks if a refresh token has been revoked.
 func CheckRefreshTokenRevoked(userID uint, iat int64, tokenString string) *errors.ErrorCode {
 	// Get database connection
 	db, err := database.GetConnection()
