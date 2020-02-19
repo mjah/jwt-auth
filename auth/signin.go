@@ -32,7 +32,7 @@ func updateSignInHistory(db *gorm.DB, user *database.User, signInSuccess *bool) 
 	return nil
 }
 
-// SignIn handlers the user sign in.
+// SignIn handles the user sign in.
 func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {
