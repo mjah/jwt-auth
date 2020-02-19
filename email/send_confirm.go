@@ -6,7 +6,7 @@ import (
 	"html/template"
 )
 
-// ConfirmEmailParams ...
+// ConfirmEmailParams holds parameters for the template.
 type ConfirmEmailParams struct {
 	ReceipientEmail  string
 	UserFirstName    string
@@ -26,7 +26,7 @@ Thanks,
 `
 )
 
-// Send ...
+// Send generates the email from the parameters and is sent.
 func (params *ConfirmEmailParams) Send() error {
 	tmpl, err := template.New("ConfirmTemplate").Parse(confirmTemplate)
 	if err != nil {
@@ -42,7 +42,7 @@ func (params *ConfirmEmailParams) Send() error {
 	return GetSender().Send([]string{params.ReceipientEmail}, emailContent)
 }
 
-// AddToQueue ...
+// AddToQueue adds the parameters to queue.
 func (params *ConfirmEmailParams) AddToQueue() error {
 	paramsJSON, err := json.Marshal(params)
 	if err != nil {
@@ -51,7 +51,7 @@ func (params *ConfirmEmailParams) AddToQueue() error {
 	return confirmEmailQueue.Produce(paramsJSON)
 }
 
-// ProcessConfirmEmailFromQueue ...
+// ProcessConfirmEmailFromQueue processes the parameters from the queue.
 func ProcessConfirmEmailFromQueue(paramsJSON []byte) error {
 	params := ConfirmEmailParams{}
 	err := json.Unmarshal(paramsJSON, &params)

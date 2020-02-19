@@ -1,3 +1,4 @@
+// Package email provides email sending functionality.
 package email
 
 import (
@@ -12,7 +13,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Sender ...
+// Sender holds the SMTP details.
 type Sender struct {
 	SMTPHost     string
 	SMTPPort     int
@@ -22,7 +23,7 @@ type Sender struct {
 	FromName     string
 }
 
-// Write ...
+// Write returns the string of the composed email.
 func (s *Sender) Write(contentType, subject, body string) string {
 	header := make(map[string]string)
 	header["Subject"] = subject
@@ -48,43 +49,40 @@ func (s *Sender) Write(contentType, subject, body string) string {
 	return message
 }
 
-// WriteHTMLEmail ...
+// WriteHTMLEmail returns the HTML composed email.
 func (s *Sender) WriteHTMLEmail(subject, body string) string {
 	return s.Write("text/html", subject, body)
 }
 
-// WritePlainEmail ...
+// WritePlainEmail returns the plain text composed email.
 func (s *Sender) WritePlainEmail(subject, body string) string {
 	return s.Write("text/plain", subject, body)
 }
 
-// Send ...
+// Send adds the from and to headers and sends the email.
 func (s *Sender) Send(dest []string, content string) error {
 	header := make(map[string]string)
 	header["From"] = s.FromAddress
 	header["To"] = strings.Join(dest, ",")
 
 	message := ""
-
 	for key, value := range header {
-		message += fmt.Sprintf("%s: %s\n", key, value)
+		message += fmt.Sprintf("%s: %s\r\n", key, value)
 	}
-
 	message += content
 
-	logger.Log().Info(message + "\n")
-
-	err := smtp.SendMail(s.SMTPHost+":"+strconv.Itoa(s.SMTPPort),
-		smtp.PlainAuth("", s.SMTPUsername, s.SMTPPassword, s.SMTPHost),
-		s.SMTPUsername, dest, []byte(message))
-	if err != nil {
-		return err
+	if viper.GetString("environment") != "production" && viper.GetBool("log_email") {
+		logger.Log().Info(message + "\n")
 	}
 
-	return nil
+	return smtp.SendMail(
+		s.SMTPHost+":"+strconv.Itoa(s.SMTPPort),
+		smtp.PlainAuth("", s.SMTPUsername, s.SMTPPassword, s.SMTPHost),
+		s.SMTPUsername, dest, []byte(message),
+	)
 }
 
-// SendTestEmail ...
+// SendTestEmail provides a simple way to test SMTP configuration.
 func SendTestEmail() {
 	sender := &Sender{
 		SMTPHost:     viper.GetString("email.smtp_host"),
@@ -94,11 +92,10 @@ func SendTestEmail() {
 		FromAddress:  viper.GetString("email.from_address"),
 	}
 
+	receipient := viper.GetString("email.test_receipient")
 	emailContent := sender.WriteHTMLEmail("Test Email", "This is a test email.")
 
-	receipient := viper.GetString("email.test_receipient")
-	err := sender.Send([]string{receipient}, emailContent)
-	if err != nil {
+	if err := sender.Send([]string{receipient}, emailContent); err != nil {
 		logger.Log().Error("SMTP Error: %s", err)
 	} else {
 		logger.Log().Info("Test email successfully sent.")

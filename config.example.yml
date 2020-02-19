@@ -1,5 +1,6 @@
 environment: "development"
 log_level: "debug" # if environment is set to production, log_level will default to error
+log_email: true    # if environment is set to production, log_email will default to false
 
 account:
   password_cost: 11

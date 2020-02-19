@@ -6,7 +6,7 @@ import (
 	"html/template"
 )
 
-// ResetPasswordEmailParams ...
+// ResetPasswordEmailParams holds parameters for the template.
 type ResetPasswordEmailParams struct {
 	ReceipientEmail   string
 	UserFirstName     string
@@ -26,7 +26,7 @@ Thanks,
 `
 )
 
-// Send ...
+// Send generates the email from the parameters and is sent.
 func (params *ResetPasswordEmailParams) Send() error {
 	tmpl, err := template.New("ResetPasswordTemplate").Parse(resetPasswordTemplate)
 	if err != nil {
@@ -42,7 +42,7 @@ func (params *ResetPasswordEmailParams) Send() error {
 	return GetSender().Send([]string{params.ReceipientEmail}, emailContent)
 }
 
-// AddToQueue ...
+// AddToQueue adds the parameters to queue.
 func (params *ResetPasswordEmailParams) AddToQueue() error {
 	paramsJSON, err := json.Marshal(params)
 	if err != nil {
@@ -51,7 +51,7 @@ func (params *ResetPasswordEmailParams) AddToQueue() error {
 	return resetPasswordEmailQueue.Produce(paramsJSON)
 }
 
-// ProcessResetPasswordEmailFromQueue ...
+// ProcessResetPasswordEmailFromQueue processes the parameters from the queue.
 func ProcessResetPasswordEmailFromQueue(paramsJSON []byte) error {
 	params := ResetPasswordEmailParams{}
 	err := json.Unmarshal(paramsJSON, &params)

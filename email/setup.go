@@ -12,7 +12,7 @@ var (
 	resetPasswordEmailQueue *queue.Queue
 )
 
-// Setup ...
+// Setup configures the sender, and declares the queues and consumers.
 func Setup() error {
 	SetSender(&Sender{
 		SMTPHost:     viper.GetString("email.smtp_host"),
@@ -34,12 +34,12 @@ func Setup() error {
 	return nil
 }
 
-// SetSender ...
+// SetSender sets the sender.
 func SetSender(sender *Sender) {
 	globalSender = sender
 }
 
-// GetSender ...
+// GetSender returns a pointer to the sender.
 func GetSender() *Sender {
 	return globalSender
 }

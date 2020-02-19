@@ -6,7 +6,7 @@ import (
 	"html/template"
 )
 
-// WelcomeEmailParams ...
+// WelcomeEmailParams holds parameters for the template.
 type WelcomeEmailParams struct {
 	ReceipientEmail string
 	UserFirstName   string
@@ -24,7 +24,7 @@ Cheers,
 `
 )
 
-// Send ...
+// Send generates the email from the parameters and is sent.
 func (params *WelcomeEmailParams) Send() error {
 	tmpl, err := template.New("WelcomeTemplate").Parse(welcomeTemplate)
 	if err != nil {
@@ -40,7 +40,7 @@ func (params *WelcomeEmailParams) Send() error {
 	return GetSender().Send([]string{params.ReceipientEmail}, emailContent)
 }
 
-// AddToQueue ...
+// AddToQueue adds the parameters to queue.
 func (params *WelcomeEmailParams) AddToQueue() error {
 	paramsJSON, err := json.Marshal(params)
 	if err != nil {
@@ -49,7 +49,7 @@ func (params *WelcomeEmailParams) AddToQueue() error {
 	return welcomeEmailQueue.Produce(paramsJSON)
 }
 
-// ProcessWelcomeEmailFromQueue ...
+// ProcessWelcomeEmailFromQueue processes the parameters from the queue.
 func ProcessWelcomeEmailFromQueue(paramsJSON []byte) error {
 	params := WelcomeEmailParams{}
 	err := json.Unmarshal(paramsJSON, &params)
