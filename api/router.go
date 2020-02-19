@@ -18,6 +18,10 @@ func GetRouter() http.Handler {
 	r := gin.Default()
 	r.Use(cors.Default())
 
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "pong"})
+	})
+
 	public := r.Group("/v1")
 	publicAuth := public.Group("/auth")
 	{
