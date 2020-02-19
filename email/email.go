@@ -96,7 +96,7 @@ func SendTestEmail() {
 	emailContent := sender.WriteHTMLEmail("Test Email", "This is a test email.")
 
 	if err := sender.Send([]string{receipient}, emailContent); err != nil {
-		logger.Log().Error("SMTP Error: %s", err)
+		logger.Log().Error("SMTP Error: ", err)
 	} else {
 		logger.Log().Info("Test email successfully sent.")
 	}
