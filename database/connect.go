@@ -14,9 +14,10 @@ var dbInstance *gorm.DB
 
 // Connect opens a database connection and returns it.
 func Connect() (*gorm.DB, error) {
-	db, err := gorm.Open("postgres", fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s",
+	db, err := gorm.Open("postgres", fmt.Sprintf("host=%s port=%s sslmode=%s user=%s password=%s dbname=%s",
 		viper.GetString("postgres.host"),
 		viper.GetString("postgres.port"),
+		viper.GetString("postgres.sslmode"),
 		viper.GetString("postgres.username"),
 		viper.GetString("postgres.password"),
 		viper.GetString("postgres.database"),

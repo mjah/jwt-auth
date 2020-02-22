@@ -31,6 +31,7 @@ token:
 postgres:
   host: "localhost"
   port: 5432
+  sslmode: "disable"
   username: "postgres"
   password: "postgres"
   database: "jwt-auth"
