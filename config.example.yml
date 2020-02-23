@@ -5,9 +5,9 @@ log_email: true    # if environment is set to production, log_email will default
 account:
   password_cost: 11
   confirm_token_expires: "24h00m"
-  # confirm_token_endpoint:
   reset_password_token_expires: "1h00m"
-  # reset_password_token_endpoint:
+  # confirm_token_endpoint:         # the url to be used in the confirm email
+  # reset_password_token_endpoint:  # the url to be used in the reset password email
 
 roles:
   define:
@@ -24,9 +24,9 @@ token:
   # public_key_path:
   # private_key_path:
   issuer: "jwt-auth"
-  access_token_expires: "5m"
+  access_token_expires: "5m"                 # recommended to keep this short (<10m)
   refresh_token_expires: "8h00m"
-  refresh_token_expires_extended: "8760h00m"
+  refresh_token_expires_extended: "8760h00m" # if user selects remember me, this will be used
 
 postgres:
   host: "localhost"

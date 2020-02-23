@@ -7,95 +7,280 @@
 [GoReportCard]: https://goreportcard.com/report/github.com/mjah/jwt-auth
 [GoReportCard Badge]: https://goreportcard.com/badge/github.com/mjah/jwt-auth
 
-## Features
+A simple JWT based authentication server.
 
-## Prerequisite
+Features:
+
+* Token based stateless authentication.
+* User sign up, sign in, sign out, update, confirm, delete, and reset password.
+* Send welcome, confirm, and reset password emails.
+* Issue access and refresh token on signin.
+* Refresh token revocation on sign out and ability to revoke all refresh tokens on sign out everywhere.
+* JWT signed using RS256 signing algorithm for asymmetric encryption.
+
+## Quick Start
+
+This section will guide you through getting this project up and running as quickly as possible. It will only require that [docker](https://www.docker.com/) is installed and nothing else.
+
+**This quick start is recommended for experimenting/testing purposes only.**
+
+### Run Postgresql
+
+```sh
+docker run -it --rm \
+--name postgres \
+-p 5432:5432 \
+-e POSTGRES_DB=jwt-auth \
+-e POSTGRES_USER=postgres \
+-e POSTGRES_PASSWORD=postgres \
+postgres:11-alpine
+```
+
+Note: If you want to use an existing Postgresql setup with same port, then ensure that the jwt-auth database is created.
+
+### Run Rabbitmq
+
+```sh
+docker run -it --rm \
+--name rabbitmq \
+-p 5672:5672 \
+-p 15672:15672 \
+rabbitmq:3-management
+```
 
 ### Generate an RSA keypair with a 2048 bit private key
 
-Private key:
-
 ```sh
-openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
+JA_KEYS_DIR="$HOME/.jwt-auth/keys"
+
+mkdir -p "$JA_KEYS_DIR"
+openssl genpkey -algorithm RSA -out "$JA_KEYS_DIR/private_key.pem" -pkeyopt rsa_keygen_bits:2048
+openssl rsa -pubout -in "$JA_KEYS_DIR/private_key.pem" -out "$JA_KEYS_DIR/public_key.pem"
 ```
 
-Public key:
+### Add keys path to a .env file
 
 ```sh
-openssl rsa -pubout -in private_key.pem -out public_key.pem
+JA_ENV_FILE="$HOME/.jwt-auth/.env"
+
+echo "JA_TOKEN_PRIVATE_KEY_PATH=/keys/private_key.pem" > "$JA_ENV_FILE"
+echo "JA_TOKEN_PUBLIC_KEY_PATH=/keys/public_key.pem" >> "$JA_ENV_FILE"
 ```
 
-### Configuration
+Note: Since we will running within a docker container, /keys is the base directory name for JA_TOKEN_PUBLIC_KEY_PATH and JA_TOKEN_PRIVATE_KEY_PATH.
+
+### Clone repository
+
+```sh
+git clone https://github.com/mjah/jwt-auth.git
+cd jwt-auth
+```
+
+### Build and run
+
+```sh
+docker build -t jwt-auth .
+
+docker run \
+--network host \
+--volume "$JA_KEYS_DIR":/keys \
+--env-file "$JA_ENV_FILE" \
+jwt-auth serve
+```
+
+Go to [localhost:9096/ping](http://localhost:9096/ping), if you receive a pong then you are now up and running.
+
+## Configuration
 
 See the [config.example.yml](https://github.com/mjah/jwt-auth/blob/master/config.example.yml) file for an example of the configuration.
 
-Environment variables are also supported. This will be the configuration name in all capital letters, 'JA\_' prefixed, and '.' replaced with '\_'. E.g. **account.password_cost** becomes **JA_ACCOUNT_PASSWORD_COST**.
-
-Configuration Name | Type | Default | Description
----|---|---|---
-environment | string | development | ...
-log_level | string | debug | ...
-log_email | bool | true | ...
-account.password_cost | int | 11 | ...
-account.confirm_token_expires | time.Duration | 24h00m | ...
-account.confirm_token_endpoint | string | | ...
-account.reset_password_token_expires | time.Duration | 1h00m | ...
-account.reset_password_token_endpoint | string | | ...
-roles.define | []string | [admin member guest] | ...
-roles.default | string | guest | ...
-serve.host | string | localhost | ...
-serve.port | int | 9096 | ...
-token.public_key_path | string || ...
-token.private_key_path | string || ...
-token.issuer | string | jwt-auth | ...
-token.access_token_expires | time.Duration | 5m | ...
-token.refresh_token_expires | time.Duration | 8h00m | ...
-token.refresh_token_expires_extended | time.Duration | 8760h00m | ...
-postgres.host | string | localhost | ...
-postgres.port | int | 5432 | ...
-postgres.username | string | postgres | ...
-postgres.password | string | psotgres | ...
-postgres.database | string | jwt-auth | ...
-amqp.host | string | localhost | ...
-amqp.port | int | 5672 | ...
-amqp.username | string | guest | ...
-amqp.password | string | guest | ...
-email.smtp_host | string || ...
-email.smtp_port | int || ...
-email.smtp_username | string || ...
-email.smtp_password | string || ...
-email.from_address | string || ...
-email.from_name | string || ...
-email.test_receipient | string || ...
+Environment variables are also supported. This will be the configuration name in all capital letters, 'JA\_' prefixed, and '.' replaced with '\_'. E.g. *email.smtp_host* becomes *JA_EMAIL_SMTP_HOST*.
 
 ## API Routes
 
 ### Public Routes
 
-Path | Method | JSON Data | Error Codes | Description
----|---|---|---|---
-/v1/auth/signup | POST | email (string, required)<br>username (string, required)<br>password (string, required)<br>first_name (string, required)<br>last_name (string, required) || ...
-/v1/auth/signin | POST | email (string, required)<br>password (string, required)<br>remember_me (bool, required) || ...
-/v1/auth/confirm | POST | email (string, required)<br>confirm_token (string, required) || ...
-/v1/auth/resetpassword | POST | email (string, required)<br>reset_password_token (string, required)<br>password (string, required) || ...
-/v1/auth/send_confirm_email | POST | email (string, required) || ...
-/v1/auth/send_resetpassword_email | POST | email (string, required) || ...
+<table>
+  <thead>
+    <tr>
+      <th>Path</th>
+      <th>Method</th>
+      <th>JSON Data</th>
+      <th>Shared Error Responses</th>
+      <th>Further Error Responses</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>/v1/auth/signup</td>
+      <td>POST</td>
+      <td>
+        email (string, required)<br>
+        username (string, required)<br>
+        password (string, required)<br>
+        first_name (string, required)<br>
+        last_name (string, required)
+      </td>
+      <td rowspan=0>
+        DetailsInvalid<br>
+        DatabaseConnectionFailed<br>
+        DatabaseQueryFailed
+      </td>
+      <td>
+        EmailAndUsernameAlreadyExists<br>
+        EmailAlreadyExists<br>
+        UsernameAlreadyExists<br>
+        DefaultRoleAssignFailed<br>
+        PasswordGenerationFailed<br>
+        MessageQueueFailed
+      </td>
+    </tr>
+    <tr>
+      <td>/v1/auth/signin</td>
+      <td>POST</td>
+      <td>
+        email (string, required)<br>
+        password (string, required)<br>
+        remember_me (bool, required)
+      </td>
+      <td>
+        EmailDoesNotExist<br>
+        PasswordInvalid<br>
+        AccessTokenIssueFailed<br>
+        RefreshTokenIssueFailed
+      </td>
+    </tr>
+    <tr>
+      <td>/v1/auth/confirm</td>
+      <td>POST</td>
+      <td>
+        email (string, required)<br>
+        confirm_token (string, required)
+      </td>
+      <td>
+        EmailDoesNotExist<br>
+        UserAlreadyConfirmed<br>
+        UUIDTokenDoesNotMatch<br>
+        UUIDTokenExpired
+      </td>
+    </tr>
+    <tr>
+      <td>/v1/auth/resetpassword</td>
+      <td>POST</td>
+      <td>
+        email (string, required)<br>
+        reset_password_token (string, required)<br>
+        password (string, required)
+      </td>
+      <td>
+        EmailDoesNotExist<br>
+        UUIDTokenDoesNotMatch<br>
+        UUIDTokenExpired<br>
+        PasswordGenerationFailed
+      </td>
+    </tr>
+    <tr>
+      <td>/v1/auth/send_confirm_email</td>
+      <td>POST</td>
+      <td>
+        email (string, required)
+      </td>
+      <td>
+        EmailDoesNotExist<br>
+        UserAlreadyConfirmed<br>
+        MessageQueueFailed
+      </td>
+    </tr>
+    <tr>
+      <td>/v1/auth/send_resetpassword_email</td>
+      <td>POST</td>
+      <td>
+        email (string, required)
+      </td>
+      <td>
+        EmailDoesNotExist<br>
+        MessageQueueFailed
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 ### Private Routes
 
-Requires refresh token in authorization bearer.
+Accessing private routes will require the refresh token in the authorization bearer.
 
-Path | Method | JSON Data | Error Codes | Description
----|---|---|---|---
-/v1/auth/signout | GET ||| ...
-/v1/auth/signout_all | GET ||| ...
-/v1/auth/refreshtoken | GET ||| ...
-/v1/auth/update | PATCH | email (string, optional)<br>username (string, optional)<br>password (string, optional)<br>first_name (string, optional)<br>last_name (string, optional) || ...
-/v1/auth/delete | DELETE ||| ...
+<table>
+  <thead>
+    <tr>
+      <th>Path</th>
+      <th>Method</th>
+      <th>JSON Data</th>
+      <th>Shared Error Responses</th>
+      <th>Further Error Responses</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>/v1/auth/signout</td>
+      <td>GET</td>
+      <td></td>
+      <td rowspan=0>
+        AuthorizationBearerTokenEmpty<br>
+        JWTTokenInvalid<br>
+        DatabaseConnectionFailed<br>
+        DatabaseQueryFailed<br>
+        UserDoesNotExist<br>
+        UserIsNotActive<br>
+        RefreshTokenIsRevoked
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>/v1/auth/signout_all</td>
+      <td>GET</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>/v1/auth/refreshtoken</td>
+      <td>GET</td>
+      <td></td>
+      <td>
+        UserDoesNotExist<br>
+        AccessTokenIssueFailed
+      </td>
+    </tr>
+    <tr>
+      <td>/v1/auth/update</td>
+      <td>PATCH</td>
+      <td>
+        email (string, optional)<br>
+        username (string, optional)<br>
+        password (string, optional)<br>
+        first_name (string, optional)<br>
+        last_name (string, optional)
+      </td>
+      <td>
+        DetailsInvalid<br>
+        UserDoesNotExist<br>
+        EmailAndUsernameAlreadyExists<br>
+        EmailAlreadyExists<br>
+        UsernameAlreadyExists<br>
+        PasswordGenerationFailed
+      </td>
+    </tr>
+    <tr>
+      <td>/v1/auth/delete</td>
+      <td>DELETE</td>
+      <td></td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
 
-### Error Codes
+### Error Responses
 
-Error codes can be seen in [errors/codes.go](https://github.com/mjah/jwt-auth/blob/master/errors/codes.go)
+Error responses and their codes can be seen in [errors/codes.go](https://github.com/mjah/jwt-auth/blob/master/errors/codes.go)
 
 ## Example Client
 
@@ -104,3 +289,7 @@ To see an implementation of the jwt-auth API, please see the following [example 
 ## Contributing
 
 Any feedback and pull requests are welcome and highly appreciated. Please open an issue first if you intend to send in a larger pull request or want to add additional features.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/mjah/jwt-auth/blob/master/LICENSE) file for details.
