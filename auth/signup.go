@@ -14,11 +14,12 @@ import (
 
 // SignUpDetails holds the details required to sign up the user.
 type SignUpDetails struct {
-	Email     string `json:"email" binding:"required" valid:"email"`
-	Username  string `json:"username" binding:"required" valid:"length(3|40)"`
-	Password  string `json:"password" binding:"required" valid:"length(8|60)"`
-	FirstName string `json:"first_name" binding:"required" valid:"length(1|32)"`
-	LastName  string `json:"last_name" binding:"required" valid:"length(1|32)"`
+	Email      string `json:"email" binding:"required" valid:"email"`
+	Username   string `json:"username" binding:"required" valid:"length(3|40)"`
+	Password   string `json:"password" binding:"required" valid:"length(8|60)"`
+	FirstName  string `json:"first_name" binding:"required" valid:"length(1|32)"`
+	LastName   string `json:"last_name" binding:"required" valid:"length(1|32)"`
+	ConfirmURL string `json:"confirm_url" binding:"required" valid:"url"`
 }
 
 // SignUp handles the user sign up.
@@ -108,7 +109,7 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 	}
 
 	// Send confirm email
-	confirmLink, _ := url.Parse(viper.GetString("account.confirm_token_endpoint"))
+	confirmLink, _ := url.Parse(details.ConfirmURL)
 	params := url.Values{}
 	params.Add("email", details.Email)
 	params.Add("confirm_token", confirmToken)

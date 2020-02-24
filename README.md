@@ -119,7 +119,8 @@ Environment variables are also supported. This will be the configuration name in
         username (string, required)<br>
         password (string, required)<br>
         first_name (string, required)<br>
-        last_name (string, required)
+        last_name (string, required)<br>
+        confirm_url (string, required)
       </td>
       <td rowspan=0>
         DetailsInvalid<br>
@@ -183,7 +184,8 @@ Environment variables are also supported. This will be the configuration name in
       <td>/v1/auth/send_confirm_email</td>
       <td>POST</td>
       <td>
-        email (string, required)
+        email (string, required)<br>
+        confirm_url (string, required)
       </td>
       <td>
         EmailDoesNotExist<br>
@@ -195,7 +197,8 @@ Environment variables are also supported. This will be the configuration name in
       <td>/v1/auth/send_resetpassword_email</td>
       <td>POST</td>
       <td>
-        email (string, required)
+        email (string, required)<br>
+        reset_password_url (string, required)
       </td>
       <td>
         EmailDoesNotExist<br>
@@ -292,4 +295,4 @@ Any feedback and pull requests are welcome and highly appreciated. Please open a
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/mjah/jwt-auth/blob/master/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/mjah/jwt-auth/blob/master/LICENSE) file for details.

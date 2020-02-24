@@ -68,7 +68,8 @@ func (details *ConfirmDetails) Confirm() *errors.ErrorCode {
 
 // SendConfirmEmailDetails holds the details required to send the email.
 type SendConfirmEmailDetails struct {
-	Email string `json:"email" binding:"required" valid:"email"`
+	Email      string `json:"email" binding:"required" valid:"email"`
+	ConfirmURL string `json:"confirm_url" binding:"required" valid:"url"`
 }
 
 // SendConfirmEmail sends the user confirmation email to queue.
@@ -110,7 +111,7 @@ func (details *SendConfirmEmailDetails) SendConfirmEmail() *errors.ErrorCode {
 	}
 
 	// Send confirm email
-	confirmLink, _ := url.Parse(viper.GetString("account.confirm_token_endpoint"))
+	confirmLink, _ := url.Parse(details.ConfirmURL)
 	params := url.Values{}
 	params.Add("email", details.Email)
 	params.Add("confirm_token", user.ConfirmToken)

@@ -6,8 +6,6 @@ account:
   password_cost: 11
   confirm_token_expires: "24h00m"
   reset_password_token_expires: "1h00m"
-  # confirm_token_endpoint:         # the url to be used in the confirm email
-  # reset_password_token_endpoint:  # the url to be used in the reset password email
 
 roles:
   define:

@@ -74,7 +74,8 @@ func (details *ResetPasswordDetails) ResetPassword() *errors.ErrorCode {
 
 // SendResetPasswordEmailDetails holds the details required to send the email.
 type SendResetPasswordEmailDetails struct {
-	Email string `json:"email" binding:"required" valid:"email"`
+	Email            string `json:"email" binding:"required" valid:"email"`
+	ResetPasswordURL string `json:"reset_password_url" binding:"required" valid:"url"`
 }
 
 // SendResetPasswordEmail sends the reset password email to queue.
@@ -111,7 +112,7 @@ func (details *SendResetPasswordEmailDetails) SendResetPasswordEmail() *errors.E
 	}
 
 	// Send reset password email
-	resetPassLink, _ := url.Parse(viper.GetString("account.reset_password_token_endpoint"))
+	resetPassLink, _ := url.Parse(details.ResetPasswordURL)
 	params := url.Values{}
 	params.Add("email", details.Email)
 	params.Add("reset_password_token", user.ResetPassToken)
