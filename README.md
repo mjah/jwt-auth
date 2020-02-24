@@ -58,34 +58,15 @@ openssl genpkey -algorithm RSA -out "$JA_KEYS_DIR/private_key.pem" -pkeyopt rsa_
 openssl rsa -pubout -in "$JA_KEYS_DIR/private_key.pem" -out "$JA_KEYS_DIR/public_key.pem"
 ```
 
-### Add keys path to a .env file
+### Run application
 
 ```sh
-JA_ENV_FILE="$HOME/.jwt-auth/.env"
-
-echo "JA_TOKEN_PRIVATE_KEY_PATH=/keys/private_key.pem" > "$JA_ENV_FILE"
-echo "JA_TOKEN_PUBLIC_KEY_PATH=/keys/public_key.pem" >> "$JA_ENV_FILE"
-```
-
-Note: Since we will running within a docker container, /keys is the base directory name for JA_TOKEN_PUBLIC_KEY_PATH and JA_TOKEN_PRIVATE_KEY_PATH.
-
-### Clone repository
-
-```sh
-git clone https://github.com/mjah/jwt-auth.git
-cd jwt-auth
-```
-
-### Build and run
-
-```sh
-docker build -t jwt-auth .
-
 docker run \
 --network host \
 --volume "$JA_KEYS_DIR":/keys \
---env-file "$JA_ENV_FILE" \
-jwt-auth serve
+-e JA_TOKEN_PRIVATE_KEY_PATH=/keys/private_key.pem \
+-e JA_TOKEN_PUBLIC_KEY_PATH=/keys/public_key.pem \
+docker.pkg.github.com/mjah/jwt-auth/jwt-auth:latest serve
 ```
 
 Go to [localhost:9096/ping](http://localhost:9096/ping), if you receive a pong then you are now up and running.
@@ -96,7 +77,7 @@ See the [config.example.yml](https://github.com/mjah/jwt-auth/blob/master/config
 
 Environment variables are also supported. This will be the configuration name in all capital letters, 'JA\_' prefixed, and '.' replaced with '\_'. E.g. *email.smtp_host* becomes *JA_EMAIL_SMTP_HOST*.
 
-## API Routes
+## API
 
 ### Public Routes
 
