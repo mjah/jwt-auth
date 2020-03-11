@@ -49,6 +49,7 @@ func (details *UpdateDetails) Update() *errors.ErrorCode {
 			if database.IsRecordNotFoundError(err) {
 				emailAlreadyExists = false
 				user.Email = details.Email
+				user.IsConfirmedEmail = false
 			} else {
 				return errors.New(errors.DatabaseQueryFailed, err)
 			}

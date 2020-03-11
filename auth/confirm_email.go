@@ -12,14 +12,14 @@ import (
 	"github.com/spf13/viper"
 )
 
-// ConfirmDetails holds the details required to confirm the user.
-type ConfirmDetails struct {
-	Email        string `json:"email" binding:"required" valid:"email"`
-	ConfirmToken string `json:"confirm_token" binding:"required" valid:"length(36|36)"`
+// ConfirmEmailDetails holds the details required to confirm the user's email.
+type ConfirmEmailDetails struct {
+	Email             string `json:"email" binding:"required" valid:"email"`
+	ConfirmEmailToken string `json:"confirm_email_token" binding:"required" valid:"length(36|36)"`
 }
 
-// Confirm handles the user confirmation.
-func (details *ConfirmDetails) Confirm() *errors.ErrorCode {
+// ConfirmEmail handles the user confirmation.
+func (details *ConfirmEmailDetails) ConfirmEmail() *errors.ErrorCode {
 	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {
 		return errors.New(errors.DetailsInvalid, err)
@@ -44,22 +44,22 @@ func (details *ConfirmDetails) Confirm() *errors.ErrorCode {
 	}
 
 	// Check if user not confirmed
-	if user.IsConfirmed {
-		return errors.New(errors.UserAlreadyConfirmed, nil)
+	if user.IsConfirmedEmail {
+		return errors.New(errors.EmailAlreadyConfirmed, nil)
 	}
 
 	// Check if confirmation token matches
-	if user.ConfirmToken != details.ConfirmToken {
+	if user.ConfirmEmailToken != details.ConfirmEmailToken {
 		return errors.New(errors.UUIDTokenDoesNotMatch, nil)
 	}
 
 	// Check if confirmation token expired
-	if user.ConfirmTokenExpires.Unix() < time.Now().Unix() {
+	if user.ConfirmEmailTokenExpires.Unix() < time.Now().Unix() {
 		return errors.New(errors.UUIDTokenExpired, nil)
 	}
 
 	// Confirm user
-	if err := db.Model(user).Update(database.User{IsConfirmed: true}).Error; err != nil {
+	if err := db.Model(user).Update(database.User{IsConfirmedEmail: true}).Error; err != nil {
 		return errors.New(errors.DatabaseQueryFailed, err)
 	}
 
@@ -68,11 +68,11 @@ func (details *ConfirmDetails) Confirm() *errors.ErrorCode {
 
 // SendConfirmEmailDetails holds the details required to send the email.
 type SendConfirmEmailDetails struct {
-	Email      string `json:"email" binding:"required" valid:"email"`
-	ConfirmURL string `json:"confirm_url" binding:"required" valid:"url"`
+	Email           string `json:"email" binding:"required" valid:"email"`
+	ConfirmEmailURL string `json:"confirm_email_url" binding:"required" valid:"url"`
 }
 
-// SendConfirmEmail sends the user confirmation email to queue.
+// SendConfirmEmail sends confirm email email to queue.
 func (details *SendConfirmEmailDetails) SendConfirmEmail() *errors.ErrorCode {
 	// Validate details
 	if _, err := govalidator.ValidateStruct(details); err != nil {
@@ -97,24 +97,24 @@ func (details *SendConfirmEmailDetails) SendConfirmEmail() *errors.ErrorCode {
 		return errors.New(errors.DatabaseQueryFailed, err)
 	}
 
-	// Check if user not confirmed
-	if user.IsConfirmed {
-		return errors.New(errors.UserAlreadyConfirmed, nil)
+	// Check if email not confirmed
+	if user.IsConfirmedEmail {
+		return errors.New(errors.EmailAlreadyConfirmed, nil)
 	}
 
 	// Update user with confirm token
-	user.ConfirmToken = utils.GenerateUUID()
-	user.ConfirmTokenExpires = time.Now().Add(viper.GetDuration("account.confirm_token_expires")).UTC()
+	user.ConfirmEmailToken = utils.GenerateUUID()
+	user.ConfirmEmailTokenExpires = time.Now().Add(viper.GetDuration("account.confirm_token_expires")).UTC()
 
 	if err := db.Save(user).Error; err != nil {
 		return errors.New(errors.DatabaseQueryFailed, err)
 	}
 
-	// Send confirm email
-	confirmLink, _ := url.Parse(details.ConfirmURL)
+	// Send confirm email email
+	confirmLink, _ := url.Parse(details.ConfirmEmailURL)
 	params := url.Values{}
 	params.Add("email", details.Email)
-	params.Add("confirm_token", user.ConfirmToken)
+	params.Add("confirm_token", user.ConfirmEmailToken)
 	confirmLink.RawQuery = params.Encode()
 
 	confirmEmail := email.ConfirmEmailParams{

@@ -14,12 +14,12 @@ import (
 
 // SignUpDetails holds the details required to sign up the user.
 type SignUpDetails struct {
-	Email      string `json:"email" binding:"required" valid:"email"`
-	Username   string `json:"username" binding:"required" valid:"length(3|40)"`
-	Password   string `json:"password" binding:"required" valid:"length(8|60)"`
-	FirstName  string `json:"first_name" binding:"required" valid:"length(1|32)"`
-	LastName   string `json:"last_name" binding:"required" valid:"length(1|32)"`
-	ConfirmURL string `json:"confirm_url" binding:"required" valid:"url"`
+	Email           string `json:"email" binding:"required" valid:"email"`
+	Username        string `json:"username" binding:"required" valid:"length(3|40)"`
+	Password        string `json:"password" binding:"required" valid:"length(8|60)"`
+	FirstName       string `json:"first_name" binding:"required" valid:"length(1|32)"`
+	LastName        string `json:"last_name" binding:"required" valid:"length(1|32)"`
+	ConfirmEmailURL string `json:"confirm_email_url" binding:"required" valid:"url"`
 }
 
 // SignUp handles the user sign up.
@@ -82,14 +82,14 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 	// Populate user details to be submitted
 	confirmToken := utils.GenerateUUID()
 	submitUser := &database.User{
-		RoleID:              role.ID,
-		Email:               details.Email,
-		Username:            details.Username,
-		Password:            generatedPassword,
-		FirstName:           details.FirstName,
-		LastName:            details.LastName,
-		ConfirmToken:        confirmToken,
-		ConfirmTokenExpires: time.Now().Add(viper.GetDuration("account.confirm_token_expires")).UTC(),
+		RoleID:                   role.ID,
+		Email:                    details.Email,
+		Username:                 details.Username,
+		Password:                 generatedPassword,
+		FirstName:                details.FirstName,
+		LastName:                 details.LastName,
+		ConfirmEmailToken:        confirmToken,
+		ConfirmEmailTokenExpires: time.Now().Add(viper.GetDuration("account.confirm_token_expires")).UTC(),
 	}
 
 	// Execute query
@@ -108,17 +108,17 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 		return errors.New(errors.MessageQueueFailed, err)
 	}
 
-	// Send confirm email
-	confirmLink, _ := url.Parse(details.ConfirmURL)
+	// Send confirm email email
+	confirmEmailLink, _ := url.Parse(details.ConfirmEmailURL)
 	params := url.Values{}
 	params.Add("email", details.Email)
 	params.Add("confirm_token", confirmToken)
-	confirmLink.RawQuery = params.Encode()
+	confirmEmailLink.RawQuery = params.Encode()
 
 	confirmEmail := email.ConfirmEmailParams{
 		ReceipientEmail:  details.Email,
 		UserFirstName:    details.FirstName,
-		ConfirmationLink: confirmLink.String(),
+		ConfirmationLink: confirmEmailLink.String(),
 		EmailFromName:    viper.GetString("email.from_name"),
 	}
 

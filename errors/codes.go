@@ -97,10 +97,10 @@ var (
 		Code:       409003,
 		Title:      "EmailAndUsernameAlreadyExists",
 	}
-	UserAlreadyConfirmed = ErrorCode{
+	EmailAlreadyConfirmed = ErrorCode{
 		HTTPStatus: http.StatusConflict,
 		Code:       409004,
-		Title:      "UserAlreadyConfirmed",
+		Title:      "EmailAlreadyConfirmed",
 	}
 
 	// 500 Internal Server Error

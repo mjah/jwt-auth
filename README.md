@@ -101,7 +101,7 @@ Environment variables are also supported. This will be the configuration name in
         password (string, required)<br>
         first_name (string, required)<br>
         last_name (string, required)<br>
-        confirm_url (string, required)
+        confirm_email_url (string, required)
       </td>
       <td rowspan=0>
         DetailsInvalid<br>
@@ -133,21 +133,21 @@ Environment variables are also supported. This will be the configuration name in
       </td>
     </tr>
     <tr>
-      <td>/v1/auth/confirm</td>
+      <td>/v1/auth/confirm_email</td>
       <td>POST</td>
       <td>
         email (string, required)<br>
-        confirm_token (string, required)
+        confirm_email_token (string, required)
       </td>
       <td>
         EmailDoesNotExist<br>
-        UserAlreadyConfirmed<br>
+        EmailAlreadyConfirmed<br>
         UUIDTokenDoesNotMatch<br>
         UUIDTokenExpired
       </td>
     </tr>
     <tr>
-      <td>/v1/auth/resetpassword</td>
+      <td>/v1/auth/reset_password</td>
       <td>POST</td>
       <td>
         email (string, required)<br>
@@ -166,16 +166,16 @@ Environment variables are also supported. This will be the configuration name in
       <td>POST</td>
       <td>
         email (string, required)<br>
-        confirm_url (string, required)
+        confirm_email_url (string, required)
       </td>
       <td>
         EmailDoesNotExist<br>
-        UserAlreadyConfirmed<br>
+        EmailAlreadyConfirmed<br>
         MessageQueueFailed
       </td>
     </tr>
     <tr>
-      <td>/v1/auth/send_resetpassword_email</td>
+      <td>/v1/auth/send_reset_password</td>
       <td>POST</td>
       <td>
         email (string, required)<br>
@@ -226,7 +226,7 @@ Accessing private routes will require the refresh token in the authorization bea
       <td></td>
     </tr>
     <tr>
-      <td>/v1/auth/refreshtoken</td>
+      <td>/v1/auth/refresh_token</td>
       <td>GET</td>
       <td></td>
       <td>

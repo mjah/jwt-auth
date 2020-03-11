@@ -8,9 +8,9 @@ import (
 	"github.com/mjah/jwt-auth/errors"
 )
 
-// Confirm route handler.
-func Confirm(c *gin.Context) {
-	var details auth.ConfirmDetails
+// ConfirmEmail route handler.
+func ConfirmEmail(c *gin.Context) {
+	var details auth.ConfirmEmailDetails
 
 	if err := c.BindJSON(&details); err != nil {
 		errCode := errors.New(errors.DetailsInvalid, err)
@@ -18,7 +18,7 @@ func Confirm(c *gin.Context) {
 		return
 	}
 
-	if errCode := details.Confirm(); errCode != nil {
+	if errCode := details.ConfirmEmail(); errCode != nil {
 		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
 		return
 	}
