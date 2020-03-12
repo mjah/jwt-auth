@@ -205,7 +205,7 @@ Accessing private routes will require the refresh token in the authorization bea
   </thead>
   <tbody>
     <tr>
-      <td>/v1/auth/signout</td>
+      <td>/v1/auth/user_details</td>
       <td>GET</td>
       <td></td>
       <td rowspan=0>
@@ -217,6 +217,12 @@ Accessing private routes will require the refresh token in the authorization bea
         UserIsNotActive<br>
         RefreshTokenIsRevoked
       </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>/v1/auth/signout</td>
+      <td>GET</td>
+      <td></td>
       <td></td>
     </tr>
     <tr>

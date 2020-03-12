@@ -37,6 +37,7 @@ func GetRouter() http.Handler {
 	private.Use(ValidateRefreshTokenMiddleware())
 	privateAuth := private.Group("/auth")
 	{
+		privateAuth.GET("/user_details", auth.UserDetails)
 		privateAuth.GET("/signout", auth.SignOut)
 		privateAuth.GET("/signout_all", auth.SignOutAll)
 		privateAuth.GET("/refresh_token", auth.RefreshToken)
