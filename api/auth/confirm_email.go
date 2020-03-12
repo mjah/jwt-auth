@@ -24,7 +24,7 @@ func ConfirmEmail(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Account confirmed.",
+		"message": "Email confirmed.",
 	})
 }
 

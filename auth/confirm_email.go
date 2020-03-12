@@ -18,7 +18,7 @@ type ConfirmEmailDetails struct {
 	ConfirmEmailToken string `json:"confirm_email_token" binding:"required" valid:"length(36|36)"`
 }
 
-// ConfirmEmail handles the user confirmation.
+// ConfirmEmail handles the email confirmation.
 func (details *ConfirmEmailDetails) ConfirmEmail() *errors.ErrorCode {
 	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {
@@ -43,7 +43,7 @@ func (details *ConfirmEmailDetails) ConfirmEmail() *errors.ErrorCode {
 		return errors.New(errors.DatabaseQueryFailed, err)
 	}
 
-	// Check if user not confirmed
+	// Check if email not confirmed
 	if user.IsConfirmedEmail {
 		return errors.New(errors.EmailAlreadyConfirmed, nil)
 	}
@@ -58,7 +58,7 @@ func (details *ConfirmEmailDetails) ConfirmEmail() *errors.ErrorCode {
 		return errors.New(errors.UUIDTokenExpired, nil)
 	}
 
-	// Confirm user
+	// Confirm email
 	if err := db.Model(user).Update(database.User{IsConfirmedEmail: true}).Error; err != nil {
 		return errors.New(errors.DatabaseQueryFailed, err)
 	}
@@ -102,7 +102,7 @@ func (details *SendConfirmEmailDetails) SendConfirmEmail() *errors.ErrorCode {
 		return errors.New(errors.EmailAlreadyConfirmed, nil)
 	}
 
-	// Update user with confirm token
+	// Update user with confirm email token
 	user.ConfirmEmailToken = utils.GenerateUUID()
 	user.ConfirmEmailTokenExpires = time.Now().Add(viper.GetDuration("account.confirm_token_expires")).UTC()
 
