@@ -236,7 +236,6 @@ Accessing private routes will require the refresh token in the authorization bea
       <td>GET</td>
       <td></td>
       <td>
-        UserDoesNotExist<br>
         AccessTokenIssueFailed
       </td>
     </tr>
@@ -252,7 +251,6 @@ Accessing private routes will require the refresh token in the authorization bea
       </td>
       <td>
         DetailsInvalid<br>
-        UserDoesNotExist<br>
         EmailAndUsernameAlreadyExists<br>
         EmailAlreadyExists<br>
         UsernameAlreadyExists<br>

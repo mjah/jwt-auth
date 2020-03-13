@@ -18,6 +18,12 @@ serve:
   host: "localhost"
   port: 9096
 
+cors:
+  allow_all_origins: true
+  allow_origins:
+    - "http://localhost:8080"
+  allow_credentials: false
+
 token:
   # public_key_path:
   # private_key_path:

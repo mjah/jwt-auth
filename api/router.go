@@ -16,7 +16,20 @@ func GetRouter() http.Handler {
 	}
 
 	r := gin.Default()
-	r.Use(cors.Default())
+	config := cors.DefaultConfig()
+
+	if viper.GetBool("cors.allow_all_origins") {
+		config.AllowAllOrigins = true
+	} else {
+		config.AllowOrigins = viper.GetStringSlice("cors.allow_origins")
+	}
+
+	if viper.GetBool("cors.allow_credentials") {
+		config.AllowCredentials = true
+	}
+
+	config.AllowHeaders = []string{"Authorization", "Origin", "Content-Length", "Content-Type"}
+	r.Use(cors.New(config))
 
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "pong"})
