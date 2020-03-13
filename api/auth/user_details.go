@@ -18,7 +18,7 @@ func UserDetails(c *gin.Context) {
 
 	userDetails, errCode := details.UserDetails()
 	if errCode != nil {
-		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 		return
 	}
 

@@ -14,12 +14,12 @@ func SignUp(c *gin.Context) {
 
 	if err := c.BindJSON(&details); err != nil {
 		errCode := errors.New(errors.DetailsInvalid, err)
-		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 		return
 	}
 
 	if errCode := details.SignUp(); errCode != nil {
-		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 		return
 	}
 

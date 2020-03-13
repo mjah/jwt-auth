@@ -23,25 +23,25 @@ func ValidateRefreshTokenMiddleware() gin.HandlerFunc {
 
 		if len(tokenBearer) == 0 {
 			errCode := errors.New(errors.AuthorizationBearerTokenEmpty, nil)
-			c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+			c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 			return
 		}
 
 		tokenString := stripBearerPrefix(tokenBearer)
 		token, errCode := jwt.ValidateToken(tokenString)
 		if errCode != nil {
-			c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+			c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 			return
 		}
 
 		claims, errCode := jwt.ParseRefreshTokenClaims(token)
 		if errCode != nil {
-			c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+			c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 			return
 		}
 
 		if errCode := jwt.CheckRefreshTokenRevoked(claims.UserID, claims.Iat, tokenString); errCode != nil {
-			c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+			c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 			return
 		}
 

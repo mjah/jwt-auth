@@ -16,7 +16,7 @@ func SignOut(c *gin.Context) {
 	details.Claims = c.MustGet("refresh_token_claims").(jwt.RefreshTokenClaims)
 
 	if errCode := details.SignOut(); errCode != nil {
-		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 		return
 	}
 
@@ -32,7 +32,7 @@ func SignOutAll(c *gin.Context) {
 	details.Claims = c.MustGet("refresh_token_claims").(jwt.RefreshTokenClaims)
 
 	if errCode := details.SignOutAll(); errCode != nil {
-		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 		return
 	}
 

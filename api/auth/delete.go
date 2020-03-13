@@ -17,7 +17,7 @@ func Delete(c *gin.Context) {
 	details.UserID = claims.UserID
 
 	if errCode := details.Delete(); errCode != nil {
-		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 		return
 	}
 

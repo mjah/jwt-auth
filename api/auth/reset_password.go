@@ -14,12 +14,12 @@ func ResetPassword(c *gin.Context) {
 
 	if err := c.BindJSON(&details); err != nil {
 		errCode := errors.New(errors.DetailsInvalid, err)
-		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 		return
 	}
 
 	if errCode := details.ResetPassword(); errCode != nil {
-		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 		return
 	}
 
@@ -34,12 +34,12 @@ func SendResetPasswordEmail(c *gin.Context) {
 
 	if err := c.BindJSON(&details); err != nil {
 		errCode := errors.New(errors.DetailsInvalid, err)
-		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 		return
 	}
 
 	if errCode := details.SendResetPasswordEmail(); errCode != nil {
-		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 		return
 	}
 

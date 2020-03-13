@@ -18,7 +18,7 @@ func RefreshToken(c *gin.Context) {
 
 	accessToken, errCode := details.RefreshToken()
 	if errCode != nil {
-		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"message": errCode.OmitDetailsInProd()})
+		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 		return
 	}
 
