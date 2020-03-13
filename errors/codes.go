@@ -164,7 +164,7 @@ func (e *ErrorCode) Error() string {
 
 // OmitDetailsInProd hides the error details when in production.
 func (e *ErrorCode) OmitDetailsInProd() *ErrorCode {
-	if viper.GetString("environment") == "production" {
+	if viper.GetString("environment") == "production" && e.Code != 400001 {
 		e.Errors = nil
 	}
 	return e
