@@ -13,7 +13,7 @@ func ConfirmEmail(c *gin.Context) {
 	var details auth.ConfirmEmailDetails
 
 	if err := c.BindJSON(&details); err != nil {
-		errCode := errors.New(errors.DetailsInvalid, err)
+		errCode := errors.New(errors.DetailsInvalid, err.Error())
 		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 		return
 	}
@@ -33,7 +33,7 @@ func SendConfirmEmail(c *gin.Context) {
 	var details auth.SendConfirmEmailDetails
 
 	if err := c.BindJSON(&details); err != nil {
-		errCode := errors.New(errors.DetailsInvalid, err)
+		errCode := errors.New(errors.DetailsInvalid, err.Error())
 		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 		return
 	}

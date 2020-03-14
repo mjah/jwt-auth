@@ -22,11 +22,11 @@ type SignInDetails struct {
 func updateSignInHistory(db *gorm.DB, user *database.User, signInSuccess *bool) *errors.ErrorCode {
 	if *signInSuccess {
 		if err := db.Model(user).Update(database.User{LastSignin: time.Now().UTC()}).Error; err != nil {
-			return errors.New(errors.DatabaseQueryFailed, err)
+			return errors.New(errors.DatabaseQueryFailed, err.Error())
 		}
 	} else {
 		if err := db.Model(user).Update(database.User{FailedSignin: time.Now().UTC()}).Error; err != nil {
-			return errors.New(errors.DatabaseQueryFailed, err)
+			return errors.New(errors.DatabaseQueryFailed, err.Error())
 		}
 	}
 	return nil
@@ -36,13 +36,13 @@ func updateSignInHistory(db *gorm.DB, user *database.User, signInSuccess *bool) 
 func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {
-		return "", "", errors.New(errors.DetailsInvalid, err)
+		return "", "", errors.New(errors.DetailsInvalid, err.Error())
 	}
 
 	// Get database connection
 	db, err := database.GetConnection()
 	if err != nil {
-		return "", "", errors.New(errors.DatabaseConnectionFailed, err)
+		return "", "", errors.New(errors.DatabaseConnectionFailed, err.Error())
 	}
 
 	// Declare variables
@@ -53,9 +53,9 @@ func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 	// Check email exists
 	if err := db.Where(condition).First(user).Error; err != nil {
 		if database.IsRecordNotFoundError(err) {
-			return "", "", errors.New(errors.EmailDoesNotExist, err)
+			return "", "", errors.New(errors.EmailDoesNotExist, err.Error())
 		}
-		return "", "", errors.New(errors.DatabaseQueryFailed, err)
+		return "", "", errors.New(errors.DatabaseQueryFailed, err.Error())
 	}
 
 	signInSuccess := false
@@ -63,12 +63,12 @@ func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 
 	// Check password is correct
 	if err := utils.CheckPassword(user.Password, details.Password); err != nil {
-		return "", "", errors.New(errors.PasswordInvalid, err)
+		return "", "", errors.New(errors.PasswordInvalid, err.Error())
 	}
 
 	// Get role name
 	if err := db.Where("id = ?", user.RoleID).First(&role).Error; err != nil {
-		return "", "", errors.New(errors.DatabaseQueryFailed, err)
+		return "", "", errors.New(errors.DatabaseQueryFailed, err.Error())
 	}
 
 	// Issue access token

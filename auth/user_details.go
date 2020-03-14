@@ -24,16 +24,16 @@ func (details *UserDetailsDetails) UserDetails() (*ReturnUserDetails, *errors.Er
 	// Get database connection
 	db, err := database.GetConnection()
 	if err != nil {
-		return nil, errors.New(errors.DatabaseConnectionFailed, err)
+		return nil, errors.New(errors.DatabaseConnectionFailed, err.Error())
 	}
 
 	// Get user by ID
 	user := &database.User{}
 	if err := db.Where("id = ?", details.UserID).First(user).Error; err != nil {
 		if database.IsRecordNotFoundError(err) {
-			return nil, errors.New(errors.UserDoesNotExist, err)
+			return nil, errors.New(errors.UserDoesNotExist, err.Error())
 		}
-		return nil, errors.New(errors.DatabaseQueryFailed, err)
+		return nil, errors.New(errors.DatabaseQueryFailed, err.Error())
 	}
 
 	// Populate user details to return

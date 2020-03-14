@@ -24,11 +24,11 @@ type RefreshTokenClaims struct {
 func ParseAccessTokenClaims(token *jwt.Token) (AccessTokenClaims, *errors.ErrorCode) {
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
-		return AccessTokenClaims{}, errors.New(errors.JWTTokenInvalid, nil)
+		return AccessTokenClaims{}, errors.New(errors.JWTTokenInvalid, "")
 	}
 
 	if claims["type"].(string) != "access" {
-		return AccessTokenClaims{}, errors.New(errors.JWTTokenInvalid, nil)
+		return AccessTokenClaims{}, errors.New(errors.JWTTokenInvalid, "")
 	}
 
 	atc := AccessTokenClaims{
@@ -44,11 +44,11 @@ func ParseAccessTokenClaims(token *jwt.Token) (AccessTokenClaims, *errors.ErrorC
 func ParseRefreshTokenClaims(token *jwt.Token) (RefreshTokenClaims, *errors.ErrorCode) {
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
-		return RefreshTokenClaims{}, errors.New(errors.JWTTokenInvalid, nil)
+		return RefreshTokenClaims{}, errors.New(errors.JWTTokenInvalid, "")
 	}
 
 	if claims["type"].(string) != "refresh" {
-		return RefreshTokenClaims{}, errors.New(errors.JWTTokenInvalid, nil)
+		return RefreshTokenClaims{}, errors.New(errors.JWTTokenInvalid, "")
 	}
 
 	rtc := RefreshTokenClaims{

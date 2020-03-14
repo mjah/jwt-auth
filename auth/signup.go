@@ -26,13 +26,13 @@ type SignUpDetails struct {
 func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 	// Validate details
 	if _, err := govalidator.ValidateStruct(details); err != nil {
-		return errors.New(errors.DetailsInvalid, err)
+		return errors.New(errors.DetailsInvalid, err.Error())
 	}
 
 	// Get database connection
 	db, err := database.GetConnection()
 	if err != nil {
-		return errors.New(errors.DatabaseConnectionFailed, err)
+		return errors.New(errors.DatabaseConnectionFailed, err.Error())
 	}
 
 	// Check email already exists
@@ -41,7 +41,7 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 		if database.IsRecordNotFoundError(err) {
 			emailAlreadyExists = false
 		} else {
-			return errors.New(errors.DatabaseQueryFailed, err)
+			return errors.New(errors.DatabaseQueryFailed, err.Error())
 		}
 	}
 
@@ -51,32 +51,32 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 		if database.IsRecordNotFoundError(err) {
 			usernameAlreadyExists = false
 		} else {
-			return errors.New(errors.DatabaseQueryFailed, err)
+			return errors.New(errors.DatabaseQueryFailed, err.Error())
 		}
 	}
 
 	// If email and/or username exists, return error
 	if emailAlreadyExists && usernameAlreadyExists {
-		return errors.New(errors.EmailAndUsernameAlreadyExists, nil)
+		return errors.New(errors.EmailAndUsernameAlreadyExists, "")
 	} else if emailAlreadyExists {
-		return errors.New(errors.EmailAlreadyExists, nil)
+		return errors.New(errors.EmailAlreadyExists, "")
 	} else if usernameAlreadyExists {
-		return errors.New(errors.UsernameAlreadyExists, nil)
+		return errors.New(errors.UsernameAlreadyExists, "")
 	}
 
 	// Get default role ID
 	role := &database.Role{}
 	if err := db.Where("role = ?", viper.GetString("roles.default")).First(&role).Error; err != nil {
 		if database.IsRecordNotFoundError(err) {
-			return errors.New(errors.DefaultRoleAssignFailed, err)
+			return errors.New(errors.DefaultRoleAssignFailed, err.Error())
 		}
-		return errors.New(errors.DatabaseQueryFailed, err)
+		return errors.New(errors.DatabaseQueryFailed, err.Error())
 	}
 
 	// Generate password
 	generatedPassword, err := utils.GeneratePassword(details.Password)
 	if err != nil {
-		return errors.New(errors.PasswordGenerationFailed, err)
+		return errors.New(errors.PasswordGenerationFailed, err.Error())
 	}
 
 	// Populate user details to be submitted
@@ -94,7 +94,7 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 
 	// Execute query
 	if err := db.Create(submitUser).Error; err != nil {
-		return errors.New(errors.DatabaseQueryFailed, err)
+		return errors.New(errors.DatabaseQueryFailed, err.Error())
 	}
 
 	// Send welcome email
@@ -105,7 +105,7 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 	}
 
 	if err := welcomeEmail.AddToQueue(); err != nil {
-		return errors.New(errors.MessageQueueFailed, err)
+		return errors.New(errors.MessageQueueFailed, err.Error())
 	}
 
 	// Send confirm email email
@@ -123,7 +123,7 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 	}
 
 	if err := confirmEmail.AddToQueue(); err != nil {
-		return errors.New(errors.MessageQueueFailed, err)
+		return errors.New(errors.MessageQueueFailed, err.Error())
 	}
 
 	return nil

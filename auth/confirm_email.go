@@ -22,13 +22,13 @@ type ConfirmEmailDetails struct {
 func (details *ConfirmEmailDetails) ConfirmEmail() *errors.ErrorCode {
 	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {
-		return errors.New(errors.DetailsInvalid, err)
+		return errors.New(errors.DetailsInvalid, err.Error())
 	}
 
 	// Get database connection
 	db, err := database.GetConnection()
 	if err != nil {
-		return errors.New(errors.DatabaseConnectionFailed, err)
+		return errors.New(errors.DatabaseConnectionFailed, err.Error())
 	}
 
 	// Declare variables
@@ -38,29 +38,29 @@ func (details *ConfirmEmailDetails) ConfirmEmail() *errors.ErrorCode {
 	// Check email exists
 	if err := db.Where(condition).First(user).Error; err != nil {
 		if database.IsRecordNotFoundError(err) {
-			return errors.New(errors.EmailDoesNotExist, err)
+			return errors.New(errors.EmailDoesNotExist, err.Error())
 		}
-		return errors.New(errors.DatabaseQueryFailed, err)
+		return errors.New(errors.DatabaseQueryFailed, err.Error())
 	}
 
 	// Check if email not confirmed
 	if user.IsConfirmedEmail {
-		return errors.New(errors.EmailAlreadyConfirmed, nil)
+		return errors.New(errors.EmailAlreadyConfirmed, "")
 	}
 
 	// Check if confirmation token matches
 	if user.ConfirmEmailToken != details.ConfirmEmailToken {
-		return errors.New(errors.UUIDTokenDoesNotMatch, nil)
+		return errors.New(errors.UUIDTokenDoesNotMatch, "")
 	}
 
 	// Check if confirmation token expired
 	if user.ConfirmEmailTokenExpires.Unix() < time.Now().Unix() {
-		return errors.New(errors.UUIDTokenExpired, nil)
+		return errors.New(errors.UUIDTokenExpired, "")
 	}
 
 	// Confirm email
 	if err := db.Model(user).Update(database.User{IsConfirmedEmail: true}).Error; err != nil {
-		return errors.New(errors.DatabaseQueryFailed, err)
+		return errors.New(errors.DatabaseQueryFailed, err.Error())
 	}
 
 	return nil
@@ -76,13 +76,13 @@ type SendConfirmEmailDetails struct {
 func (details *SendConfirmEmailDetails) SendConfirmEmail() *errors.ErrorCode {
 	// Validate details
 	if _, err := govalidator.ValidateStruct(details); err != nil {
-		return errors.New(errors.DetailsInvalid, err)
+		return errors.New(errors.DetailsInvalid, err.Error())
 	}
 
 	// Get database connection
 	db, err := database.GetConnection()
 	if err != nil {
-		return errors.New(errors.DatabaseConnectionFailed, err)
+		return errors.New(errors.DatabaseConnectionFailed, err.Error())
 	}
 
 	// Declare variables
@@ -92,14 +92,14 @@ func (details *SendConfirmEmailDetails) SendConfirmEmail() *errors.ErrorCode {
 	// Check email exists
 	if err := db.Where(condition).First(user).Error; err != nil {
 		if database.IsRecordNotFoundError(err) {
-			return errors.New(errors.EmailDoesNotExist, err)
+			return errors.New(errors.EmailDoesNotExist, err.Error())
 		}
-		return errors.New(errors.DatabaseQueryFailed, err)
+		return errors.New(errors.DatabaseQueryFailed, err.Error())
 	}
 
 	// Check if email not confirmed
 	if user.IsConfirmedEmail {
-		return errors.New(errors.EmailAlreadyConfirmed, nil)
+		return errors.New(errors.EmailAlreadyConfirmed, "")
 	}
 
 	// Update user with confirm email token
@@ -107,7 +107,7 @@ func (details *SendConfirmEmailDetails) SendConfirmEmail() *errors.ErrorCode {
 	user.ConfirmEmailTokenExpires = time.Now().Add(viper.GetDuration("account.confirm_token_expires")).UTC()
 
 	if err := db.Save(user).Error; err != nil {
-		return errors.New(errors.DatabaseQueryFailed, err)
+		return errors.New(errors.DatabaseQueryFailed, err.Error())
 	}
 
 	// Send confirm email email
@@ -125,7 +125,7 @@ func (details *SendConfirmEmailDetails) SendConfirmEmail() *errors.ErrorCode {
 	}
 
 	if err := confirmEmail.AddToQueue(); err != nil {
-		return errors.New(errors.MessageQueueFailed, err)
+		return errors.New(errors.MessageQueueFailed, err.Error())
 	}
 
 	return nil

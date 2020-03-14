@@ -21,7 +21,7 @@ func (atc *AccessTokenClaims) IssueAccessToken() (string, *errors.ErrorCode) {
 	).SignedString(privateKey)
 
 	if err != nil {
-		return "", errors.New(errors.AccessTokenIssueFailed, err)
+		return "", errors.New(errors.AccessTokenIssueFailed, err.Error())
 	}
 
 	return tokenString, nil
@@ -41,7 +41,7 @@ func (rtc *RefreshTokenClaims) IssueRefreshToken() (string, *errors.ErrorCode) {
 	).SignedString(privateKey)
 
 	if err != nil {
-		return "", errors.New(errors.RefreshTokenIssueFailed, err)
+		return "", errors.New(errors.RefreshTokenIssueFailed, err.Error())
 	}
 
 	return tokenString, nil

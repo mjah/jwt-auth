@@ -24,13 +24,13 @@ type ResetPasswordDetails struct {
 func (details *ResetPasswordDetails) ResetPassword() *errors.ErrorCode {
 	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {
-		return errors.New(errors.DetailsInvalid, err)
+		return errors.New(errors.DetailsInvalid, err.Error())
 	}
 
 	// Get database connection
 	db, err := database.GetConnection()
 	if err != nil {
-		return errors.New(errors.DatabaseConnectionFailed, err)
+		return errors.New(errors.DatabaseConnectionFailed, err.Error())
 	}
 
 	// Declare variables
@@ -40,29 +40,29 @@ func (details *ResetPasswordDetails) ResetPassword() *errors.ErrorCode {
 	// Check email exists
 	if err := db.Where(condition).First(user).Error; err != nil {
 		if database.IsRecordNotFoundError(err) {
-			return errors.New(errors.EmailDoesNotExist, err)
+			return errors.New(errors.EmailDoesNotExist, err.Error())
 		}
-		return errors.New(errors.DatabaseQueryFailed, err)
+		return errors.New(errors.DatabaseQueryFailed, err.Error())
 	}
 
 	// Check if reset password token matches
 	if user.ResetPassToken != details.ResetPasswordToken {
-		return errors.New(errors.UUIDTokenDoesNotMatch, nil)
+		return errors.New(errors.UUIDTokenDoesNotMatch, "")
 	}
 
 	// Check if reset password token expired
 	if user.ResetPassTokenExpires.Unix() < time.Now().Unix() {
-		return errors.New(errors.UUIDTokenExpired, nil)
+		return errors.New(errors.UUIDTokenExpired, "")
 	}
 
 	// Update password
 	generatedPassword, err := utils.GeneratePassword(details.Password)
 	if err != nil {
-		return errors.New(errors.PasswordGenerationFailed, err)
+		return errors.New(errors.PasswordGenerationFailed, err.Error())
 	}
 
 	if err := db.Model(user).Update(database.User{Password: generatedPassword}).Error; err != nil {
-		return errors.New(errors.DatabaseQueryFailed, err)
+		return errors.New(errors.DatabaseQueryFailed, err.Error())
 	}
 
 	if errCode := jwt.RevokeRefreshTokenAllBefore(user.ID); errCode != nil {
@@ -82,13 +82,13 @@ type SendResetPasswordEmailDetails struct {
 func (details *SendResetPasswordEmailDetails) SendResetPasswordEmail() *errors.ErrorCode {
 	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {
-		return errors.New(errors.DetailsInvalid, err)
+		return errors.New(errors.DetailsInvalid, err.Error())
 	}
 
 	// Get database connection
 	db, err := database.GetConnection()
 	if err != nil {
-		return errors.New(errors.DatabaseConnectionFailed, err)
+		return errors.New(errors.DatabaseConnectionFailed, err.Error())
 	}
 
 	// Declare variables
@@ -98,9 +98,9 @@ func (details *SendResetPasswordEmailDetails) SendResetPasswordEmail() *errors.E
 	// Check email exists
 	if err := db.Where(condition).First(user).Error; err != nil {
 		if database.IsRecordNotFoundError(err) {
-			return errors.New(errors.EmailDoesNotExist, err)
+			return errors.New(errors.EmailDoesNotExist, err.Error())
 		}
-		return errors.New(errors.DatabaseQueryFailed, err)
+		return errors.New(errors.DatabaseQueryFailed, err.Error())
 	}
 
 	// Update user with reset password token
@@ -108,7 +108,7 @@ func (details *SendResetPasswordEmailDetails) SendResetPasswordEmail() *errors.E
 	user.ResetPassTokenExpires = time.Now().Add(viper.GetDuration("account.reset_password_token_expires")).UTC()
 
 	if err := db.Save(user).Error; err != nil {
-		return errors.New(errors.DatabaseQueryFailed, err)
+		return errors.New(errors.DatabaseQueryFailed, err.Error())
 	}
 
 	// Send reset password email
@@ -126,7 +126,7 @@ func (details *SendResetPasswordEmailDetails) SendResetPasswordEmail() *errors.E
 	}
 
 	if err := resetPassEmail.AddToQueue(); err != nil {
-		return errors.New(errors.MessageQueueFailed, err)
+		return errors.New(errors.MessageQueueFailed, err.Error())
 	}
 
 	return nil

@@ -19,7 +19,7 @@ func (details *RefreshTokenDetails) RefreshToken() (string, *errors.ErrorCode) {
 	// Get database connection
 	db, err := database.GetConnection()
 	if err != nil {
-		return "", errors.New(errors.DatabaseConnectionFailed, err)
+		return "", errors.New(errors.DatabaseConnectionFailed, err.Error())
 	}
 
 	// Declare variables
@@ -29,14 +29,14 @@ func (details *RefreshTokenDetails) RefreshToken() (string, *errors.ErrorCode) {
 	// Get user by ID
 	if err := db.Where("id = ?", details.UserID).First(user).Error; err != nil {
 		if database.IsRecordNotFoundError(err) {
-			return "", errors.New(errors.UserDoesNotExist, err)
+			return "", errors.New(errors.UserDoesNotExist, err.Error())
 		}
-		return "", errors.New(errors.DatabaseQueryFailed, err)
+		return "", errors.New(errors.DatabaseQueryFailed, err.Error())
 	}
 
 	// Get role name
 	if err := db.Where("id = ?", user.RoleID).First(&role).Error; err != nil {
-		return "", errors.New(errors.DatabaseQueryFailed, err)
+		return "", errors.New(errors.DatabaseQueryFailed, err.Error())
 	}
 
 	// Issue access token

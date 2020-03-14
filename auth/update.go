@@ -22,22 +22,22 @@ type UpdateDetails struct {
 func (details *UpdateDetails) Update() *errors.ErrorCode {
 	// Validate struct
 	if _, err := govalidator.ValidateStruct(details); err != nil {
-		return errors.New(errors.DetailsInvalid, err)
+		return errors.New(errors.DetailsInvalid, err.Error())
 	}
 
 	// Get database connection
 	db, err := database.GetConnection()
 	if err != nil {
-		return errors.New(errors.DatabaseConnectionFailed, err)
+		return errors.New(errors.DatabaseConnectionFailed, err.Error())
 	}
 
 	// Get user by ID
 	user := &database.User{}
 	if err := db.Where("id = ?", details.Claims.UserID).First(user).Error; err != nil {
 		if database.IsRecordNotFoundError(err) {
-			return errors.New(errors.UserDoesNotExist, err)
+			return errors.New(errors.UserDoesNotExist, err.Error())
 		}
-		return errors.New(errors.DatabaseQueryFailed, err)
+		return errors.New(errors.DatabaseQueryFailed, err.Error())
 	}
 
 	// Email
@@ -51,7 +51,7 @@ func (details *UpdateDetails) Update() *errors.ErrorCode {
 				user.Email = details.Email
 				user.IsConfirmedEmail = false
 			} else {
-				return errors.New(errors.DatabaseQueryFailed, err)
+				return errors.New(errors.DatabaseQueryFailed, err.Error())
 			}
 		}
 	}
@@ -66,18 +66,18 @@ func (details *UpdateDetails) Update() *errors.ErrorCode {
 				usernameAlreadyExists = false
 				user.Username = details.Username
 			} else {
-				return errors.New(errors.DatabaseQueryFailed, err)
+				return errors.New(errors.DatabaseQueryFailed, err.Error())
 			}
 		}
 	}
 
 	// If email and/or username exists, return error
 	if emailAlreadyExists && usernameAlreadyExists {
-		return errors.New(errors.EmailAndUsernameAlreadyExists, nil)
+		return errors.New(errors.EmailAndUsernameAlreadyExists, "")
 	} else if emailAlreadyExists {
-		return errors.New(errors.EmailAlreadyExists, nil)
+		return errors.New(errors.EmailAlreadyExists, "")
 	} else if usernameAlreadyExists {
-		return errors.New(errors.UsernameAlreadyExists, nil)
+		return errors.New(errors.UsernameAlreadyExists, "")
 	}
 
 	// Password
@@ -85,7 +85,7 @@ func (details *UpdateDetails) Update() *errors.ErrorCode {
 		// Generate password
 		generatedPassword, err := utils.GeneratePassword(details.Password)
 		if err != nil {
-			return errors.New(errors.PasswordGenerationFailed, err)
+			return errors.New(errors.PasswordGenerationFailed, err.Error())
 		}
 		user.Password = generatedPassword
 	}
@@ -102,7 +102,7 @@ func (details *UpdateDetails) Update() *errors.ErrorCode {
 
 	// Update user
 	if err := db.Save(user).Error; err != nil {
-		return errors.New(errors.DatabaseQueryFailed, err)
+		return errors.New(errors.DatabaseQueryFailed, err.Error())
 	}
 
 	// Revoke refresh token all before on password change

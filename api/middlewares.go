@@ -22,7 +22,7 @@ func ValidateRefreshTokenMiddleware() gin.HandlerFunc {
 		tokenBearer := c.GetHeader("Authorization")
 
 		if len(tokenBearer) == 0 {
-			errCode := errors.New(errors.AuthorizationBearerTokenEmpty, nil)
+			errCode := errors.New(errors.AuthorizationBearerTokenEmpty, "")
 			c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 			return
 		}

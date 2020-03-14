@@ -10,11 +10,11 @@ import (
 
 // ErrorCode holds the error code information.
 type ErrorCode struct {
-	HTTPStatus  int
-	Code        int
-	Title       string
-	Description string
-	Errors      error
+	HTTPStatus   int
+	Code         int
+	Title        string
+	Description  string
+	ErrorMessage string
 }
 
 // Error Codes
@@ -159,24 +159,24 @@ var (
 )
 
 func (e *ErrorCode) Error() string {
-	return fmt.Sprintf("[%d] %s - %v", e.Code, e.Title, e.Errors)
+	return fmt.Sprintf("[%d] %s - %v", e.Code, e.Title, e.ErrorMessage)
 }
 
 // OmitDetailsInProd hides the error details when in production.
 func (e *ErrorCode) OmitDetailsInProd() *ErrorCode {
 	if viper.GetString("environment") == "production" && e.Code != 400001 {
-		e.Errors = nil
+		e.ErrorMessage = ""
 	}
 	return e
 }
 
 // New allows for an error code to be created.
-func New(errorCode ErrorCode, errors error) *ErrorCode {
+func New(errorCode ErrorCode, errorMessage string) *ErrorCode {
 	return &ErrorCode{
-		HTTPStatus:  errorCode.HTTPStatus,
-		Code:        errorCode.Code,
-		Title:       errorCode.Title,
-		Description: errorCode.Description,
-		Errors:      errors,
+		HTTPStatus:   errorCode.HTTPStatus,
+		Code:         errorCode.Code,
+		Title:        errorCode.Title,
+		Description:  errorCode.Description,
+		ErrorMessage: errorMessage,
 	}
 }
