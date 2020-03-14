@@ -74,7 +74,7 @@ func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 	// Issue access token
 	atc := jwt.AccessTokenClaims{
 		Iat:    time.Now().Unix(),
-		Exp:    time.Now().Add(viper.GetDuration("token.access_token_expires")).Unix(),
+		Exp:    time.Now().Add(viper.GetDuration("token.access_token.expires")).Unix(),
 		UserID: user.ID,
 		Role:   role.Role,
 	}
@@ -85,9 +85,9 @@ func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 	}
 
 	// Issue refresh token
-	expireIn := viper.GetDuration("token.refresh_token_expires")
+	expireIn := viper.GetDuration("token.refresh_token.expires")
 	if details.RememberMe {
-		expireIn = viper.GetDuration("token.refresh_token_expires_extended")
+		expireIn = viper.GetDuration("token.refresh_token.expires_extended")
 	}
 
 	rtc := jwt.RefreshTokenClaims{

@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mjah/jwt-auth/auth"
 	"github.com/mjah/jwt-auth/auth/jwt"
+	"github.com/spf13/viper"
 )
 
 // RefreshToken route handler.
@@ -22,8 +23,19 @@ func RefreshToken(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"message":      "Access token refreshed.",
-		"access_token": accessToken,
-	})
+	if viper.GetBool("token.access_token.transport.cookies") {
+		maxAge := int(viper.GetDuration("token.access_token.expires").Seconds())
+		c.SetCookie("access_token", accessToken, maxAge, "/", "", viper.GetBool("serve.cookies_secure"), true)
+	}
+
+	if viper.GetBool("token.access_token.transport.json_response") {
+		c.JSON(http.StatusOK, gin.H{
+			"message":      "Access token refreshed.",
+			"access_token": accessToken,
+		})
+	} else {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Access token refreshed.",
+		})
+	}
 }

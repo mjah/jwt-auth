@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mjah/jwt-auth/auth"
 	"github.com/mjah/jwt-auth/auth/jwt"
+	"github.com/spf13/viper"
 )
 
 // SignOut route handler.
@@ -18,6 +19,14 @@ func SignOut(c *gin.Context) {
 	if errCode := details.SignOut(); errCode != nil {
 		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 		return
+	}
+
+	if viper.GetBool("token.access_token.transport.cookies") {
+		c.SetCookie("access_token", "", 0, "/", "", viper.GetBool("serve.cookies_secure"), true)
+	}
+
+	if viper.GetBool("token.refresh_token.transport.cookies") {
+		c.SetCookie("refresh_token", "", 0, "/", "", viper.GetBool("serve.cookies_secure"), true)
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -34,6 +43,14 @@ func SignOutAll(c *gin.Context) {
 	if errCode := details.SignOutAll(); errCode != nil {
 		c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
 		return
+	}
+
+	if viper.GetBool("token.access_token.transport.cookies") {
+		c.SetCookie("access_token", "", 0, "/", "", viper.GetBool("serve.cookies_secure"), true)
+	}
+
+	if viper.GetBool("token.refresh_token.transport.cookies") {
+		c.SetCookie("refresh_token", "", 0, "/", "", viper.GetBool("serve.cookies_secure"), true)
 	}
 
 	c.JSON(http.StatusOK, gin.H{

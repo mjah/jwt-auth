@@ -17,20 +17,28 @@ roles:
 serve:
   host: "localhost"
   port: 9096
-
-cors:
-  allow_all_origins: true
-  allow_origins:
-    - "http://localhost:8080"
-  allow_credentials: false
+  cors:
+    allow_all_origins: false
+    allow_origins:
+      - "http://localhost:8080"
+    allow_credentials: true
+  cookies_secure: false
 
 token:
   # public_key_path:
   # private_key_path:
   issuer: "jwt-auth"
-  access_token_expires: "5m"                 # recommended to keep this short (<10m)
-  refresh_token_expires: "8h00m"
-  refresh_token_expires_extended: "8760h00m" # if user selects remember me, this will be used
+  access_token:
+    expires: "5m" # recommended to keep this short (<10m)
+    transport:
+      cookies: false
+      json_response: true
+  refresh_token:
+    expires: "8h00m"
+    expires_extended: "8760h00m" # if user selects remember me, this will be used
+    transport:
+      cookies: true
+      json_response: false
 
 postgres:
   host: "localhost"

@@ -18,13 +18,13 @@ func GetRouter() http.Handler {
 	r := gin.Default()
 	config := cors.DefaultConfig()
 
-	if viper.GetBool("cors.allow_all_origins") {
+	if viper.GetBool("serve.cors.allow_all_origins") {
 		config.AllowAllOrigins = true
 	} else {
-		config.AllowOrigins = viper.GetStringSlice("cors.allow_origins")
+		config.AllowOrigins = viper.GetStringSlice("serve.cors.allow_origins")
 	}
 
-	if viper.GetBool("cors.allow_credentials") {
+	if viper.GetBool("serve.cors.allow_credentials") {
 		config.AllowCredentials = true
 	}
 

@@ -42,7 +42,7 @@ func (details *RefreshTokenDetails) RefreshToken() (string, *errors.ErrorCode) {
 	// Issue access token
 	atc := jwt.AccessTokenClaims{
 		Iat:    time.Now().Unix(),
-		Exp:    time.Now().Add(viper.GetDuration("token.access_token_expires")).Unix(),
+		Exp:    time.Now().Add(viper.GetDuration("token.access_token.expires")).Unix(),
 		UserID: user.ID,
 		Role:   role.Role,
 	}

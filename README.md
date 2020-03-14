@@ -15,6 +15,7 @@ Features:
 * User sign up, sign in, sign out, update, confirm, delete, and reset password.
 * Send welcome, confirm, and reset password emails.
 * Issue access and refresh token on signin.
+* Ability to store tokens in HTTPOnly cookies and/or receive in JSON response.
 * Refresh token revocation on sign out and ability to revoke all refresh tokens on sign out everywhere.
 * JWT signed using RS256 signing algorithm for asymmetric encryption.
 
@@ -210,6 +211,7 @@ Accessing private routes will require the refresh token in the authorization bea
       <td></td>
       <td rowspan=0>
         AuthorizationBearerTokenEmpty<br>
+        RefreshTokenCookieEmpty<br>
         JWTTokenInvalid<br>
         DatabaseConnectionFailed<br>
         DatabaseQueryFailed<br>

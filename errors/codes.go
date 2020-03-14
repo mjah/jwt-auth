@@ -40,6 +40,12 @@ var (
 		Title:       "AuthorizationBearerTokenEmpty",
 		Description: "Authorization bearer token empty.",
 	}
+	RefreshTokenCookieEmpty = ErrorCode{
+		HTTPStatus:  http.StatusBadRequest,
+		Code:        400003,
+		Title:       "RefreshTokenCookieEmpty",
+		Description: "Refresh token cookie empty.",
+	}
 
 	// 401 Unauthorized
 	PasswordIncorrect = ErrorCode{

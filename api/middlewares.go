@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/mjah/jwt-auth/auth/jwt"
 	"github.com/mjah/jwt-auth/errors"
+	"github.com/spf13/viper"
 )
 
 func stripBearerPrefix(tokenBearer string) string {
@@ -19,15 +20,26 @@ func stripBearerPrefix(tokenBearer string) string {
 // before accessing private resources.
 func ValidateRefreshTokenMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		tokenBearer := c.GetHeader("Authorization")
+		var tokenString string
 
-		if len(tokenBearer) == 0 {
-			errCode := errors.New(errors.AuthorizationBearerTokenEmpty, "")
-			c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
-			return
+		if viper.GetBool("token.refresh_token.transport.cookies") {
+			var err error
+			tokenString, err = c.Cookie("refresh_token")
+			if err != nil {
+				errCode := errors.New(errors.RefreshTokenCookieEmpty, err.Error())
+				c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
+				return
+			}
+		} else {
+			tokenBearer := c.GetHeader("Authorization")
+			if len(tokenBearer) == 0 {
+				errCode := errors.New(errors.AuthorizationBearerTokenEmpty, "")
+				c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
+				return
+			}
+			tokenString = stripBearerPrefix(tokenBearer)
 		}
 
-		tokenString := stripBearerPrefix(tokenBearer)
 		token, errCode := jwt.ValidateToken(tokenString)
 		if errCode != nil {
 			c.AbortWithStatusJSON(errCode.HTTPStatus, gin.H{"error": errCode.OmitDetailsInProd()})
