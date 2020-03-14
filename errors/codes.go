@@ -42,11 +42,11 @@ var (
 	}
 
 	// 401 Unauthorized
-	PasswordInvalid = ErrorCode{
+	PasswordIncorrect = ErrorCode{
 		HTTPStatus:  http.StatusUnauthorized,
 		Code:        401001,
-		Title:       "PasswordInvalid",
-		Description: "Password invalid.",
+		Title:       "PasswordIncorrect",
+		Description: "Password incorrect.",
 	}
 	JWTTokenInvalid = ErrorCode{
 		HTTPStatus:  http.StatusUnauthorized,

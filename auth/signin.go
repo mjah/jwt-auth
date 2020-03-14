@@ -63,7 +63,7 @@ func (details *SignInDetails) SignIn() (string, string, *errors.ErrorCode) {
 
 	// Check password is correct
 	if err := utils.CheckPassword(user.Password, details.Password); err != nil {
-		return "", "", errors.New(errors.PasswordInvalid, err.Error())
+		return "", "", errors.New(errors.PasswordIncorrect, err.Error())
 	}
 
 	// Get role name
