@@ -22,11 +22,11 @@ func SignOut(c *gin.Context) {
 	}
 
 	if viper.GetBool("token.access_token.transport.cookies") {
-		c.SetCookie("access_token", "", 0, "/", "", viper.GetBool("serve.cookies_secure"), true)
+		c.SetCookie("access_token", "", -1, "/", "", viper.GetBool("serve.cookies_secure"), true)
 	}
 
 	if viper.GetBool("token.refresh_token.transport.cookies") {
-		c.SetCookie("refresh_token", "", 0, "/", "", viper.GetBool("serve.cookies_secure"), true)
+		c.SetCookie("refresh_token", "", -1, "/", "", viper.GetBool("serve.cookies_secure"), true)
 	}
 
 	c.JSON(http.StatusOK, gin.H{
@@ -46,11 +46,11 @@ func SignOutAll(c *gin.Context) {
 	}
 
 	if viper.GetBool("token.access_token.transport.cookies") {
-		c.SetCookie("access_token", "", 0, "/", "", viper.GetBool("serve.cookies_secure"), true)
+		c.SetCookie("access_token", "", -1, "/", "", viper.GetBool("serve.cookies_secure"), true)
 	}
 
 	if viper.GetBool("token.refresh_token.transport.cookies") {
-		c.SetCookie("refresh_token", "", 0, "/", "", viper.GetBool("serve.cookies_secure"), true)
+		c.SetCookie("refresh_token", "", -1, "/", "", viper.GetBool("serve.cookies_secure"), true)
 	}
 
 	c.JSON(http.StatusOK, gin.H{
