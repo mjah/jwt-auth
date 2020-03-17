@@ -1,6 +1,8 @@
 package auth
 
 import (
+	"strings"
+
 	"github.com/asaskevich/govalidator"
 	"github.com/mjah/jwt-auth/auth/jwt"
 	"github.com/mjah/jwt-auth/database"
@@ -42,7 +44,8 @@ func (details *UpdateDetails) Update() *errors.ErrorCode {
 
 	// Email
 	emailAlreadyExists := false
-	if details.Email != "" {
+	details.Email = strings.ToLower(details.Email)
+	if details.Email != "" && details.Email != user.Email {
 		// Check email already exists
 		emailAlreadyExists = true
 		if err := db.Where(&database.User{Email: details.Email}).First(&database.User{}).Error; err != nil {
@@ -58,7 +61,7 @@ func (details *UpdateDetails) Update() *errors.ErrorCode {
 
 	// Username
 	usernameAlreadyExists := false
-	if details.Username != "" {
+	if details.Username != "" && details.Username != user.Username {
 		// Check username already exists
 		usernameAlreadyExists = true
 		if err := db.Where(&database.User{Username: details.Username}).First(&database.User{}).Error; err != nil {

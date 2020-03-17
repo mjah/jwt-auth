@@ -2,6 +2,7 @@ package auth
 
 import (
 	"net/url"
+	"strings"
 	"time"
 
 	"github.com/asaskevich/govalidator"
@@ -37,6 +38,7 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 
 	// Check email already exists
 	emailAlreadyExists := true
+	details.Email = strings.ToLower(details.Email)
 	if err := db.Where(&database.User{Email: details.Email}).First(&database.User{}).Error; err != nil {
 		if database.IsRecordNotFoundError(err) {
 			emailAlreadyExists = false
