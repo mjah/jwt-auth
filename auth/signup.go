@@ -112,7 +112,7 @@ func (details *SignUpDetails) SignUp() *errors.ErrorCode {
 	confirmEmailLink, _ := url.Parse(details.ConfirmEmailURL)
 	params := url.Values{}
 	params.Add("email", details.Email)
-	params.Add("confirm_token", confirmToken)
+	params.Add("confirm_email_token", confirmToken)
 	confirmEmailLink.RawQuery = params.Encode()
 
 	confirmEmail := email.ConfirmEmailParams{

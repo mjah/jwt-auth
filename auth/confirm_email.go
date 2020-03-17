@@ -114,7 +114,7 @@ func (details *SendConfirmEmailDetails) SendConfirmEmail() *errors.ErrorCode {
 	confirmLink, _ := url.Parse(details.ConfirmEmailURL)
 	params := url.Values{}
 	params.Add("email", details.Email)
-	params.Add("confirm_token", user.ConfirmEmailToken)
+	params.Add("confirm_email_token", user.ConfirmEmailToken)
 	confirmLink.RawQuery = params.Encode()
 
 	confirmEmail := email.ConfirmEmailParams{
