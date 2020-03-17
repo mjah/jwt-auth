@@ -94,7 +94,7 @@ Environment variables are also supported. This will be the configuration name in
   </thead>
   <tbody>
     <tr>
-      <td>/v1/auth/signup</td>
+      <td>/signup</td>
       <td>POST</td>
       <td>
         email (string, required)<br>
@@ -119,7 +119,7 @@ Environment variables are also supported. This will be the configuration name in
       </td>
     </tr>
     <tr>
-      <td>/v1/auth/signin</td>
+      <td>/signin</td>
       <td>POST</td>
       <td>
         email (string, required)<br>
@@ -134,7 +134,7 @@ Environment variables are also supported. This will be the configuration name in
       </td>
     </tr>
     <tr>
-      <td>/v1/auth/confirm_email</td>
+      <td>/confirm-email</td>
       <td>POST</td>
       <td>
         email (string, required)<br>
@@ -148,7 +148,7 @@ Environment variables are also supported. This will be the configuration name in
       </td>
     </tr>
     <tr>
-      <td>/v1/auth/reset_password</td>
+      <td>/reset-password</td>
       <td>POST</td>
       <td>
         email (string, required)<br>
@@ -163,7 +163,7 @@ Environment variables are also supported. This will be the configuration name in
       </td>
     </tr>
     <tr>
-      <td>/v1/auth/send_confirm_email</td>
+      <td>/send-confirm-email</td>
       <td>POST</td>
       <td>
         email (string, required)<br>
@@ -176,7 +176,7 @@ Environment variables are also supported. This will be the configuration name in
       </td>
     </tr>
     <tr>
-      <td>/v1/auth/send_reset_password</td>
+      <td>/send-reset-password</td>
       <td>POST</td>
       <td>
         email (string, required)<br>
@@ -206,7 +206,7 @@ Accessing private routes will require the refresh token in the authorization bea
   </thead>
   <tbody>
     <tr>
-      <td>/v1/auth/user_details</td>
+      <td>/user</td>
       <td>GET</td>
       <td></td>
       <td rowspan=0>
@@ -222,27 +222,7 @@ Accessing private routes will require the refresh token in the authorization bea
       <td></td>
     </tr>
     <tr>
-      <td>/v1/auth/signout</td>
-      <td>GET</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>/v1/auth/signout_all</td>
-      <td>GET</td>
-      <td></td>
-      <td></td>
-    </tr>
-    <tr>
-      <td>/v1/auth/refresh_token</td>
-      <td>GET</td>
-      <td></td>
-      <td>
-        AccessTokenIssueFailed
-      </td>
-    </tr>
-    <tr>
-      <td>/v1/auth/update</td>
+      <td>/user</td>
       <td>PATCH</td>
       <td>
         email (string, optional)<br>
@@ -260,10 +240,30 @@ Accessing private routes will require the refresh token in the authorization bea
       </td>
     </tr>
     <tr>
-      <td>/v1/auth/delete</td>
+      <td>/user</td>
       <td>DELETE</td>
       <td></td>
       <td></td>
+    </tr>
+    <tr>
+      <td>/signout</td>
+      <td>GET</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>/signout-all</td>
+      <td>GET</td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>/refresh-token</td>
+      <td>GET</td>
+      <td></td>
+      <td>
+        AccessTokenIssueFailed
+      </td>
     </tr>
   </tbody>
 </table>

@@ -35,27 +35,25 @@ func GetRouter() http.Handler {
 		c.JSON(http.StatusOK, gin.H{"message": "pong"})
 	})
 
-	public := r.Group("/v1")
-	publicAuth := public.Group("/auth")
+	public := r.Group("/")
 	{
-		publicAuth.POST("/signup", auth.SignUp)
-		publicAuth.POST("/signin", auth.SignIn)
-		publicAuth.POST("/confirm_email", auth.ConfirmEmail)
-		publicAuth.POST("/reset_password", auth.ResetPassword)
-		publicAuth.POST("/send_confirm_email", auth.SendConfirmEmail)
-		publicAuth.POST("/send_reset_password", auth.SendResetPasswordEmail)
+		public.POST("signup", auth.SignUp)
+		public.POST("signin", auth.SignIn)
+		public.POST("confirm-email", auth.ConfirmEmail)
+		public.POST("reset-password", auth.ResetPassword)
+		public.POST("send-confirm-email", auth.SendConfirmEmail)
+		public.POST("send-reset-password", auth.SendResetPasswordEmail)
 	}
 
-	private := r.Group("/v1")
+	private := r.Group("/")
 	private.Use(ValidateRefreshTokenMiddleware())
-	privateAuth := private.Group("/auth")
 	{
-		privateAuth.GET("/user_details", auth.UserDetails)
-		privateAuth.GET("/signout", auth.SignOut)
-		privateAuth.GET("/signout_all", auth.SignOutAll)
-		privateAuth.GET("/refresh_token", auth.RefreshToken)
-		privateAuth.PATCH("/update", auth.Update)
-		privateAuth.DELETE("/delete", auth.Delete)
+		private.GET("user", auth.UserDetails)
+		private.PATCH("user", auth.Update)
+		private.DELETE("user", auth.Delete)
+		private.GET("signout", auth.SignOut)
+		private.GET("signout-all", auth.SignOutAll)
+		private.GET("refresh-token", auth.RefreshToken)
 	}
 
 	return r
